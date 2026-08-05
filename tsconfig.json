@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "jsx": "react-jsx",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
+    "esModuleInterop": true,
+    "noEmit": true,
+    "pretty": true,
+    "skipLibCheck": true
+  },
+  "include": ["bun-env.d.ts", "scripts/**/*.ts", "pedroviz/**/*.ts?"]
+}

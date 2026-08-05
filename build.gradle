@@ -15,6 +15,7 @@ plugins {
     // Note for FTC Teams: Do not modify this yourself.
     id 'com.android.application' version '8.13.2' apply false
     id 'com.android.library' version '8.13.2' apply false
+    id 'idea'
 }
 
 // This is now required because aapt2 has to be downloaded from the
@@ -28,4 +29,20 @@ allprojects {
 
 repositories {
     mavenCentral()
+}
+
+// This is the task that is run by GitHub on PR's
+task justAssembleDebug(type: GradleBuild) {
+    tasks = [
+        ':Twenty403:assembleDebug',
+        ':Sixteen750:assembleDebug'
+    ]
+}
+
+idea {
+  module {
+    // Add relative paths to folders you want to exclude from indexing
+    excludeDirs += file('node_modules')
+    excludeDirs += file('pedroviz/node_modules')
+  }
 }
