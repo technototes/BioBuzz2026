@@ -7,4 +7,17 @@ pluginManagement {
 }
 
 include ':FtcRobotController'
-include ':TeamCode'
+// Uncomment this to use TechnoLib from a subdirectory.
+// Or just try 'bun libflip' to let the script do it for you...
+include 'RobotLibrary'                                                   // FLIP: TechnoLibLocal
+project(':RobotLibrary').projectDir = new File('TechnoLib/RobotLibrary') // FLIP: TechnoLibLocal
+
+include ':Sixteen750'
+include ':Twenty403'
+
+// These are other 'bots' that we should build until we're at competitions
+include ':LearnBot'                                                      // FLIP: BUILD ALL BOTS
+
+// This is a thing that will generate diagrams for our code:
+// include ':java2umltext'                                                // FLIP: UML
+// project(':java2umltext').projectDir = new File('scripts/java2umltext') // FLIP: UML

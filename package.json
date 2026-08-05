@@ -1,0 +1,155 @@
+{
+  "name": "ftc-maintenance-sripts",
+  "repository": "https://github.com/technototes/Decode2025.git",
+  "author": "Kevin Frei <kevinfrei@hotmail.com>",
+  "license": "CC0-1.0",
+  "type": "module",
+  "scripts": {
+    "- // a-": "",
+    "- // a ": "These are all for fast building 'stuff':",
+    "- // a+": "",
+    "fast": "bun run gradle :Twenty403:assembleDebug :Sixteen750:assembleDebug :Blackbird:assembleDebug :SwerveBot:assembleDebug",
+    "fast16": "bun run gradle :Sixteen750:assembleDebug",
+    "fast20": "bun run gradle :Twenty403:assembleDebug",
+    "fastlb": "bun run gradle :LearnBot:assembleDebug",
+    "fastbb": "bun run gradle :Blackbird:assembleDebug",
+    "fastsw": "bun run gradle :SwerveBot:assembleDebug",
+    "- // b-": "",
+    "- // b ": "These are all for 'fullly' building 'stuff':",
+    "- // b+": "",
+    "build": "bun run gradle :Sixteen750:build :Twenty403:build :Blackbird:build :SwerveBot:build",
+    "build16": "bun run gradle :Sixteen750:build",
+    "build20": "bun run gradle :Twenty403:build",
+    "buildlb": "bun run gradle :LearnBot:build",
+    "buildbb": "bun run gradle :Blackbird:build",
+    "buildsw": "bun run gradle :SwerveBot:build",
+    "full": "bun run gradle build",
+    "- // c-": "",
+    "- // c ": "These scripts are for formatting code/scripts/markdown stuff:",
+    "- // c+": "",
+    "format": "tools format bun",
+    "foramt": "tools format bun",
+    "force-format": "prettier -w \"Twenty403/**/*.java\" \"Sixteen750/**/*.java\" \"Blackbird/**/*.java\" \"scripts/**/*.ts*\"",
+    "- // d-": "",
+    "- // d ": "This will toggle using TechnoLib locally or from Maven",
+    "libflip": "bun run scripts/flip.ts lib",
+    "- // e-": "",
+    "- // e": "Disable/enable 'all' bots & subbuilds",
+    "botflip": "bun run scripts/flip.ts bot",
+    "- // f-": "",
+    "- // f ": "Stuff for connecting/disconnecting from the bot",
+    "- // f+": "",
+    "connect": "bun run adb connect 192.168.43.1:5555",
+    "disconnect": "bun run adb disconnect 192.168.43.1:5555",
+    "discall": "bun run adb disconnect",
+    "- // g-": "",
+    "- // g ": "Open the FTC Panels web interface",
+    "panel": "bun run open http://192.168.43.1:8001",
+    "- // h-": "",
+    "- // h ": "platform-specific commands",
+    "- // h+": "",
+    "gradle": "./gradlew",
+    "adb": "bun run os adb",
+    "adb:win": "./scripts/adb.cmd",
+    "adb:mac": "~/Library/Android/sdk/platform-tools/adb",
+    "adb:lin": "~/Android/Sdk/platform-tools/adb",
+    "open": "bun run os open",
+    "open:win": "cmd /c start \"\"",
+    "open:mac": "open",
+    "open:lin": "xdg-open",
+    "- // j-": "",
+    "- // j ": "This is the script that presents the students with a workflow",
+    "work": "bun run scripts/workflow.ts",
+    "- // y-": "",
+    "- // y ": "This runs a different script per os (run-script-os isn't bun-compatible)",
+    "os": "bun run scripts/os.ts",
+    "- // z-": "",
+    "- // z ": "Type check the scripts (BUG: It's typechecking node_modules too!)",
+    "types": "tsc --noEmit -p tsconfig.json",
+    "- //": "This is just a shortcut helper script for now to launch the pedropath visualizer",
+    "pv": "cd pedroviz && bun install && bun pvdev",
+    "- // graph-": "",
+    "- // graph1": "This generates class graphs for the various codebases. Paste it into https://mermaid.live to visualize",
+    "- // graph2": "First build the java2umltext tool with './gradlew :java2umltext:build' (or bun build)",
+    "- // graph3": " but you probably need to umlflip first to enable all the code",
+    "- // graph4": "Then you can use the graph* commands below to generate the graphs",
+    "umlflip": "bun run scripts/flip.ts uml",
+    "graphlib": "java -jar scripts/java2umltext/build/libs/java2umltext-0.1.0.jar MERMAID TechnoLib/RobotLibrary > tl-classgraph.mmd",
+    "graph16": "java -jar scripts/java2umltext/build/libs/java2umltext-0.1.0.jar MERMAID Sixteen750 > 16750-classgraph.mmd",
+    "graph20": "java -jar scripts/java2umltext/build/libs/java2umltext-0.1.0.jar MERMAID Twenty403 > 20403-classgraph.mmd",
+    "graphlb": "java -jar scripts/java2umltext/build/libs/java2umltext-0.1.0.jar MERMAID LearnBot > learnbot-classgraph.mmd",
+    "graph": "bun run graphlib && bun run graph16 && bun run graph20 && bun run graphlb",
+    "- // git hooks": "Auto-format code on commit",
+    "prepare": "simple-git-hooks"
+  },
+  "dependencies": {
+    "@freik/containers": "^0.4.10",
+    "@freik/typechk": "^0.10.0",
+    "@freik/workspace": "^0.8.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.7.1",
+    "lint-staged": "^17.3.0",
+    "prettier": "^3.9.6",
+    "prettier-plugin-java": "^2.10.3",
+    "pretty-quick": "^4.2.2",
+    "simple-git": "^3.36.0",
+    "simple-git-hooks": "^2.13.1",
+    "typescript": "^7.0.2"
+  },
+  "devDependencies": {
+    "@types/bun": "1.3.14"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "bunx lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,java}": [
+      "prettier --write"
+    ]
+  },
+  "prettier": {
+    "printWidth": 80,
+    "trailingComma": "all",
+    "singleQuote": true,
+    "proseWrap": "always",
+    "tabWidth": 2,
+    "useTabs": false,
+    "bracketSameLine": true,
+    "arrowParens": "always",
+    "plugins": ["prettier-plugin-java", "@ianvs/prettier-plugin-sort-imports"],
+    "overrides": [
+      {
+        "files": "*.json",
+        "options": {
+          "parser": "json"
+        }
+      },
+      {
+        "files": "*.mts",
+        "options": {
+          "parser": "typescript"
+        }
+      },
+      {
+        "files": "*.java",
+        "options": {
+          "tabWidth": 4,
+          "printWidth": 100,
+          "arrowParens": "avoid"
+        }
+      }
+    ],
+    "importOrder": [
+      "^react$",
+      "^react-dom$",
+      "^react-dom/client$",
+      "^.*jotai.*$",
+      "",
+      "<THIRD_PARTY_MODULES>",
+      "^@freik/.*$",
+      "",
+      "^(?!.*[.]css$)[./].*$",
+      "",
+      ".css$"
+    ]
+  }
+}

@@ -1,6 +1,15 @@
 repositories {
     mavenCentral()
     google() // Needed for androidx
+
+    // Start Freik-added stuff:
+    // Used by TechnoLib; jitpack.io can turn GitHub Releases into package repository like jsDelivr
+    maven { url = 'https://jitpack.io' }
+
+    // Panels dashbboard
+    maven { url = "https://mymaven.bylazar.com/releases" }
+    // FTC Dashboard
+    maven { url = 'https://maven.brott.dev/' }
 }
 
 dependencies {
@@ -12,6 +21,16 @@ dependencies {
     implementation 'org.firstinspires.ftc:Hardware:11.2.1'
     implementation 'org.firstinspires.ftc:FtcCommon:11.2.1'
     implementation 'org.firstinspires.ftc:Vision:11.2.1'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-}
+    implementation 'androidx.appcompat:appcompat:1.7.1'
 
+    // Freik: 16750/20403 external dependencies:
+    // TechnoLib: This should be commented out to use a local source copy
+    //            'bun libflip' will also comment it out
+    // implementation 'com.github.technototes:technolib:2.3.0' // FLIP: TechnoLibLocal
+
+    // Adding support for Pedro Pathing
+    implementation 'com.pedropathing:ftc:2.1.2'
+    implementation 'com.pedropathing:telemetry:1.0.0'
+    implementation 'com.bylazar:fullpanels:1.0.12'
+    implementation 'com.acmerobotics.dashboard:dashboard:0.5.1'
+}
