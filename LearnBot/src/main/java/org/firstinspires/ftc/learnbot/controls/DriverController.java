@@ -29,6 +29,10 @@ public class DriverController implements Loggable {
     public CommandButton driveModeButton;
     public CommandButton holdPosButton;
     public CommandButton snapRotButton;
+    public CommandButton upButton;
+    public CommandButton midButton;
+    public CommandButton lowButton;
+    public CommandButton zeroButton;
     public Command stickDriver;
     public CycleCommandGroup rotationCommand;
     public CommandButton launch1Button;
@@ -63,6 +67,10 @@ public class DriverController implements Loggable {
         visionButton = gamepad.ps_circle;
         launch1Button = gamepad.ps_square;
         launch2Button = gamepad.ps_cross;
+        upButton = gamepad.ps_circle;
+        midButton = gamepad.ps_circle;
+        lowButton = gamepad.ps_square;
+        zeroButton = gamepad.ps_cross;
     }
 
     public void bindDriveControls() {
@@ -75,31 +83,31 @@ public class DriverController implements Loggable {
 
             if (Connected.LIMELIGHT) {
                 visionButton.whenPressedReleased(
-                    robot.drivebase::SetVisionDriving,
-                    robot.drivebase::ResumeDriving
+                        robot.drivebase::SetVisionDriving,
+                        robot.drivebase::ResumeDriving
                 );
             }
 
             rotationCommand = new CycleCommandGroup(
-                robot.drivebase::SetHoldRotation,
-                robot.drivebase::SetTangentRotation,
-                robot.drivebase::SetBidirectionalRotation,
-                robot.drivebase::SetVisionRotation,
-                // robot.drivebase::SetTargetBasedRotation,
-                robot.drivebase::SetFreeRotation
+                    robot.drivebase::SetHoldRotation,
+                    robot.drivebase::SetTangentRotation,
+                    robot.drivebase::SetBidirectionalRotation,
+                    robot.drivebase::SetVisionRotation,
+                    // robot.drivebase::SetTargetBasedRotation,
+                    robot.drivebase::SetFreeRotation
             );
 
             rotateModeButton.whenPressed(rotationCommand);
             driveModeButton.whenPressed(
-                new CycleCommandGroup(
-                    robot.drivebase::SetSquareMotion,
-                    // robot.drivebase::SetTargetBasedMotion,
-                    robot.drivebase::SetFreeMotion
-                )
+                    new CycleCommandGroup(
+                            robot.drivebase::SetSquareMotion,
+                            // robot.drivebase::SetTargetBasedMotion,
+                            robot.drivebase::SetFreeMotion
+                    )
             );
             holdPosButton.whenPressedReleased(
-                robot.drivebase::StayPut,
-                robot.drivebase::ResumeDriving
+                    robot.drivebase::StayPut,
+                    robot.drivebase::ResumeDriving
             );
             snapRotButton.whenPressedReleased(robot.drivebase::SetSnapRotation, () -> {
                 robot.drivebase.SetFreeRotation();
@@ -108,10 +116,10 @@ public class DriverController implements Loggable {
             resetGyroButton.whenPressed(robot.drivebase::ResetGyro);
             // This is a nifty feature students built last year: We can *cycle* through commands!
             botFieldToggleButton.whenReleased(
-                new CycleCommandGroup(
-                    robot.drivebase::SetRobotCentricMode,
-                    robot.drivebase::SetFieldCentricMode
-                )
+                    new CycleCommandGroup(
+                            robot.drivebase::SetRobotCentricMode,
+                            robot.drivebase::SetFieldCentricMode
+                    )
             );
         }
         if (Connected.LAUNCHER) {
@@ -119,4 +127,6 @@ public class DriverController implements Loggable {
             launch2Button.whenReleased(Launcher.Commands.StopLaunch());
         }
     }
+
+
 }

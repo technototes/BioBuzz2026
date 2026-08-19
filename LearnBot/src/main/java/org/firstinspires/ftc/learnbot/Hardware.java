@@ -16,6 +16,7 @@ import java.util.List;
 import org.firstinspires.ftc.learnbot.Setup.HardwareNames;
 import org.firstinspires.ftc.learnbot.components.Gimbal;
 import org.firstinspires.ftc.learnbot.components.Pedro;
+import org.firstinspires.ftc.learnbot.components.Slides;
 import org.firstinspires.ftc.learnbot.subsystems.AllianceDetection;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
 
@@ -25,6 +26,7 @@ public class Hardware implements Loggable {
     public HardwareMap map;
     public IGyro imu;
     public EncodedMotor<DcMotorEx> fl, fr, rl, rr, testMotor;
+    public EncodedMotor<DcMotorEx> slides;
     public AllianceDetection allianceDetection;
     public Limelight3A limelight;
     public SparkFunOTOS odo;
@@ -38,9 +40,9 @@ public class Hardware implements Loggable {
         hubs = hwmap.getAll(LynxModule.class);
         // imu = new AdafruitIMU(HardwareNames.EXTERNALIMU, AdafruitIMU.Orientation.Pitch);
         imu = new IMU(
-            Setup.HardwareNames.IMU,
-            RevHubOrientationOnRobot.LogoFacingDirection.UP,
-            RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+                Setup.HardwareNames.IMU,
+                RevHubOrientationOnRobot.LogoFacingDirection.UP,
+                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
         );
         if (Setup.Connected.DRIVEBASE) {
             fl = new EncodedMotor<>(Pedro.Config.FLMOTOR);
@@ -59,11 +61,14 @@ public class Hardware implements Loggable {
             yawServo = new Servo(Gimbal.Config.YAW_SERVO);
             pitchServo = new Servo(Gimbal.Config.PITCH_SERVO);
         }
-        allianceDetection = new AllianceDetection(
-            hwmap,
-            HardwareNames.ALLIANCE_SWITCH_RED,
-            HardwareNames.ALLIANCE_SWITCH_BLUE
-        );
+        if (Setup.Connected.SLIDES) {
+            slides = new EncodedMotor<>(Slides.Config.MotorName);
+        }
+       // allianceDetection = new AllianceDetection(
+               // hwmap,
+               // HardwareNames.ALLIANCE_SWITCH_RED,
+              //  HardwareNames.ALLIANCE_SWITCH_BLUE
+       // );
     }
 
     // We can read the voltage from the different hubs for fun...

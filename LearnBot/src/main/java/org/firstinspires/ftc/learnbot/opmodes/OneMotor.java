@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 @SuppressWarnings("unused")
 @Configurable
 @TeleOp(name = "SingleMotor")
-@Disabled
+//@Disabled
 public class OneMotor extends LinearOpMode {
 
     public static double motorPower = 0.2;

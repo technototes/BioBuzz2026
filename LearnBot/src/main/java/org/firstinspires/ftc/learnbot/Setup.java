@@ -7,13 +7,14 @@ public class Setup {
     @Configurable
     public static class Connected {
 
-        public static boolean DRIVEBASE = true;
+        public static boolean DRIVEBASE = false;
         public static boolean TESTSUBSYSTEM = false;
-        public static boolean LIMELIGHT = true;
+        public static boolean LIMELIGHT = false;
         public static boolean OTOS = false;
-        public static boolean PINPOINT = true;
-        public static boolean GIMBAL = true;
+        public static boolean PINPOINT = false;
+        public static boolean GIMBAL = false;
         public static boolean LAUNCHER = false;
+        public static boolean SLIDES = true;
     }
 
     @Configurable
@@ -21,8 +22,8 @@ public class Setup {
 
         public static String IMU = "imu";
         public static String LIMELIGHT = "limelight";
-        public static String ALLIANCE_SWITCH_RED = "asr";
-        public static String ALLIANCE_SWITCH_BLUE = "asb";
+      //  public static String ALLIANCE_SWITCH_RED = "asr";
+       // public static String ALLIANCE_SWITCH_BLUE = "asb";
     }
 
     @Configurable
