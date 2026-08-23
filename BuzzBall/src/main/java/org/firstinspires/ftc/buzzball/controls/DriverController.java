@@ -6,17 +6,13 @@ import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
 import com.technototes.library.control.Stick;
 import com.technototes.library.logger.Loggable;
-import com.technototes.library.util.Alliance;
 import org.firstinspires.ftc.buzzball.Hardware;
 import org.firstinspires.ftc.buzzball.Robot;
 import org.firstinspires.ftc.buzzball.Setup;
-import org.firstinspires.ftc.buzzball.commands.AltAutoOrient;
 import org.firstinspires.ftc.buzzball.commands.PedroDriver;
+import org.firstinspires.ftc.buzzball.commands.SequentialCommands;
 import org.firstinspires.ftc.buzzball.commands.TeleCommands;
-import org.firstinspires.ftc.buzzball.commands.auto.DriveAutoCommand;
-import org.firstinspires.ftc.buzzball.commands.auto.Paths;
 import org.firstinspires.ftc.buzzball.commands.driving.DrivingCommands;
-import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
 
 public class DriverController implements Loggable {
 
@@ -29,28 +25,21 @@ public class DriverController implements Loggable {
     public CommandButton snailButton;
     public CommandButton launchButton;
     public CommandButton spitButton;
-    public CommandButton intakeButton;
-
-    public CommandButton TripleBallLaunch;
-    public CommandAxis AltAutoAlign;
-
-    public CommandButton MotorDecrease;
-    public CommandButton MotorIncrease;
     public CommandButton gateButton;
     public CommandButton brakeButton;
-    public CommandButton hoodButton;
     public CommandButton override;
-    public CommandButton hooddownButton;
-    public CommandButton RumbleToggle;
     public CommandButton RelocButton;
     public CommandButton holdButton;
-    public CommandButton CloseShoot;
-    public CommandButton FarShoot;
     public CommandAxis intakeTrigger;
     public CommandAxis autoAim;
-    public CommandAxis spitTrigger;
+
     public PedroDriver pedroDriver;
-    public CommandButton increaseD;
+    public CommandButton depositHighBasketButton;
+    public CommandButton depositLowBasketButton;
+    public CommandButton depositRetractButton;
+    public CommandButton clawOpenButton;
+    public CommandButton turretTrackToggleButton;
+    public CommandButton turretRelocalizeButton;
 
     public static double triggerThreshold = 0.1;
 
@@ -76,6 +65,12 @@ public class DriverController implements Loggable {
         if (Setup.Connected.AIMINGSUBSYSTEM) {
             bindAimControls();
         }
+        if (Setup.Connected.DEPOSITSUBSYSTEM) {
+            bindDepositControls();
+        }
+        if (Setup.Connected.TURRETSUBSYSTEM) {
+            bindTurretControls();
+        }
     }
 
     public void AssignNamedControllerButton() {
@@ -84,24 +79,18 @@ public class DriverController implements Loggable {
         driveRightStick = gamepad.rightStick;
         intakeTrigger = gamepad.rightTrigger;
         autoAim = gamepad.leftTrigger;
-
-        //AltAutoAlign = gamepad.leftTrigger;
-        // turboButton = gamepad.leftBumper;
+        depositHighBasketButton = gamepad.ps_triangle;
+        depositLowBasketButton = gamepad.ps_circle;
+        depositRetractButton = gamepad.rightBumper;
+        clawOpenButton = gamepad.leftBumper;
         snailButton = gamepad.leftBumper;
         launchButton = gamepad.rightBumper;
         spitButton = gamepad.ps_square;
         brakeButton = gamepad.ps_triangle;
-        increaseD = gamepad.dpadUp;
-        //hoodButton = gamepad.dpadUp;
-        hooddownButton = gamepad.dpadDown;
-        MotorDecrease = gamepad.dpadLeft;
-        MotorIncrease = gamepad.dpadRight;
-        //        FarShoot = gamepad.dpadLeft;
-        //        CloseShoot = gamepad.dpadRight;
         gateButton = gamepad.ps_cross;
-        holdButton = gamepad.ps_circle; // made it not bound the same as decrease velo
-        //TripleBallLaunch = gamepad.ps_share; // made the auto launching command testable in tele
-        RelocButton = gamepad.ps_share;
+        holdButton = gamepad.ps_circle;
+        turretTrackToggleButton = gamepad.ps_share;
+        turretRelocalizeButton = gamepad.dpadUp;
     }
 
     public void bindDriveControls() {
@@ -113,51 +102,23 @@ public class DriverController implements Loggable {
         );
         CommandScheduler.scheduleJoystick(pedroDriver);
 
-        // turboButton.whenPressed(DrivingCommands.TurboDriving(robot.drivebase));
-        // turboButton.whenReleased(DrivingCommands.NormalDriving(robot.drivebase));
         snailButton.whenPressedReleased(
             DrivingCommands.SnailDriving(pedroDriver),
             DrivingCommands.NormalDriving(pedroDriver)
         );
-        /*  if (robot.alliance == Alliance.BLUE) {
-                    snailButton.whenPressed(
-                       DrivingCommands.SnapDriving(
-                            pedroDriver,
-                            Setup.OtherSettings.GATE_INTAKE_HEADING_BLUE
-                        )
-                    );
-                } else {
-                   snailButton.whenPressed(
-                        DrivingCommands.SnapDriving(
-                            pedroDriver,
-                            Setup.OtherSettings.GATE_INTAKE_HEADING_RED
-                        )
-                   );
-                }
-                snailButton.whenReleased(DrivingCommands.NoAutoOrient(pedroDriver));
-*/
+
         resetGyroButton.whenPressed(DrivingCommands.ResetGyro(pedroDriver));
-        //MotorDecrease.whenPressed(TeleCommands.DecreaseMotor(robot));
-        //MotorIncrease.whenPressed(TeleCommands.IncreaseMotor(robot));
 
         if (Setup.Connected.LIMELIGHTSUBSYSTEM) {
             autoAim.whenPressed(DrivingCommands.AutoOrient(pedroDriver));
             autoAim.whenReleased(DrivingCommands.NoAutoOrient(pedroDriver));
             RelocButton.whenPressed(TeleCommands.LLRelocCommand(robot));
-            //AltAutoAlign.whenPressed(new AltAutoOrient(robot));
-            //AltAutoAlign.whenReleased(DrivingCommands.NormalDriving(pedroDriver));
         }
-        // autoAim.whilePressed(new LLPipelineChangeCommand(hardware.limelight, Setup.HardwareNames.AprilTag_Pipeline));
     }
 
     public void bindLaunchControls() {
         launchButton.whilePressed(TeleCommands.Launch(robot));
         launchButton.whileReleased(TeleCommands.IdleLaunch(robot));
-        //        CloseShoot.whenPressed(TeleCommands.SetCloseShoot(robot));
-        //        FarShoot.whenPressed(TeleCommands.SetFarShoot(robot));
-        MotorIncrease.whenPressed(robot.launcherSubsystem::IncreaseMotorVelocity);
-        MotorDecrease.whenPressed(robot.launcherSubsystem::DecreaseMotorVelocity);
-        increaseD.whenPressed(robot.launcherSubsystem::increaseRegressionDTeleop);
     }
 
     public void bindIntakeControls() {
@@ -169,25 +130,22 @@ public class DriverController implements Loggable {
         intakeTrigger.whenReleased(TeleCommands.IntakeStop(robot));
     }
 
-    // spitTrigger.whilePressed(TeleCommands.Spit(robot.intakeSubsystem));
-    // spitTrigger.whileReleased(TeleCommands.Intake(robot.intakeSubsystem));
-
     public void bindBrakeControls() {
         brakeButton.whilePressed(TeleCommands.EngageBrake(robot));
         brakeButton.whilePressed(TeleCommands.StopLaunch(robot));
         brakeButton.whenReleased(TeleCommands.DisengageBrake(robot));
     }
 
+    public void bindDepositControls() {
+        depositHighBasketButton.whenPressed(SequentialCommands.HighBasketScore(robot));
+        depositLowBasketButton.whenPressed(SequentialCommands.LowBasketScore(robot));
+        depositRetractButton.whenPressed(SequentialCommands.PlaceAndRetract(robot));
+
+        clawOpenButton.whilePressed(TeleCommands.DepositClawOpen(robot));
+        clawOpenButton.whenReleased(TeleCommands.DepositClawClose(robot));
+    }
+
     public void bindAimControls() {
-        // if(yippee) {
-        //     leverButton.whenPressed(
-        //     TeleCommands.LeverStop(robot.aimingSubsystem));
-        //     yippee = false;
-        // } else {
-        //     leverButton.whenPressed(
-        //     TeleCommands.LeverGo(robot.aimingSubsystem));
-        //     yippee = true;
-        // }
         gateButton.whenPressed(TeleCommands.GateDown(robot));
         gateButton.whenPressed(TeleCommands.Feed(robot));
         gateButton.whenReleased(TeleCommands.IntakeStop(robot));
@@ -198,5 +156,14 @@ public class DriverController implements Loggable {
         holdButton.whenPressed(TeleCommands.GateDown(robot));
         holdButton.whenReleased(TeleCommands.IntakeStop(robot));
         holdButton.whenReleased(TeleCommands.GateUp(robot));
+    }
+
+    public void bindTurretControls() {
+        turretTrackToggleButton.toggle(
+            TeleCommands.TurretTrackDefault(robot),
+            TeleCommands.TurretDisableTracking(robot)
+        );
+
+        turretRelocalizeButton.whenPressed(TeleCommands.TurretRelocalizeToPosition1(robot));
     }
 }

@@ -30,9 +30,13 @@ public class Hardware implements Loggable {
     public MotorPlus<DcMotorEx> intake2;
     public EncodedMotor launcher1;
     public EncodedMotor launcher2;
+    public EncodedMotor vertslide;
     public Servo brake;
     public Servo hood;
     public Servo lever;
+    public Servo armServo;
+    public Servo wristServo;
+    public Servo clawServo;
     public MotorEncoder odoRL, odoFB;
     public SparkFunOTOS odo;
     public CRServo testCRServo;
@@ -41,6 +45,9 @@ public class Hardware implements Loggable {
     public CRServo gobbleServo;
     public CRServo gulpServo;
     public HardwareMap map;
+    public EncodedMotor<DcMotorEx> depoSlideMotor;
+    public Servo depoArmServo, depoClawServo, depoWristServo;
+    public Servo turretServo;
 
     /* Put other hardware here! */
 
@@ -93,6 +100,15 @@ public class Hardware implements Loggable {
         }
         if (Setup.Connected.LIMELIGHTSUBSYSTEM) {
             limelight = hwmap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
+        }
+        if (Setup.Connected.DEPOSITSUBSYSTEM) {
+            depoSlideMotor = new EncodedMotor<>(Setup.HardwareNames.DEPO_SLIDE_MOTOR);
+            depoArmServo = new Servo(Setup.HardwareNames.DEPO_ARM_SERVO);
+            depoClawServo = new Servo(Setup.HardwareNames.DEPO_CLAW_SERVO);
+            depoWristServo = new Servo(Setup.HardwareNames.DEPO_WRIST_SERVO);
+        }
+        if (Setup.Connected.TURRETSUBSYSTEM) {
+            turretServo = new Servo(Setup.HardwareNames.TURRET_SERVO);
         }
     }
 

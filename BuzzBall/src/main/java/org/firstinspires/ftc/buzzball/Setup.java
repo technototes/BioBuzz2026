@@ -8,18 +8,21 @@ public class Setup {
     @Configurable
     public static class Connected {
 
-        public static final boolean TESTSUBSYSTEM = true;
-        public static final boolean LIMELIGHTSUBSYSTEM = true;
-        public static boolean DRIVEBASE = true;
+        public static final boolean TESTSUBSYSTEM = false;
+        public static final boolean LIMELIGHTSUBSYSTEM = false;
+        public static boolean DRIVEBASE = false;
         public static boolean ODOSUBSYSTEM = true;
         public static boolean SAFETYSUBSYSTEM = false;
-        public static boolean EXTERNAL_IMU = true;
+        public static boolean EXTERNAL_IMU = false;
         public static boolean OTOS = false;
-        public static boolean INTAKESUBSYSTEM = true;
-        public static boolean SMARTINTAKE = true;
-        public static boolean LAUNCHERSUBSYSTEM = true;
-        public static boolean AIMINGSUBSYSTEM = true;
-        public static boolean BRAKESUBSYSTEM = true;
+        public static boolean INTAKESUBSYSTEM = false;
+        public static boolean SMARTINTAKE = false;
+        public static boolean LAUNCHERSUBSYSTEM = false;
+        public static boolean AIMINGSUBSYSTEM = false;
+        public static boolean BRAKESUBSYSTEM = false;
+        public static boolean DEPOSITSUBSYSTEM = false;
+        public static boolean CLAUDESUBSYSTEM = false;
+        public static boolean TURRETSUBSYSTEM = true;
     }
 
     @Configurable
@@ -31,7 +34,7 @@ public class Setup {
         public static String RR_DRIVE_MOTOR = "rr";
         public static String IMU = "imu";
         public static String EXTERNAL_IMU = "adafruit-imu";
-        public static String ODORL = "intake/odo";
+        public static String ODORL = "odo";
         public static String ODOFB = "odof";
         public static String OTOS = "sparky";
         public static String INTAKE_MOTOR = "intake/odo";
@@ -46,6 +49,11 @@ public class Setup {
         public static String LIMELIGHT = "limelight";
         public static String ITKANL = "gulpServo";
         public static String ITKANR = "gobbleServo";
+        public static String DEPO_SLIDE_MOTOR = "depoSlide";
+        public static String DEPO_ARM_SERVO = "depoArm";
+        public static String DEPO_CLAW_SERVO = "depoClaw";
+        public static String DEPO_WRIST_SERVO = "depoWrist";
+        public static String TURRET_SERVO = "turret";
 
         public static int Green_Color_Pipeline = 0;
         // public static int Classifier_Pipeline = 2;

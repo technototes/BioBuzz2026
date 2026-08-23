@@ -104,16 +104,20 @@ public class AutoConstants {
 
         public static String forwardName = HardwareNames.ODOFB;
         public static String strafeName = HardwareNames.ODORL;
-        public static double forwardTicksToInches = ((17.5 / 25.4) * 2 * Math.PI) / 8192; // 5.42, 5.47, 5.49
-        public static double strafeTicksToInches = ((17.5 / 25.4) * 2 * Math.PI) / 8192; // 5.37, 5.39, 5.38
-        public static double forwardPodYOffset = -3.9; // From Colin's CAD 10/31
-        public static double strafePodXOffset = -4.124; // From Colin's CAD 10/31
-        public static boolean forwardReversed = true;
-        public static boolean strafeReversed = false;
+        public static double forwardTicksToInches = ((16 / 25.4) * 2 * Math.PI) / 8192; // 5.42, 5.47, 5.49
+        public static double strafeTicksToInches = ((16 / 25.4) * 2 * Math.PI) / 8192; // 5.37, 5.39, 5.38
+        // UPDATED from the new chassis measurement: both odo pods are offset 64.5mm from center
+        // (64.5mm = 2.5394in). Magnitude is solid; sign on each is a guess pending confirmation
+        // of which side each pod actually sits on - flip either if the localizer drifts sideways
+        // or spins in place while driving straight.
+        public static double forwardPodYOffset = -64.5 / 25.4; // ASSUMPTION: sign TBD, see above
+        public static double strafePodXOffset = -64.5 / 25.4; // ASSUMPTION: sign TBD, see above
+        public static boolean forwardReversed = false;
+        public static boolean strafeReversed = true;
         public static RevHubOrientationOnRobot.LogoFacingDirection logoDir =
-            RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+            RevHubOrientationOnRobot.LogoFacingDirection.RIGHT;
         public static RevHubOrientationOnRobot.UsbFacingDirection usbDir =
-            RevHubOrientationOnRobot.UsbFacingDirection.UP;
+            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
     }
 
     public static TwoWheelConstants getTwoWheelLocalizerConstants() {
@@ -178,10 +182,10 @@ public class AutoConstants {
     public static MecanumConstants getDriveConstants() {
         return new MecanumConstants()
             .maxPower(1)
-            .leftFrontMotorName(HardwareNames.FL_DRIVE_MOTOR)
-            .leftRearMotorName(HardwareNames.RL_DRIVE_MOTOR)
-            .rightFrontMotorName(HardwareNames.FR_DRIVE_MOTOR)
-            .rightRearMotorName(HardwareNames.RR_DRIVE_MOTOR)
+            .leftFrontMotorName(HardwareNames.ODOFB)
+            .leftRearMotorName(HardwareNames.ODOFB)
+            .rightFrontMotorName(HardwareNames.ODOFB)
+            .rightRearMotorName(HardwareNames.ODOFB)
             .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
