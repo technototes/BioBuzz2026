@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.learnbot.opmodes;
+package org.firstinspires.ftc.learnbot.pedro;
 
 import com.pedropathing.tuning.autotune.Procedure;
 import com.pedropathing.tuning.autotune.Tuner;

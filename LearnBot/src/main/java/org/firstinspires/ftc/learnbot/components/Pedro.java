@@ -1,20 +1,9 @@
 package org.firstinspires.ftc.learnbot.components;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.control.FilteredPIDFCoefficients;
+import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.ftc.FollowerBuilder;
-import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.Encoder;
-import com.pedropathing.ftc.localization.constants.DriveEncoderConstants;
-import com.pedropathing.ftc.localization.constants.OTOSConstants;
-import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
-import com.pedropathing.geometry.BezierPoint;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
-import com.pedropathing.paths.PathConstraints;
+import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
@@ -82,6 +71,7 @@ public class Pedro {
         public static double forwardDeceleration = -40.0;
         public static double lateralDeceleration = -48.0;
         public static double centripetalScale = 0.0005;
+        /*
         // PIDs to be tuned:
         public static com.pedropathing.control.PIDFCoefficients translationPID =
             new com.pedropathing.control.PIDFCoefficients(0.08, 0.000005, 0.008, 0.02);
@@ -98,7 +88,7 @@ public class Pedro {
             0.6, // Kalman filter: 60% of D will come from the *previous* derivative
             0.02
         );
-
+        */
         // The percent of a path that must be complete for Pedro to decide it's done
         public static double tValueContraint = 0.99;
 
@@ -115,7 +105,7 @@ public class Pedro {
         // The maximum heading error (in degrees) the bot can be from the path end
         // while still saying the path is complete.
         public static double acceptableHeading = 2.5;
-
+        /*
         public static FollowerConstants getFollowerConstants() {
             return new FollowerConstants()
                 // tune these
@@ -280,6 +270,7 @@ public class Pedro {
                     .IMU_Orientation(TwoWheelConfig.orientation);
             }
         }
+ */
     }
 
     public static class Commands {
@@ -310,6 +301,7 @@ public class Pedro {
             return new JoystickImpl(fwdSup, strafeSup, rotSup);
         }
 
+        /*
         public static Command FollowPath(PathChain p) {
             return new FollowPathImpl(p);
         }
@@ -321,7 +313,7 @@ public class Pedro {
         public static Command FollowPath(PathChain p, boolean readCurPose) {
             return new FollowPathImpl(p, readCurPose);
         }
-
+*/
         public static Command TurboSpeed() {
             return self::SetTurboSpeed;
         }
@@ -372,7 +364,7 @@ public class Pedro {
 
             @Override
             public void execute() {
-                getFollower().drivetrain.runDrive(p);
+                // getFollower().drivetrain.runDrive(p);
             }
         }
 
@@ -420,7 +412,7 @@ public class Pedro {
                 return false;
             }
         }
-
+        /*
         protected static class FollowPathImpl implements Command {
 
             public PathChain pathChain;
@@ -461,10 +453,12 @@ public class Pedro {
                 getFollower().update();
             }
         }
+
+ */
     }
 
     public static Follower createFollower(HardwareMap hardwareMap) {
-        FollowerBuilder fb = new FollowerBuilder(Config.getFollowerConstants(), hardwareMap)
+        /* FollowerBuilder fb = new FollowerBuilder(Config.getFollowerConstants(), hardwareMap)
             .pathConstraints(Config.getPathConstraints())
             .mecanumDrivetrain(Config.getDriveConstants());
         switch (Config.Localizer.WhichLocalizer) {
@@ -486,7 +480,8 @@ public class Pedro {
                 break;
         }
         Follower f = fb.build();
-        f.setMaxPowerScaling(Config.AUTO_SPEED);
+        f.setMaxPowerScaling(Config.AUTO_SPEED);*/
+        Follower f = null;
         return f;
     }
 
@@ -693,30 +688,30 @@ public class Pedro {
         // Command to start teleop driving
         public void StartTele() {
             started = true;
-            follower.startTeleOpDrive();
+            follower.manual();
         }
 
         // Methods to bind to buttons (Commands)
         public void ResetGyro() {
             headingOffsetRadians = MathUtils.normalizeRadians(
-                follower.getHeading() + BaseHeadingOffset()
+                follower.pose().heading() + BaseHeadingOffset()
             );
         }
 
         public void SetSnailSpeed() {
-            follower.setMaxPowerScaling(Config.SNAIL_SPEED);
+            // TODO: follower.setMaxPowerScaling(Config.SNAIL_SPEED);
             driveStyle.translationSpeed = Config.SNAIL_SPEED;
             driveStyle.rotationSpeed = Config.SNAIL_TURN;
         }
 
         public void SetNormalSpeed() {
-            follower.setMaxPowerScaling(Config.NORMAL_SPEED);
+            // TODO: follower.setMaxPowerScaling(Config.NORMAL_SPEED);
             driveStyle.translationSpeed = Config.NORMAL_SPEED;
             driveStyle.rotationSpeed = Config.NORMAL_TURN;
         }
 
         public void SetTurboSpeed() {
-            follower.setMaxPowerScaling(Config.TURBO_SPEED);
+            // TODO: follower.setMaxPowerScaling(Config.TURBO_SPEED);
             driveStyle.translationSpeed = Config.TURBO_SPEED;
             driveStyle.rotationSpeed = Config.TURBO_TURN;
         }
@@ -734,11 +729,11 @@ public class Pedro {
                 StartTele();
             } else if (px != TranslationMode.Hold && x == TranslationMode.Hold) {
                 // If we've switched *to* holding a pose, start the follower
-                holdPose = follower.getPose();
-                follower.holdPoint(new BezierPoint(holdPose), holdPose.getHeading(), false);
+                holdPose = follower.pose();
+                follower.hold(holdPose, false);
             } else if (pr != RotationMode.Hold && driveStyle.rotation == RotationMode.Hold) {
                 // If we're transitioning to a Rotational hold, just set the pos in the holdPose
-                holdPose = follower.getPose();
+                holdPose = follower.pose();
             }
             if (r == RotationMode.Target_NYI) {
                 directedHeading = Double.NaN;
@@ -906,7 +901,7 @@ public class Pedro {
                 }
             }
             ShowDriveVectors(forward, strafe, rot, GetHeadingOffsetRadians());
-            follower.setTeleOpDrive(forward, strafe, rot, botCentric, GetHeadingOffsetRadians());
+            follower.manual(forward, strafe, rot);
             follower.update();
         }
 
@@ -914,7 +909,7 @@ public class Pedro {
             // Negative, because pushing left is negative, but that is a positive change in Pedro's
             // coordinate system.
             curHeading = MathUtils.normalizeDeltaRadians(
-                follower.getHeading() - GetHeadingOffsetRadians()
+                follower.pose().heading() - GetHeadingOffsetRadians()
             );
             switch (driveStyle.rotation) {
                 case Target_NYI:
@@ -935,7 +930,7 @@ public class Pedro {
                     // Hold the current heading
                     if (driveStyle.translation != TranslationMode.Hold && holdPose != null) {
                         targetHeading = MathUtils.normalizeDeltaRadians(
-                            holdPose.getHeading() - GetHeadingOffsetRadians()
+                            holdPose.heading() - GetHeadingOffsetRadians()
                         );
                     } else {
                         // This is weird: We have a rotational hold, but not a translational hold, and
@@ -1084,13 +1079,13 @@ public class Pedro {
                     break;
             }
             drvMode += String.format(Locale.ENGLISH, " Max:%.2f", driveStyle.translationSpeed);
-            Pose curPose = follower.getPose();
+            Pose curPose = follower.pose();
             drvLoc = String.format(
                 Locale.ENGLISH,
                 "X:%.2f Y:%.2f H:%.1f° T:%.1f°",
-                curPose.getX(),
-                curPose.getY(),
-                Math.toDegrees(curPose.getHeading()),
+                curPose.x(),
+                curPose.y(),
+                Math.toDegrees(curPose.heading()),
                 Math.toDegrees(targetHeading)
             );
         }

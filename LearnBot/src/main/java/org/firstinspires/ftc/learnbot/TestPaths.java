@@ -4,13 +4,10 @@ import static com.pedropathing.api.Paths.*;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.api.PoseFactory;
-import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector2D;
 import com.pedropathing.paths.Path;
-import com.pedropathing.paths.curves.Line;
 import com.pedropathing.paths.interpolator.Interpolator;
-import com.pedropathing.paths.interpolator.PiecewiseInterpolator;
 
 /**** DO NOT EDIT ****
  These paths are specifically for testing the visualizer. If you want to make some

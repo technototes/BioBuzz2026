@@ -28,10 +28,10 @@ public class SparkFunOTOSOpMode extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Get a reference to the sensor
-        myOtos = hardwareMap.get(
-            SparkFunOTOS.class,
-            Pedro.Config.Localizer.OTOSConfig.hardwareName
-        );
+        //        myOtos = hardwareMap.get(
+        //            SparkFunOTOS.class,
+        //            Pedro.Config.Localizer.OTOSConfig.hardwareName
+        //        );
 
         // All the configuration for the OTOS is done in this helper method, check it out!
         configureOtos();

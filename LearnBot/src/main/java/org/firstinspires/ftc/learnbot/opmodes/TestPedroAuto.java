@@ -26,6 +26,7 @@ public class TestPedroAuto extends CommandOpMode {
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Net);
+        /*
         TestPaths p = new TestPaths(Pedro.getFollower());
         CommandScheduler.scheduleOnceForState(
             () -> Pedro.getFollower().setStartingPose(p.getStart()),
@@ -43,6 +44,7 @@ public class TestPedroAuto extends CommandOpMode {
             ),
             OpModeState.RUN
         );
+         */
     }
 
     public void uponStart() {
