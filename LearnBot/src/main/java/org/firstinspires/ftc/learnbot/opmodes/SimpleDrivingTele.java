@@ -25,34 +25,7 @@ public class SimpleDrivingTele extends LinearOpMode {
         rr.setDirection(Direction.FORWARD);
         waitForStart();
         while (opModeIsActive()) {
-            double fwdBack = gamepad1.left_stick_y;
-            double strafe = gamepad1.left_stick_x;
-            double rotate = gamepad1.right_stick_x;
-            double fbMagnitude = Math.abs(fwdBack);
-            double sMagnitude = Math.abs(strafe);
-            double rMagnitude = Math.abs(rotate);
-            if (fbMagnitude >= sMagnitude && fbMagnitude >= rMagnitude) {
-                // We're driving forward/backward: Move all wheels in the same direction
-                fl.setPower(fwdBack);
-                fr.setPower(fwdBack);
-                rl.setPower(fwdBack);
-                rr.setPower(fwdBack);
-            } else if (sMagnitude >= fbMagnitude && sMagnitude >= rMagnitude) {
-                // We're strafing left/right: Move opposite corners in the same direction
-                fl.setPower(strafe);
-                rr.setPower(strafe);
-                fr.setPower(-strafe);
-                rl.setPower(-strafe);
-            } else {
-                // We're rotating:: Opposite sides move in opposite directions
-                fl.setPower(rotate);
-                rl.setPower(rotate);
-                fr.setPower(-rotate);
-                rr.setPower(-rotate);
-            }
-            telemetry.addData("forward/backward", fwdBack);
-            telemetry.addData("strafe", strafe);
-            telemetry.addData("rotate", rotate);
+            telemetry.addData("info", 1);
             telemetry.update();
         }
     }
