@@ -28,13 +28,13 @@ public class MoveForward extends CommandOpMode {
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Net);
         SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
         otos.calibrateImu();
-        robot.follower = AutoConstants.createFollower(hardwareMap);
+        // robot.follower = AutoConstants.createFollower(hardwareMap);
         //robot.drivebase.setPoseEstimate(AutoConstants.BACKWARD.toPose());
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new DriveAutoCommand(robot.follower, 0.5),
+                new DriveAutoCommand(robot.follower, 0.5, 0),
                 new WaitCommand(0.3),
-                new DriveAutoCommand(robot.follower, 0),
+                new DriveAutoCommand(robot.follower, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
@@ -49,7 +49,7 @@ public class MoveForward extends CommandOpMode {
 
     @Override
     public void runLoop() {
-        telemetry.addData("Pose:", robot.follower.getPose());
+        telemetry.addData("Pose:", robot.follower.pose());
         //        if (robot.follower.getHeading() != robot.follower.getCurrentPath().getPose()) {}
         robot.follower.update();
     }

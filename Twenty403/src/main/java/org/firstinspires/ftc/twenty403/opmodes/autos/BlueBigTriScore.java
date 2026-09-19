@@ -9,9 +9,7 @@ import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.twenty403.Hardware;
-import org.firstinspires.ftc.twenty403.Paths;
 import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.Setup;
 import org.firstinspires.ftc.twenty403.commands.FeedCMD;
@@ -25,7 +23,8 @@ public class BlueBigTriScore extends CommandOpMode {
 
     public Robot robot;
     public Hardware hardware;
-    private Paths p;
+
+    // private Paths p;
 
     @Override
     public void uponInit() {
@@ -34,7 +33,7 @@ public class BlueBigTriScore extends CommandOpMode {
         SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
         otos.calibrateImu();
         //        robot.follower = AutoConstants.createFollower(hardwareMap);
-        p = new Paths(robot.follower);
+        // p = new Paths(robot.follower);
         //        Pose start = p.start.setHeading(Math.toRadians(37));
         //        robot.follower.setPose(p.start);
         //        telemetry.addData("Pose:", robot.follower.getPose());
@@ -43,11 +42,11 @@ public class BlueBigTriScore extends CommandOpMode {
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
                 FeedCMD.Feed(robot),
-                new DriveAutoCommand(robot.follower, -.5),
+                new DriveAutoCommand(robot.follower, -0.5, 0),
                 new WaitCommand(.3),
-                new DriveAutoCommand(robot.follower, -.5, .5, .5, -.5),
+                new DriveAutoCommand(robot.follower, 0, 0.5),
                 new WaitCommand(.9),
-                new DriveAutoCommand(robot.follower, 0),
+                new DriveAutoCommand(robot.follower, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN

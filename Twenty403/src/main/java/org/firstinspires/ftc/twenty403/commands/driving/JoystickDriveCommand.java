@@ -162,7 +162,7 @@ public class JoystickDriveCommand implements Command, Loggable {
     public void execute() {
         // If subsystem is busy it is running a trajectory.
         if (!follower.isBusy()) {
-            double curHeading = -follower.getHeading();
+            double curHeading = -follower.pose().heading();
 
             // The math & signs looks wonky, because this makes things field-relative
             // (Remember that "3 O'Clock" is zero degrees)
