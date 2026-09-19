@@ -22,7 +22,6 @@ import com.technototes.library.util.Alliance;
 import com.technototes.library.util.HeadingHelper;
 import java.util.Arrays;
 import java.util.List;
-import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.twenty403.Hardware;
 import org.firstinspires.ftc.twenty403.Robot;
@@ -90,7 +89,7 @@ public class JustDrivingTeleOp extends CommandOpMode {
         if (Setup.Connected.LAUNCHER) {
             CommandScheduler.register(robot.launcherSubsystem);
         }
-        if (Setup.Connected.FEED) {
+        if (Setup.Connected.INTAKE) {
             CommandScheduler.register(robot.feedingSubsystem);
         }
         telemetry.addData(">", "Robot Ready.  Press Play.");

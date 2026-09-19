@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.twenty403.controls;
 
-import static org.firstinspires.ftc.twenty403.Setup.HardwareNames.LIMELIGHT;
-
-import com.pedropathing.follower.Follower;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.technototes.library.command.CommandScheduler;
-import com.technototes.library.command.CycleCommandGroup;
 import com.technototes.library.control.CommandAxis;
 import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
@@ -15,10 +10,7 @@ import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.Setup;
 import org.firstinspires.ftc.twenty403.commands.EZCmd;
 import org.firstinspires.ftc.twenty403.commands.FeedCMD;
-import org.firstinspires.ftc.twenty403.commands.LLPipelineChangeCommand;
-import org.firstinspires.ftc.twenty403.commands.auto.DriveAutoCommand;
 import org.firstinspires.ftc.twenty403.commands.driving.JoystickDriveCommand;
-import org.firstinspires.ftc.twenty403.subsystems.LauncherSubsystem;
 
 public class DriverController {
 
@@ -66,7 +58,7 @@ public class DriverController {
         if (Setup.Connected.LAUNCHER) {
             bindLaunchControls();
         }
-        if (Setup.Connected.FEED) {
+        if (Setup.Connected.INTAKE) {
             bindFeedControls();
         }
         if (Setup.Connected.LIMELIGHT) {

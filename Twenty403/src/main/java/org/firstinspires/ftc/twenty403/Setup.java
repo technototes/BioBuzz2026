@@ -1,9 +1,6 @@
 package org.firstinspires.ftc.twenty403;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.technototes.library.logger.Log;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class Setup {
 
@@ -15,7 +12,7 @@ public class Setup {
         public static boolean SAFETYSUBSYSTEM = false;
         public static boolean EXTERNALIMU = true;
         public static boolean LAUNCHER = true;
-        public static boolean FEED = true;
+        public static boolean INTAKE = true;
         public static boolean LIMELIGHT = false;
         public static boolean OTOS = true;
     }
@@ -30,9 +27,9 @@ public class Setup {
         public static String IMU = "imu";
         public static String EXTERNALIMU = "adafruit-imu";
         public static String OCTOQUAD = "octoquad";
-        public static String TOP = "top";
-        public static String BOTTOML = "bottoml";
-        public static String BOTTOMR = "bottomr";
+        public static String LAUNCHER = "top";
+        public static String LEFTINTAKE = "bottoml";
+        public static String RIGHTINTAKE = "bottomr";
         public static String OTOS = "sparky";
         public static String LIMELIGHT = "limelight";
         public static String TESTSERVO = "testservo";
