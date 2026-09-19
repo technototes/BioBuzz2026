@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.hardware.motor.CRServo;
+import com.technototes.library.hardware.motor.Motor;
 import com.technototes.library.hardware.motor.MotorPlus;
 import com.technototes.library.logger.Log;
 import com.technototes.library.logger.Loggable;
@@ -70,8 +71,8 @@ public class IntakeSubsystem implements Loggable, Subsystem {
 
     public static double intakespike = 0; //the current it goes to when a ball is intake - will test and see
 
-    MotorPlus intake;
-    MotorPlus transfer;
+    Motor<DcMotorEx> intake;
+    MotorPlus<DcMotorEx> transfer;
     CRServo gobbleServo;
     CRServo gulpServo;
 
@@ -81,9 +82,6 @@ public class IntakeSubsystem implements Loggable, Subsystem {
         // Do stuff in here
         if (hasHardware) {
             intake = h.intake;
-            transfer = h.intake2;
-            gobbleServo = h.gobbleServo;
-            gulpServo = h.gulpServo;
             intakecurrent = getIntakeCurrent();
             transfercurrent = getTransferCurrent();
             CommandScheduler.register(this);

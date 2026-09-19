@@ -68,8 +68,6 @@ public class AutoConstants {
     @Configurable
     public static class TwoWheelConfig {
 
-        public static String forwardName = HardwareNames.ODOFB;
-        public static String strafeName = HardwareNames.ODORL;
         public static double forwardTicksToInches = ((17.5 / 25.4) * 2 * Math.PI) / 8192; // 5.42, 5.47, 5.49
         public static double strafeTicksToInches = ((17.5 / 25.4) * 2 * Math.PI) / 8192; // 5.37, 5.39, 5.38
         public static double forwardPodYOffset = -3.9; // From Colin's CAD 10/31
