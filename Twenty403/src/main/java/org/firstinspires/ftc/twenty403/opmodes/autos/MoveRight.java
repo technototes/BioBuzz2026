@@ -10,7 +10,6 @@ import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
 import com.technototes.library.util.HeadingHelper;
-import org.firstinspires.ftc.twenty403.AutoConstants;
 import org.firstinspires.ftc.twenty403.Hardware;
 import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.Setup;
