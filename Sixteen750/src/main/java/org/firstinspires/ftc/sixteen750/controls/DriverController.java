@@ -6,17 +6,12 @@ import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
 import com.technototes.library.control.Stick;
 import com.technototes.library.logger.Loggable;
-import com.technototes.library.util.Alliance;
 import org.firstinspires.ftc.sixteen750.Hardware;
 import org.firstinspires.ftc.sixteen750.Robot;
 import org.firstinspires.ftc.sixteen750.Setup;
-import org.firstinspires.ftc.sixteen750.commands.AltAutoOrient;
 import org.firstinspires.ftc.sixteen750.commands.PedroDriver;
 import org.firstinspires.ftc.sixteen750.commands.TeleCommands;
-import org.firstinspires.ftc.sixteen750.commands.auto.DriveAutoCommand;
-import org.firstinspires.ftc.sixteen750.commands.auto.Paths;
 import org.firstinspires.ftc.sixteen750.commands.driving.DrivingCommands;
-import org.firstinspires.ftc.sixteen750.subsystems.LimelightSubsystem;
 
 public class DriverController implements Loggable {
 
@@ -151,13 +146,13 @@ public class DriverController implements Loggable {
     }
 
     public void bindLaunchControls() {
-        launchButton.whilePressed(TeleCommands.Launch(robot));
-        launchButton.whileReleased(TeleCommands.IdleLaunch(robot));
+        // launchButton.whilePressed(TeleCommands.Launch(robot));
+        // launchButton.whileReleased(TeleCommands.IdleLaunch(robot));
         //        CloseShoot.whenPressed(TeleCommands.SetCloseShoot(robot));
         //        FarShoot.whenPressed(TeleCommands.SetFarShoot(robot));
-        MotorIncrease.whenPressed(robot.launcherSubsystem::IncreaseMotorVelocity);
-        MotorDecrease.whenPressed(robot.launcherSubsystem::DecreaseMotorVelocity);
-        increaseD.whenPressed(robot.launcherSubsystem::increaseRegressionDTeleop);
+        // MotorIncrease.whenPressed(robot.launcherSubsystem::IncreaseMotorVelocity);
+        // MotorDecrease.whenPressed(robot.launcherSubsystem::DecreaseMotorVelocity);
+        // increaseD.whenPressed(robot.launcherSubsystem::increaseRegressionDTeleop);
     }
 
     public void bindIntakeControls() {
@@ -173,9 +168,11 @@ public class DriverController implements Loggable {
     // spitTrigger.whileReleased(TeleCommands.Intake(robot.intakeSubsystem));
 
     public void bindBrakeControls() {
+        /*
         brakeButton.whilePressed(TeleCommands.EngageBrake(robot));
         brakeButton.whilePressed(TeleCommands.StopLaunch(robot));
         brakeButton.whenReleased(TeleCommands.DisengageBrake(robot));
+         */
     }
 
     public void bindAimControls() {
@@ -188,15 +185,15 @@ public class DriverController implements Loggable {
         //     TeleCommands.LeverGo(robot.aimingSubsystem));
         //     yippee = true;
         // }
-        gateButton.whenPressed(TeleCommands.GateDown(robot));
+        // gateButton.whenPressed(TeleCommands.GateDown(robot));
         gateButton.whenPressed(TeleCommands.Feed(robot));
         gateButton.whenReleased(TeleCommands.IntakeStop(robot));
-        gateButton.whenReleased(TeleCommands.GateUp(robot));
+        // gateButton.whenReleased(TeleCommands.GateUp(robot));
 
         //
         holdButton.whilePressed(TeleCommands.Intake(robot));
-        holdButton.whenPressed(TeleCommands.GateDown(robot));
+        // holdButton.whenPressed(TeleCommands.GateDown(robot));
         holdButton.whenReleased(TeleCommands.IntakeStop(robot));
-        holdButton.whenReleased(TeleCommands.GateUp(robot));
+        //holdButton.whenReleased(TeleCommands.GateUp(robot));
     }
 }

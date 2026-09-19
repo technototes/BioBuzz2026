@@ -1,43 +1,41 @@
 package org.firstinspires.ftc.sixteen750.commands;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
 import com.technototes.library.command.Command;
 import org.firstinspires.ftc.sixteen750.Setup;
 
 public class PedroPathCommand implements Command {
 
-    public PathChain pathChain;
+    public Path pathChain;
     public Follower follower;
     public Pose begin;
     public double maxPowerScaling;
     public boolean currentPose;
     public boolean brake;
 
-    public PedroPathCommand(Follower f, PathChain p, double maxPower) {
+    public PedroPathCommand(Follower f, Path p, double maxPower) {
         follower = f;
         pathChain = p;
-        maxPowerScaling = maxPower;
         currentPose = false;
         begin = null;
         brake = false;
     }
 
-    public PedroPathCommand(Follower f, PathChain p, double maxPower, boolean b) {
+    public PedroPathCommand(Follower f, Path p, double maxPower, boolean b) {
         follower = f;
         pathChain = p;
-        maxPowerScaling = maxPower;
         currentPose = false;
         begin = null;
         brake = b;
     }
 
-    public PedroPathCommand(Follower f, PathChain p) {
+    public PedroPathCommand(Follower f, Path p) {
         this(f, p, 0);
     }
 
-    public PedroPathCommand(Follower f, Pose startPose, PathChain p, double maxPower) {
+    public PedroPathCommand(Follower f, Pose startPose, Path p, double maxPower) {
         follower = f;
         pathChain = p;
         currentPose = true;
@@ -45,7 +43,7 @@ public class PedroPathCommand implements Command {
         maxPowerScaling = maxPower;
     }
 
-    public PedroPathCommand(Follower f, PathChain p, boolean currPose, double maxPower) {
+    public PedroPathCommand(Follower f, Path p, boolean currPose, double maxPower) {
         follower = f;
         pathChain = p;
         currentPose = currPose;
@@ -53,26 +51,22 @@ public class PedroPathCommand implements Command {
         maxPowerScaling = maxPower;
     }
 
-    public PedroPathCommand(Follower f, Pose startPose, PathChain p) {
+    public PedroPathCommand(Follower f, Pose startPose, Path p) {
         this(f, startPose, p, 0);
     }
 
-    public PedroPathCommand(Follower f, PathChain p, boolean currPose) {
+    public PedroPathCommand(Follower f, Path p, boolean currPose) {
         this(f, p, currPose, 0);
     }
 
     @Override
     public void initialize() {
         // I'm not sure we want to do this here...
-        follower.setMaxPowerScaling(Setup.OtherSettings.AUTO_SCALING);
+        // follower.setMaxPowerScaling(Setup.OtherSettings.AUTO_SCALING);
         if (currentPose) {
-            follower.setStartingPose(begin == null ? follower.getPose() : begin);
+            follower.setPose(begin == null ? follower.pose() : begin);
         }
-        if (maxPowerScaling > 0) {
-            follower.followPath(pathChain, maxPowerScaling, false);
-        } else {
-            follower.followPath(pathChain);
-        }
+        follower.follow(pathChain);
     }
 
     @Override

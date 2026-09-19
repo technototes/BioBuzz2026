@@ -6,7 +6,6 @@ import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.learnbot.Hardware;
 import org.firstinspires.ftc.learnbot.Robot;
 import org.firstinspires.ftc.learnbot.TestPaths;
@@ -51,7 +50,5 @@ public class TestPedroAuto extends CommandOpMode {
         robot.atStart();
     }
 
-    public void end() {
-        HeadingHelper.SaveCurrentPosition(Pedro.getFollower());
-    }
+    public void end() {}
 }

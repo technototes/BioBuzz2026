@@ -128,15 +128,17 @@ public class OperatorController {
     }
 
     public void bindLaunchControls() {
+        /*
         launchButton.whilePressed(TeleCommands.Launch(robot));
         launchButton.whenReleased(TeleCommands.StopLaunch(robot));
         //        CloseShoot.whenPressed(TeleCommands.SetCloseShoot(robot));
         //        FarShoot.whenPressed(TeleCommands.SetFarShoot(robot));
-        MotorIncrease.whenPressed(robot.launcherSubsystem::IncreaseMotorVelocity);
-        MotorDecrease.whenPressed(robot.launcherSubsystem::DecreaseMotorVelocity);
-        increaseD.whenPressed(robot.launcherSubsystem::increaseRegressionDTeleop);
+        // MotorIncrease.whenPressed(robot.launcherSubsystem::IncreaseMotorVelocity);
+        // MotorDecrease.whenPressed(robot.launcherSubsystem::DecreaseMotorVelocity);
+        // increaseD.whenPressed(robot.launcherSubsystem::increaseRegressionDTeleop);
         OutreachLaunchButton.whenPressed(TeleCommands.OutreachLaunch(robot));
         OutreachLaunchFarButton.whenPressed(TeleCommands.OutreachLaunchFar(robot));
+        */
     }
 
     public void bindIntakeControls() {
@@ -144,15 +146,15 @@ public class OperatorController {
         spitButton.whenReleased(TeleCommands.IntakeStop(robot));
         intakeTrigger.whenPressed(TeleCommands.Intake(robot));
         intakeTrigger.whenReleased(TeleCommands.IntakeStop(robot));
-        RumbleToggle.toggle(TeleCommands.Rumble(robot), TeleCommands.RumbleOff(robot));
+        // RumbleToggle.toggle(TeleCommands.Rumble(robot), TeleCommands.RumbleOff(robot));
     }
 
     // spitTrigger.whilePressed(TeleCommands.Spit(robot.intakeSubsystem));
     // spitTrigger.whileReleased(TeleCommands.Intake(robot.intakeSubsystem));
 
     public void bindBrakeControls() {
-        brakeButton.whilePressed(TeleCommands.EngageBrake(robot));
-        brakeButton.whenReleased(TeleCommands.DisengageBrake(robot));
+        // brakeButton.whilePressed(TeleCommands.EngageBrake(robot));
+        // brakeButton.whenReleased(TeleCommands.DisengageBrake(robot));
     }
 
     public void bindAimControls() {
@@ -165,8 +167,8 @@ public class OperatorController {
         //     TeleCommands.LeverGo(robot.aimingSubsystem));
         //     yippee = true;
         // }
-        gateButton.whenPressed(TeleCommands.GateDown(robot));
-        gateButton.whenReleased(TeleCommands.GateUp(robot));
+        //        gateButton.whenPressed(TeleCommands.GateDown(robot));
+        //        gateButton.whenReleased(TeleCommands.GateUp(robot));
 
         //
         holdButton.whilePressed(TeleCommands.HoldIntake(robot));

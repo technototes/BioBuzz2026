@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.learnbot.components;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo.Direction;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -78,8 +78,8 @@ public class Gimbal {
     // This doesn't support  movement yet, but *does* implement the TargetAcquisition interface
     public static class Component implements Subsystem, Loggable, TargetAcquisition {
 
-        private final Servo yaw, pitch;
-        private final TargetAcquisition camera;
+        private final Servo _yaw, _pitch;
+        private final TargetAcquisition _camera;
 
         // Things I want the gimbal to do:
         // Track a target when it's visible (as it moves, follow it, unless you can't
@@ -87,15 +87,15 @@ public class Gimbal {
         // Scan in the direction where it thinks a target might be? This one is iffy.
         // Indicate where a target is currently located, offset from the Vision subsystem/component
         public Component(Servo yawServo, Servo pitchServo, TargetAcquisition vision) {
-            yaw = yawServo;
-            pitch = pitchServo;
-            if (yaw != null) {
-                yaw.setInverted(Config.Yaw.flip);
+            _yaw = yawServo;
+            _pitch = pitchServo;
+            if (_yaw != null) {
+                _yaw.setInverted(Config.Yaw.flip);
             }
-            if (pitch != null) {
-                pitch.setInverted(Config.Pitch.flip);
+            if (_pitch != null) {
+                _pitch.setInverted(Config.Pitch.flip);
             }
-            camera = vision;
+            _camera = vision;
             CommandScheduler.register(this);
         }
 
@@ -111,15 +111,15 @@ public class Gimbal {
 
         @Override
         public double getHorizontalPosition() {
-            double fromCamera = camera.getHorizontalPosition();
-            double gimbalPosition = yaw.getPosition();
+            double fromCamera = _camera.getHorizontalPosition();
+            double gimbalPosition = _yaw.getPosition();
             return Config.Yaw.Adjust(fromCamera, gimbalPosition);
         }
 
         @Override
         public double getVerticalPosition() {
-            double fromCamera = camera.getVerticalPosition();
-            double gimbalPosition = pitch.getPosition();
+            double fromCamera = _camera.getVerticalPosition();
+            double gimbalPosition = _pitch.getPosition();
             return Config.Pitch.Adjust(fromCamera, gimbalPosition);
         }
 
@@ -138,8 +138,8 @@ public class Gimbal {
         //  target *scanning* when a target isn't visible
         @Override
         public void periodic() {
-            double vert = camera.getVerticalPosition();
-            double horiz = camera.getHorizontalPosition();
+            double vert = _camera.getVerticalPosition();
+            double horiz = _camera.getHorizontalPosition();
             if (Double.isNaN(vert) || Double.isNaN(horiz)) {
                 if (curState == State.Unknown || curState == State.Following) {
                     curState = State.Scanning_Start;
@@ -174,7 +174,7 @@ public class Gimbal {
     //  This would entail watching a target and moving the gimbal to measure how far
     //  each movement changes the position of the target.
 
-    @TeleOp(name = "Gimbal Testing")
+    @Autonomous(name = "Gimbal Testing")
     public static class TestingOpMode extends ValidationOpMode {
 
         // Hardware

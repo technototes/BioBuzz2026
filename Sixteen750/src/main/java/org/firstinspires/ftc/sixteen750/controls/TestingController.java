@@ -31,7 +31,7 @@ public class TestingController {
     }
 
     private void bindButtonControls() {
-        motorPowerButton.whenPressed(TeleCommands.MotorPowerTest(robot));
-        motorVelocityButton.whenPressed(TeleCommands.MotorVelocityTest(robot));
+        //        motorVelocityButton.whenPressed(TeleCommands.MotorVelocityTest(robot));
+        //        motorPowerButton.whenPressed(TeleCommands.MotorPowerTest(robot));
     }
 }

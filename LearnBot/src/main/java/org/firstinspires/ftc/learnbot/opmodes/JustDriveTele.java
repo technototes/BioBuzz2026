@@ -11,7 +11,6 @@ import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.logger.Loggable;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.learnbot.Hardware;
 import org.firstinspires.ftc.learnbot.Robot;
 import org.firstinspires.ftc.learnbot.components.Pedro;
@@ -37,7 +36,7 @@ public class JustDriveTele extends CommandOpMode implements Loggable {
         hardware.follower.update();
         robot = new Robot(hardware, Alliance.NONE, StartingPosition.Unspecified);
         controls = new DriverController(driverGamepad, robot);
-        CommandScheduler.scheduleInit(HeadingHelper.RestorePreviousPosition(Pedro.getFollower()));
+        // CommandScheduler.scheduleInit(HeadingHelper.RestorePreviousPosition(Pedro.getFollower()));
         CommandScheduler.scheduleJoystick(controls.stickDriver);
     }
 

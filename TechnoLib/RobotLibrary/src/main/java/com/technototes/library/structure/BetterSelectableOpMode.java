@@ -1,4 +1,4 @@
-package com.technototes.library.structure;
+/*package com.technototes.library.structure;
 
 import com.pedropathing.telemetry.SelectScope;
 import com.pedropathing.telemetry.Selector;
@@ -128,3 +128,4 @@ public abstract class BetterSelectableOpMode extends OpMode {
         }
     }
 }
+*/

@@ -49,9 +49,6 @@ public class Hardware implements Loggable {
             rr = new EncodedMotor<>(Pedro.Config.RRMOTOR);
             follower = Pedro.createFollower(hwmap);
         }
-        if (Setup.Connected.OTOS) {
-            // odo = hwmap.get(SparkFunOTOS.class, Pedro.Config.Localizer.OTOSConfig.hardwareName);
-        }
         if (Setup.Connected.LIMELIGHT) {
             limelight = hwmap.get(Limelight3A.class, HardwareNames.LIMELIGHT);
         }

@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.firstinspires.ftc:Hardware:12.0.0'
     implementation 'org.firstinspires.ftc:FtcCommon:12.0.0'
     implementation 'org.firstinspires.ftc:Vision:12.0.0'
-    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     // Freik: 16750/20403 external dependencies:
     // TechnoLib: This should be commented out to use a local source copy
@@ -34,5 +34,5 @@ dependencies {
     implementation 'com.pedropathing:revhub:3.0.0'
     implementation 'com.pedropathing:tuning:1.0.0'
     implementation 'com.bylazar:fullpanels:1.0.12'
-    implementation 'com.acmerobotics.dashboard:dashboard:0.6.0'
+    // implementation 'com.acmerobotics.dashboard:dashboard:0.6.0'
 }

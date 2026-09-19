@@ -3,7 +3,7 @@ package org.firstinspires.ftc.sixteen750.subsystems;
 import static org.firstinspires.ftc.sixteen750.Setup.HardwareNames.AprilTag_Pipeline;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
@@ -13,7 +13,6 @@ import com.technototes.library.logger.Log;
 import com.technototes.library.logger.Loggable;
 import com.technototes.library.subsystem.Subsystem;
 import com.technototes.library.util.Alliance;
-
 import java.sql.Time;
 import java.util.List;
 import java.util.Timer;

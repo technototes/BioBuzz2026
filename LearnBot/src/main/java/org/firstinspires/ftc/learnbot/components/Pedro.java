@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.learnbot.components;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
