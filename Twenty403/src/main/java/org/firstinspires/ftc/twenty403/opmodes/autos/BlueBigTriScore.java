@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.twenty403.opmodes.autos;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.geometry.Pose;
+//import com.pedropathing.geometry.Pose;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.technototes.library.command.CommandScheduler;
@@ -9,10 +9,7 @@ import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
-import org.firstinspires.ftc.twenty403.AutoConstants;
 import org.firstinspires.ftc.twenty403.Hardware;
-import org.firstinspires.ftc.twenty403.Paths;
 import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.Setup;
 import org.firstinspires.ftc.twenty403.commands.FeedCMD;
@@ -26,7 +23,8 @@ public class BlueBigTriScore extends CommandOpMode {
 
     public Robot robot;
     public Hardware hardware;
-    private Paths p;
+
+    // private Paths p;
 
     @Override
     public void uponInit() {
@@ -34,21 +32,21 @@ public class BlueBigTriScore extends CommandOpMode {
         robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
         SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
         otos.calibrateImu();
-        robot.follower = AutoConstants.createFollower(hardwareMap);
-        p = new Paths(robot.follower);
-        Pose start = p.start.setHeading(Math.toRadians(37));
-        robot.follower.setPose(p.start);
-        telemetry.addData("Pose:", robot.follower.getPose());
+        //        robot.follower = AutoConstants.createFollower(hardwareMap);
+        // p = new Paths(robot.follower);
+        //        Pose start = p.start.setHeading(Math.toRadians(37));
+        //        robot.follower.setPose(p.start);
+        //        telemetry.addData("Pose:", robot.follower.getPose());
         robot.follower.update();
         CommandScheduler.register(robot.launcherSubsystem);
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
                 FeedCMD.Feed(robot),
-                new DriveAutoCommand(robot.follower, -.5),
+                new DriveAutoCommand(robot.follower, -0.5, 0),
                 new WaitCommand(.3),
-                new DriveAutoCommand(robot.follower, -.5, .5, .5, -.5),
+                new DriveAutoCommand(robot.follower, 0, 0.5),
                 new WaitCommand(.9),
-                new DriveAutoCommand(robot.follower, 0),
+                new DriveAutoCommand(robot.follower, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
@@ -57,7 +55,7 @@ public class BlueBigTriScore extends CommandOpMode {
 
     @Override
     public void initLoop() {
-        telemetry.addData("Pose:", robot.follower.getPose());
+        //        telemetry.addData("Pose:", robot.follower.getPose());
         robot.follower.update();
     }
 
@@ -68,12 +66,12 @@ public class BlueBigTriScore extends CommandOpMode {
     }
 
     public void end() {
-        HeadingHelper.savePose(robot.follower.getPose());
+        //        HeadingHelper.savePose(robot.follower.getPose());
     }
 
     @Override
     public void runLoop() {
-        telemetry.addData("Pose:", robot.follower.getPose());
+        //        telemetry.addData("Pose:", robot.follower.getPose());
         //        if (robot.follower.getHeading() != robot.follower.getCurrentPath().getPose()) {}
         robot.follower.update();
     }

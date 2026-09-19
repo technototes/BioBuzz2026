@@ -8,8 +8,7 @@ import com.bylazar.gamepad.GamepadManager;
 import com.bylazar.gamepad.PanelsGamepad;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.LLStatus;
@@ -25,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.Supplier;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.twenty403.AutoConstants;
 import org.firstinspires.ftc.twenty403.Hardware;
 import org.firstinspires.ftc.twenty403.Robot;
 import org.firstinspires.ftc.twenty403.Setup;
@@ -50,7 +48,6 @@ public class JustDrivingTeleOp extends CommandOpMode {
 
     private Limelight3A limelight;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
-    private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
     private double slowModeMultiplier = 0.5;
 
@@ -66,9 +63,6 @@ public class JustDrivingTeleOp extends CommandOpMode {
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
         robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
-        robot.follower = AutoConstants.createFollower(hardwareMap);
-        robot.follower.setStartingPose(robot.follower.getPose());
-        robot.follower.update();
         controlsOperator = new OperatorController(codriverGamepad, robot);
         SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
         otos.calibrateImu();
@@ -101,12 +95,10 @@ public class JustDrivingTeleOp extends CommandOpMode {
         }
         telemetry.addData(">", "Robot Ready.  Press Play.");
         telemetry.update();
-        robot.follower.setMaxPowerScaling(.75);
     }
 
     @Override
     public void uponStart() {
-        robot.follower.startTeleopDrive();
         robot.atStart();
     }
 
@@ -116,12 +108,6 @@ public class JustDrivingTeleOp extends CommandOpMode {
         // telemetry.update();
         robot.follower.update();
 
-        robot.follower.setTeleOpDrive(
-            -gamepad1.left_stick_y,
-            -gamepad1.left_stick_x,
-            -gamepad1.right_stick_x,
-            false // Robot Centric
-        );
         LLStatus status = null;
         if (Setup.Connected.LIMELIGHT) {
             status = limelight.getStatus();
