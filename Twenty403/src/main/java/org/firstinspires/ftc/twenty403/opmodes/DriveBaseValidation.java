@@ -5,9 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.technototes.library.hardware.motor.CRServo;
 import org.firstinspires.ftc.twenty403.Setup;
-import org.firstinspires.ftc.twenty403.subsystems.TestSubsystem;
 
 @Configurable
 @TeleOp(name = "Drivebase Testbed")
@@ -15,11 +13,10 @@ public class DriveBaseValidation extends LinearOpMode {
 
     public static double motorPower = 0.2;
     public static double triggerThreshold = 0.1;
-    public TestSubsystem ts;
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // First, get the hardward
+        // First, get the hardware
         DcMotorEx fr, fl, rr, rl, launch;
         com.qualcomm.robotcore.hardware.CRServo bl, br;
         if (Setup.Connected.DRIVEBASE) {
@@ -38,18 +35,18 @@ public class DriveBaseValidation extends LinearOpMode {
             rr = null;
         }
         if (Setup.Connected.LAUNCHER) {
-            launch = this.hardwareMap.get(DcMotorEx.class, Setup.HardwareNames.TOP);
+            launch = this.hardwareMap.get(DcMotorEx.class, Setup.HardwareNames.LAUNCHER);
         } else {
             launch = null;
         }
-        if (Setup.Connected.FEED) {
+        if (Setup.Connected.INTAKE) {
             bl = this.hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo.class,
-                Setup.HardwareNames.BOTTOML
+                Setup.HardwareNames.LEFTINTAKE
             );
             br = this.hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo.class,
-                Setup.HardwareNames.BOTTOMR
+                Setup.HardwareNames.RIGHTINTAKE
             );
         } else {
             bl = null;
@@ -93,7 +90,7 @@ public class DriveBaseValidation extends LinearOpMode {
                 }
                 telemetry.addData("launch", gamepad1.cross);
             }
-            if (Setup.Connected.FEED) {
+            if (Setup.Connected.INTAKE) {
                 if (gamepad1.square) {
                     br.setPower(-1);
                 } else {

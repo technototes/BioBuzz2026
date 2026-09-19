@@ -45,7 +45,7 @@ public class LauncherSubsystem implements Loggable, Subsystem {
         hasHardware = Setup.Connected.LAUNCHER;
         // Do stuff in here
         if (hasHardware) {
-            top = h.top;
+            top = h.launcher;
             top.coast();
             double ADDITION = PEAK_VOLTAGE - h.voltage();
             if (ADDITION == 0) {

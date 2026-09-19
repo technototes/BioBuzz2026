@@ -25,8 +25,8 @@ public class FeedingSubsystem implements Subsystem {
         hasHardware = Setup.Connected.LAUNCHER;
         // Do stuff in here
         if (hasHardware) {
-            bottomLeft = h.bottomLeft;
-            bottomRight = h.bottomRight;
+            bottomLeft = h.leftIntakeServo;
+            bottomRight = h.rightIntakeServo;
             this.h = h;
         } else {
             bottomLeft = null;
@@ -44,8 +44,8 @@ public class FeedingSubsystem implements Subsystem {
             //                return;
             //            }
             if (
-                (h.top.getVelocity() >= TARGET_MOTOR_VELOCITY - 20 &&
-                    h.top.getVelocity() < TARGET_MOTOR_VELOCITY + 50) ||
+                (h.launcher.getVelocity() >= TARGET_MOTOR_VELOCITY - 20 &&
+                    h.launcher.getVelocity() < TARGET_MOTOR_VELOCITY + 50) ||
                 err < 80
             ) {
                 bottomRight.setPower(-CRSERVO_SPEED);
