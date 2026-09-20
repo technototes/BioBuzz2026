@@ -1,7 +1,7 @@
 package com.technototes.library.util;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Pose;
 import com.technototes.library.command.Command;
 
 public class HeadingHelper {
@@ -25,7 +25,7 @@ public class HeadingHelper {
     }
 
     public static Command SaveCurrentPosition(Follower f) {
-        return Command.create(() -> savePose(f.getPose()));
+        return Command.create(() -> savePose(f.pose()));
     }
 
     public static Command RestorePreviousPosition(Follower f) {
@@ -38,7 +38,7 @@ public class HeadingHelper {
     }
 
     public static void savePose(Pose p) {
-        saveHeading(p.getX(), p.getY(), p.getHeading());
+        saveHeading(p.x(), p.y(), p.heading());
     }
 
     public static Pose getSavedPose() {

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.sixteen750.opmodes;
 import static org.firstinspires.ftc.sixteen750.Setup.HardwareNames.AprilTag_Pipeline;
 
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.technototes.library.command.CommandScheduler;
@@ -15,13 +16,10 @@ import org.firstinspires.ftc.sixteen750.Hardware;
 import org.firstinspires.ftc.sixteen750.Robot;
 import org.firstinspires.ftc.sixteen750.Setup;
 import org.firstinspires.ftc.sixteen750.commands.TeleCommands;
-import org.firstinspires.ftc.sixteen750.commands.auto.Paths;
 import org.firstinspires.ftc.sixteen750.commands.driving.DrivingCommands;
 import org.firstinspires.ftc.sixteen750.controls.DriverController;
 import org.firstinspires.ftc.sixteen750.controls.OperatorController;
 import org.firstinspires.ftc.sixteen750.helpers.StartingPosition;
-import org.firstinspires.ftc.sixteen750.subsystems.LauncherSubsystem;
-import org.firstinspires.ftc.sixteen750.subsystems.LimelightSubsystem;
 
 @TeleOp(name = "BlueTele")
 @SuppressWarnings("unused")
@@ -40,7 +38,7 @@ public class BlueTele extends CommandOpMode implements Loggable {
         robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
         // controlsOperator = new OperatorController(codriverGamepad, robot);
         panelsTelemetry = PanelsTelemetry.INSTANCE;
-        robot.follower.setStartingPose(Paths.getBSegmentedCurveStart());
+        robot.follower.setPose(new Pose(0, 0, 0) /*Paths.getBSegmentedCurveStart()*/);
         // limelight = hardwareMap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
         if (Setup.Connected.DRIVEBASE) {
             controlsDriver = new DriverController(driverGamepad, robot);
@@ -50,9 +48,7 @@ public class BlueTele extends CommandOpMode implements Loggable {
             CommandScheduler.scheduleForState(
                 new SequentialCommandGroup(
                     HeadingHelper.RestorePreviousPosition(robot.follower),
-                    DrivingCommands.ResetGyro(controlsDriver.pedroDriver),
-                    TeleCommands.SetRegressionCTeleop(robot),
-                    TeleCommands.SetRegressionDTeleop(robot)
+                    DrivingCommands.ResetGyro(controlsDriver.pedroDriver)
                 ),
                 OpModeState.INIT
             );
@@ -76,7 +72,7 @@ public class BlueTele extends CommandOpMode implements Loggable {
             limelight.start();
         }
         if (Setup.Connected.LAUNCHERSUBSYSTEM) {
-            CommandScheduler.register(robot.launcherSubsystem);
+            // CommandScheduler.register(robot.launcherSubsystem);
         }
     }
 

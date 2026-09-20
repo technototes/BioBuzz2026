@@ -10,7 +10,6 @@ import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.sixteen750.Hardware;
 import org.firstinspires.ftc.sixteen750.Robot;
 import org.firstinspires.ftc.sixteen750.commands.PedroPathCommand;
-import org.firstinspires.ftc.sixteen750.commands.auto.LinePaths;
 import org.firstinspires.ftc.sixteen750.controls.DriverController;
 import org.firstinspires.ftc.sixteen750.helpers.StartingPosition;
 
@@ -27,12 +26,12 @@ public class SidetoSide48 extends CommandOpMode {
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Net);
-        LinePaths p = new LinePaths(robot.follower);
-        robot.follower.setStartingPose(p.getForward48Start());
+        // LinePaths p = new LinePaths(robot.follower);
+        // robot.follower.setStartingPose(p.getForward48Start());
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new PedroPathCommand(robot.follower, p.SideLeft48),
-                new PedroPathCommand(robot.follower, p.SideRight48),
+                // new PedroPathCommand(robot.follower, p.SideLeft48),
+                // new PedroPathCommand(robot.follower, p.SideRight48),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
@@ -44,6 +43,6 @@ public class SidetoSide48 extends CommandOpMode {
     }
 
     public void end() {
-        HeadingHelper.savePose(robot.follower.getPose());
+        HeadingHelper.savePose(robot.follower.pose());
     }
 }

@@ -15,14 +15,13 @@ import org.firstinspires.ftc.buzzball.Hardware;
 import org.firstinspires.ftc.buzzball.Robot;
 import org.firstinspires.ftc.buzzball.Setup;
 import org.firstinspires.ftc.buzzball.commands.TeleCommands;
-import org.firstinspires.ftc.buzzball.commands.auto.Paths;
+import org.firstinspires.ftc.buzzball.commands.auto.Poses;
+import org.firstinspires.ftc.buzzball.commands.auto.RPaths;
 import org.firstinspires.ftc.buzzball.commands.driving.DrivingCommands;
 import org.firstinspires.ftc.buzzball.controls.DriverController;
 import org.firstinspires.ftc.buzzball.controls.OperatorController;
 import org.firstinspires.ftc.buzzball.helpers.StartingPosition;
-import org.firstinspires.ftc.buzzball.subsystems.IntakeSubsystem;
-import org.firstinspires.ftc.buzzball.subsystems.LauncherSubsystem;
-import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
+import org.firstinspires.ftc.buzzball.opmodes.auto.RedFar15Partner;
 
 @TeleOp(name = "RedTele")
 @SuppressWarnings("unused")
@@ -41,7 +40,7 @@ public class RedTele extends CommandOpMode implements Loggable {
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Unspecified);
         // controlsOperator = new OperatorController(codriverGamepad, robot);
         panelsTelemetry = PanelsTelemetry.INSTANCE;
-        robot.follower.setStartingPose(Paths.getRSegmentedCurveStart());
+        robot.follower.setStartingPose(Poses.StartPoses.getRStart());
         // limelight = hardwareMap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
         if (Setup.Connected.DRIVEBASE) {
             controlsDriver = new DriverController(driverGamepad, robot);

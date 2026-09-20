@@ -1,27 +1,11 @@
 package org.firstinspires.ftc.sixteen750;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.control.FilteredPIDFCoefficients;
-import com.pedropathing.control.PIDFCoefficients;
-import com.pedropathing.control.PredictiveBrakingCoefficients;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.ftc.FollowerBuilder;
-import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.Encoder;
-import com.pedropathing.ftc.localization.constants.DriveEncoderConstants;
-import com.pedropathing.ftc.localization.constants.OTOSConstants;
-import com.pedropathing.ftc.localization.constants.TwoWheelConstants;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathConstraints;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.sixteen750.Setup.HardwareNames;
-import org.firstinspires.ftc.sixteen750.helpers.CustomAdafruitIMU;
 
 @Configurable
 public class AutoConstants {
@@ -47,21 +31,6 @@ public class AutoConstants {
     // These are hand tuned to work how we want
     public static double brakingStrength = 1;
     public static double brakingStart = 1;
-    public static PIDFCoefficients headingPIDF = new PIDFCoefficients(0.5, 0, 0.03, 0.03); //11-7 tuning i = 0.00055
-    public static PIDFCoefficients second_headingPIDF = new PIDFCoefficients(0.5, 0.05, 0.03, 0);
-    // Predictive Braking doesn't use the translational PIDF anymore.
-    public static PIDFCoefficients translationPIDF = new PIDFCoefficients(0.07, 0, 0.009, 0.02); //11-7 tuning i = 0.00015
-
-    // "Kalman filtering": T in this constructor is the % of the previous
-    // derivative that should be used to calculate the derivative.
-    // (D is "Derivative" in PIDF...)
-    public static FilteredPIDFCoefficients drivePIDF = new FilteredPIDFCoefficients(
-        0.04,
-        0,
-        0.003,
-        0.6,
-        0.03
-    );
 
     // The percent of a path that must be complete for Pedro to decide it's done
     // For predictive braking, this is supposed to be lower, so I dropped it from
@@ -79,9 +48,6 @@ public class AutoConstants {
     // The maximum heading error (in degrees) the bot can be from the path end
     // while still saying the path is complete.
     public static double acceptableHeading = 1.5;
-
-    // public static FilteredPIDFCoefficients drivePIDF = new FilteredPIDFCoefficients(0.1, 0, 0, 0.01);
-    // public static PIDFCoefficients centripetalPIDF = new PIDFCoefficients(0.1, 0, 0, 0.01);
 
     @Configurable
     public static class DriveEncoderConfig {
@@ -116,80 +82,6 @@ public class AutoConstants {
             RevHubOrientationOnRobot.UsbFacingDirection.UP;
     }
 
-    public static TwoWheelConstants getTwoWheelLocalizerConstants() {
-        TwoWheelConstants tc = new TwoWheelConstants()
-            .forwardEncoder_HardwareMapName(TwoWheelConfig.forwardName)
-            .strafeEncoder_HardwareMapName(TwoWheelConfig.strafeName)
-            .forwardPodY(TwoWheelConfig.forwardPodYOffset)
-            .strafePodX(TwoWheelConfig.strafePodXOffset)
-            .forwardTicksToInches(TwoWheelConfig.forwardTicksToInches)
-            .strafeTicksToInches(TwoWheelConfig.strafeTicksToInches)
-            .forwardEncoderDirection(
-                TwoWheelConfig.forwardReversed ? Encoder.REVERSE : Encoder.FORWARD
-            )
-            .strafeEncoderDirection(
-                TwoWheelConfig.strafeReversed ? Encoder.REVERSE : Encoder.FORWARD
-            );
-        if (Setup.Connected.EXTERNAL_IMU) {
-            tc = tc.customIMU(new CustomAdafruitIMU());
-        } else {
-            tc = tc
-                .IMU_HardwareMapName(Setup.HardwareNames.IMU)
-                .IMU_Orientation(
-                    new RevHubOrientationOnRobot(TwoWheelConfig.logoDir, TwoWheelConfig.usbDir)
-                );
-        }
-        return tc;
-    }
-
-    public static FollowerConstants getFollowerConstants() {
-        // tune these
-        return (
-            new FollowerConstants()
-                .mass(botWeightKg)
-                .forwardZeroPowerAcceleration(fwdDeceleration)
-                .lateralZeroPowerAcceleration(latDeceleration)
-                .predictiveBrakingCoefficients(
-                    new PredictiveBrakingCoefficients(kP, kLinear, kQuadratic)
-                )
-                // .holdPointTranslationalScaling(1)
-                .headingPIDFCoefficients(headingPIDF)
-                .useSecondaryHeadingPIDF(true)
-                .secondaryHeadingPIDFCoefficients(second_headingPIDF)
-                // .drivePIDFCoefficients(drivePIDF)
-                // .translationalPIDFCoefficients(translationPIDF)
-                .centripetalScaling(0 /*centripetalScaling*/)
-        );
-    }
-
-    public static PathConstraints getPathConstraints() {
-        PathConstraints pc = new PathConstraints(
-            TValueConstraint,
-            timeoutConstraint,
-            brakingStrength,
-            brakingStart
-        );
-        pc.setVelocityConstraint(acceptableVelocity);
-        pc.setTranslationalConstraint(acceptableDistance);
-        pc.setHeadingConstraint(Math.toRadians(acceptableHeading));
-        return pc;
-    }
-
-    public static MecanumConstants getDriveConstants() {
-        return new MecanumConstants()
-            .maxPower(1)
-            .leftFrontMotorName(HardwareNames.FL_DRIVE_MOTOR)
-            .leftRearMotorName(HardwareNames.RL_DRIVE_MOTOR)
-            .rightFrontMotorName(HardwareNames.FR_DRIVE_MOTOR)
-            .rightRearMotorName(HardwareNames.RR_DRIVE_MOTOR)
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .xVelocity(xvelocity)
-            .yVelocity(yvelocity);
-    }
-
     /*
     public static DriveEncoderConstants getEncoderConstants() {
         return new DriveEncoderConstants()
@@ -219,22 +111,6 @@ public class AutoConstants {
     */
 
     public static Follower createFollower(HardwareMap hardwareMap) {
-        if (Setup.Connected.OTOS) {
-            SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, HardwareNames.OTOS);
-            otos.calibrateImu();
-        }
-        Follower fol = new FollowerBuilder(getFollowerConstants(), hardwareMap)
-            .pathConstraints(getPathConstraints())
-            //.driveEncoderLocalizer(getEncoderConstants())
-            //.OTOSLocalizer(getOTOSConstants())
-            .mecanumDrivetrain(getDriveConstants())
-            .twoWheelLocalizer(getTwoWheelLocalizerConstants())
-            .build();
-        //        fol.setMaxPowerScaling(0.5);
-        return fol;
+        return null;
     }
-
-    //New testing constants for this year's game
-    public static Pose scorePose = new Pose(0.0, 0.0, 0.0);
-    public static Pose pickup1Pose = new Pose(0.0, 0.0, 0.0);
 }

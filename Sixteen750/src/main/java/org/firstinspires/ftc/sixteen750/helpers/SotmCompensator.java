@@ -3,9 +3,9 @@ package org.firstinspires.ftc.sixteen750.helpers;
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Vector;
+import com.pedropathing.math.Velocity;
 import com.technototes.library.logger.Log;
 import com.technototes.library.logger.Loggable;
-import org.firstinspires.ftc.sixteen750.subsystems.LauncherSubsystem;
 import org.firstinspires.ftc.sixteen750.subsystems.LimelightSubsystem;
 
 @Configurable
@@ -39,8 +39,8 @@ public class SotmCompensator implements Loggable {
             return;
         }
 
-        Vector vel = follower.getVelocity();
-        double velMag = vel.getMagnitude();
+        Velocity vel = follower.velocity();
+        double velMag = vel.omega;
         speed = velMag;
         if (velMag < MinSpeed) {
             // if robot is barely moving no need to use sotm
@@ -50,9 +50,9 @@ public class SotmCompensator implements Loggable {
             vTangential = 0;
         }
 
-        double robotHeading = follower.getPose().getHeading(); // maths that ai did for me i took time to understand it tho ik all the underlying principles just like fahhhhhhhhh so much math
-        double vx_field = vel.getXComponent();
-        double vy_field = vel.getYComponent();
+        double robotHeading = follower.pose().heading(); // maths that ai did for me i took time to understand it tho ik all the underlying principles just like fahhhhhhhhh so much math
+        double vx_field = vel.vx;
+        double vy_field = vel.vy;
         double cosH = Math.cos(robotHeading);
         double sinH = Math.sin(robotHeading);
         double vForwardRobot = vx_field * cosH + vy_field * sinH;

@@ -1,21 +1,13 @@
 package org.firstinspires.ftc.buzzball.commands;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierPoint;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.technototes.library.command.Command;
-import com.technototes.library.logger.Log;
 import com.technototes.library.util.Alliance;
 import com.technototes.library.util.PIDFController;
 import org.firstinspires.ftc.buzzball.Robot;
 import org.firstinspires.ftc.buzzball.Setup;
-import org.firstinspires.ftc.buzzball.commands.auto.Paths;
-import org.firstinspires.ftc.buzzball.opmodes.BlueTele;
-import org.firstinspires.ftc.buzzball.opmodes.RedTele;
-import org.firstinspires.ftc.buzzball.subsystems.LauncherSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
 
 @Configurable

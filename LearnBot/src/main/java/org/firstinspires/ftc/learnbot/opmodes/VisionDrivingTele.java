@@ -5,13 +5,12 @@ import com.bylazar.gamepad.GamepadManager;
 import com.bylazar.gamepad.PanelsGamepad;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.logger.Loggable;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.learnbot.Hardware;
 import org.firstinspires.ftc.learnbot.Robot;
 import org.firstinspires.ftc.learnbot.commands.SetVisionPipeline;
@@ -40,7 +39,6 @@ public class VisionDrivingTele extends CommandOpMode implements Loggable {
         robot = new Robot(hardware, Alliance.NONE, StartingPosition.Unspecified);
         controls = new DriverController(driverGamepad, robot);
         CommandScheduler.register(robot.vision);
-        CommandScheduler.scheduleInit(HeadingHelper.RestorePreviousPosition(Pedro.getFollower()));
         CommandScheduler.scheduleInit(
             new SetVisionPipeline(robot.vision, TargetSubsystem.Pipeline.APRIL_TAG)
         );

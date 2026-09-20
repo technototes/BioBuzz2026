@@ -2,12 +2,7 @@ package org.firstinspires.ftc.buzzball.commands;
 
 import com.pedropathing.geometry.BezierPoint;
 import com.technototes.library.command.Command;
-import com.technototes.library.command.SequentialCommandGroup;
-import com.technototes.library.command.WaitCommand;
 import org.firstinspires.ftc.buzzball.Robot;
-import org.firstinspires.ftc.buzzball.commands.LLRelocCommand;
-import org.firstinspires.ftc.buzzball.commands.auto.Paths;
-import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
 
 public class TeleCommands {
 
@@ -25,24 +20,52 @@ public class TeleCommands {
         return Command.create(r.launcherSubsystem::Launch);
     }
 
-    public static Command SetFarShoot(Robot r) {
-        return Command.create(r.launcherSubsystem::FarShoot);
+    public static Command SlidesHigh(Robot r) {
+        return Command.create(r.depositSubsystem::slidesToUp);
     }
 
-    public static Command SetCloseShoot(Robot r) {
-        return Command.create(r.launcherSubsystem::CloseShoot);
+    public static Command SlidesLow(Robot r) {
+        return Command.create(r.depositSubsystem::slidesToLow);
     }
 
-    public static Command AutoLaunch1(Robot r) {
-        return Command.create(r.launcherSubsystem::AutoLaunch1);
+    public static Command SlidesZero(Robot r) {
+        return Command.create(r.depositSubsystem::slidesToZero);
     }
 
-    public static Command AutoLaunch2(Robot r) {
-        return Command.create(r.launcherSubsystem::AutoLaunch2);
+    public static Command SetLowBasket(Robot r) {
+        return Command.create(r.depositSubsystem::targetToLowBasket);
     }
 
-    public static Command FarAutoLaunch(Robot r) {
-        return Command.create(r.launcherSubsystem::FarAutoLaunch);
+    public static Command SetHighBasket(Robot r) {
+        return Command.create(r.depositSubsystem::targetToHighBasket);
+    }
+
+    public static Command ArmDown(Robot r) {
+        return Command.create(r.depositSubsystem::armToDown);
+    }
+
+    public static Command ArmHoriz(Robot r) {
+        return Command.create(r.depositSubsystem::armToHorizDepo);
+    }
+
+    public static Command DepositClawOpen(Robot r) {
+        return Command.create(r.depositSubsystem::openClaw);
+    }
+
+    public static Command DepositClawClose(Robot r) {
+        return Command.create(r.depositSubsystem::closeClaw);
+    }
+
+    public static Command WristHoriz(Robot r) {
+        return Command.create(r.depositSubsystem::wristHoriz);
+    }
+
+    public static Command ArmCompensateOn(Robot r) {
+        return Command.create(r.depositSubsystem::armCompensationOn);
+    }
+
+    public static Command ArmCompensateOff(Robot r) {
+        return Command.create(r.depositSubsystem::armCompensationOff);
     }
 
     public static Command StopLaunch(Robot r) {
@@ -51,22 +74,6 @@ public class TeleCommands {
 
     public static Command IdleLaunch(Robot r) {
         return Command.create(r.launcherSubsystem::Idle);
-    }
-
-    public static Command Rumble(Robot r) {
-        return Command.create(r.limelightSubsystem::setRumble);
-    }
-
-    public static Command RumbleOff(Robot r) {
-        return Command.create(r.limelightSubsystem::setRumbleOff);
-    }
-
-    public static Command IncreaseMotor(Robot r) {
-        return Command.create(r.launcherSubsystem::IncreaseMotorVelocity);
-    }
-
-    public static Command DecreaseMotor(Robot r) {
-        return Command.create(r.launcherSubsystem::DecreaseMotorVelocity);
     }
 
     public static Command Intake(Robot r) {
@@ -97,32 +104,12 @@ public class TeleCommands {
         return Command.create(r.brakeSubsystem::Engage);
     }
 
-    public static Command HoldIntake(Robot r) {
-        return Command.create(r.intakeSubsystem::Hold);
-    }
-
     public static Command DisengageBrake(Robot r) {
         return Command.create(r.brakeSubsystem::Disengage);
     }
 
-    public static Command Aim(Robot r) {
-        return Command.create(r.aimingSubsystem::Aim);
-    }
-
     public static Command HoodUp(Robot r) {
         return Command.create(r.aimingSubsystem::testHoodUp);
-    }
-
-    public static Command HoodUpAutoOnly(Robot r) {
-        return Command.create(r.aimingSubsystem::testHoodUpAutoOnly);
-    }
-
-    public static Command HoodUpAutoOnly2(Robot r) {
-        return Command.create(r.aimingSubsystem::testHoodUpAutoOnly2);
-    }
-
-    public static Command HoodDown(Robot r) {
-        return Command.create(r.aimingSubsystem::testHoodDown);
     }
 
     public static Command GateUp(Robot r) {
@@ -141,18 +128,6 @@ public class TeleCommands {
         return Command.create(r.testSubsystem::setMotorVelocityTest);
     }
 
-    public static Command ReadVelocity(Robot r) {
-        return Command.create(r.launcherSubsystem::readVelocity);
-    }
-
-    public static Command SetRegressionCAuto(Robot r) {
-        return Command.create(r.launcherSubsystem::setRegressionCAuto);
-    }
-
-    public static Command SetRegressionDAuto(Robot r) {
-        return Command.create(r.launcherSubsystem::setRegressionDAuto);
-    }
-
     public static Command SetRegressionCTeleop(Robot r) {
         return Command.create(r.launcherSubsystem::setRegressionCTeleop);
     }
@@ -161,33 +136,22 @@ public class TeleCommands {
         return Command.create(r.launcherSubsystem::setRegressionDTeleop);
     }
 
-    public static Command IncreaseRegressionDTeleop(Robot r) {
-        return Command.create(r.launcherSubsystem::increaseRegressionDTeleop);
+    public static Command TurretTrackDefault(Robot r) {
+        return Command.create(r.turretSubsystem::trackDefaultTarget);
     }
 
-    public static SequentialCommandGroup OutreachLaunch(Robot r) {
-        return new SequentialCommandGroup(
-            Command.create(r.launcherSubsystem::Launch),
-            new WaitCommand(0.8),
-            Command.create(r.intakeSubsystem::Intake),
-            Command.create(r.aimingSubsystem::GoBall),
-            new WaitCommand(.8),
-            Command.create(r.launcherSubsystem::Stop),
-            Command.create(r.intakeSubsystem::StopIntake),
-            Command.create(r.aimingSubsystem::StopBall).raceWith(new AltAutoOrient(r))
-        );
+    public static Command TurretDisableTracking(Robot r) {
+        return Command.create(() -> {
+            r.turretSubsystem.disableTracking();
+            r.turretSubsystem.turretToForward();
+        });
     }
 
-    public static SequentialCommandGroup OutreachLaunchFar(Robot r) {
-        return new SequentialCommandGroup(
-            Command.create(r.launcherSubsystem::Launch),
-            new WaitCommand(1.4),
-            Command.create(r.intakeSubsystem::Hold),
-            Command.create(r.aimingSubsystem::GoBall),
-            new WaitCommand(2.5),
-            Command.create(r.launcherSubsystem::Stop),
-            Command.create(r.intakeSubsystem::StopIntake),
-            Command.create(r.aimingSubsystem::StopBall).raceWith(new AltAutoOrient(r))
-        );
+    public static Command TurretRelocalizeToPosition1(Robot r) {
+        return Command.create(r.turretSubsystem::relocalizeToPosition1);
+    }
+
+    public static Command TurretRelocalizeToPosition2(Robot r) {
+        return Command.create(r.turretSubsystem::relocalizeToPosition2);
     }
 }

@@ -6,11 +6,14 @@ import com.technototes.library.util.Alliance;
 import org.firstinspires.ftc.buzzball.helpers.StartingPosition;
 import org.firstinspires.ftc.buzzball.subsystems.AimingSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.BrakeSubsystem;
+import org.firstinspires.ftc.buzzball.subsystems.ClaudeSubsystem;
+import org.firstinspires.ftc.buzzball.subsystems.DepositSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.IntakeSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.LauncherSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.SafetySubsystem;
 import org.firstinspires.ftc.buzzball.subsystems.TestSubsystem;
+import org.firstinspires.ftc.buzzball.subsystems.TurretSubsystem;
 
 public class Robot implements Loggable {
 
@@ -25,6 +28,9 @@ public class Robot implements Loggable {
     public BrakeSubsystem brakeSubsystem;
     public AimingSubsystem aimingSubsystem;
     public LimelightSubsystem limelightSubsystem;
+    public ClaudeSubsystem claudeSubsystem;
+    public DepositSubsystem depositSubsystem;
+    public TurretSubsystem turretSubsystem;
     public TestSubsystem testSubsystem;
     public Follower follower;
     private Hardware hardware;
@@ -58,6 +64,19 @@ public class Robot implements Loggable {
         }
         if (Setup.Connected.DRIVEBASE) {
             follower = AutoConstants.createFollower(hw.map);
+        }
+        if (Setup.Connected.ODOSUBSYSTEM) {
+            follower = AutoConstants.createFollower(hw.map);
+        }
+        if (Setup.Connected.CLAUDESUBSYSTEM) {
+            this.claudeSubsystem = new ClaudeSubsystem(hw);
+        }
+        if (Setup.Connected.DEPOSITSUBSYSTEM) {
+            this.depositSubsystem = new DepositSubsystem(hw);
+        }
+        if (Setup.Connected.TURRETSUBSYSTEM) {
+            // built after follower above - the turret needs it for field-relative tracking
+            this.turretSubsystem = new TurretSubsystem(hw, follower);
         }
     }
 

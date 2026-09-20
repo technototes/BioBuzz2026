@@ -219,10 +219,12 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     }
 
     public void SmartVelocity() {
-        if (AimingSubsystem.GateDown) {
+        /* if (AimingSubsystem.GateDown) {
             SMART_INTAKE_VELOCITY = 1;
             SMART_TRANSFER_VELOCITY = 1;
-        } else if (intakeFull) {
+        } else*/ if (
+            intakeFull
+        ) {
             SMART_INTAKE_VELOCITY = 0;
             SMART_TRANSFER_VELOCITY = 0;
         } else if (transferFull) {
@@ -235,7 +237,7 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     }
 
     public void SmartTransferVelocity() {
-        if (AimingSubsystem.GateDown) {
+        if (false /*AimingSubsystem.GateDown*/) {
             SMART_TRANSFER_VELOCITY = 1;
         } else {
             SMART_TRANSFER_VELOCITY = 0.38;

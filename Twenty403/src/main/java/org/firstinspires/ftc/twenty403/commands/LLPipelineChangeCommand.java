@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.twenty403.commands;
 
-import com.pedropathing.follower.Follower;
-import com.pedropathing.paths.Path;
-import com.pedropathing.paths.PathBuilder;
-import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.technototes.library.command.Command;
 

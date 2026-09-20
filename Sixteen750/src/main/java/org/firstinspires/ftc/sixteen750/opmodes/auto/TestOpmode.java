@@ -9,9 +9,7 @@ import com.technototes.library.util.Alliance;
 import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.sixteen750.Hardware;
 import org.firstinspires.ftc.sixteen750.Robot;
-import org.firstinspires.ftc.sixteen750.commands.AltAutoOrient;
 import org.firstinspires.ftc.sixteen750.commands.LLSetup;
-import org.firstinspires.ftc.sixteen750.commands.auto.Paths;
 import org.firstinspires.ftc.sixteen750.controls.DriverController;
 import org.firstinspires.ftc.sixteen750.helpers.StartingPosition;
 
@@ -33,21 +31,21 @@ public class TestOpmode extends CommandOpMode {
         //        hardware.fl.setDirection(DcMotorSimple.Direction.FORWARD);
         //        hardware.fr.setDirection(DcMotorSimple.Direction.REVERSE);
         CommandScheduler.register(robot.limelightSubsystem);
-        Paths p = new Paths(robot.follower);
-        robot.follower.setStartingPose(p.getRSegmentedCurveStart());
+        // Paths p = new Paths(robot.follower);
+        // robot.follower.setStartingPose(p.getRSegmentedCurveStart());
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
                 new LLSetup(robot),
-                new ParallelCommandGroup(
-                    new AltAutoOrient(robot)
-                    //new AltAutoVelocity(robot),
-                    //new AltAutoOrient(robot),
-                    //new DriveAutoCommand(robot.follower, 0.5),
-                    //                    TeleCommands.HoldIntake(robot),
-                    //                    TeleCommands.GateUp(robot),
-                    //                    TeleCommands.HoodUp(robot)
-                    // Paths.AutoLaunching3BallsSlowIntake(robot)
-                ),
+                // new ParallelCommandGroup(
+                // new AltAutoOrient(robot)
+                //new AltAutoVelocity(robot),
+                //new AltAutoOrient(robot),
+                //new DriveAutoCommand(robot.follower, 0.5),
+                //                    TeleCommands.HoldIntake(robot),
+                //                    TeleCommands.GateUp(robot),
+                //                    TeleCommands.HoodUp(robot)
+                // Paths.AutoLaunching3BallsSlowIntake(robot)
+                //),
                 //                new WaitCommand(0.5),
                 //                new ParallelCommandGroup(
                 //                    //new DriveAutoCommand(robot.follower, 0),
@@ -80,7 +78,7 @@ public class TestOpmode extends CommandOpMode {
     }
 
     public void end() {
-        HeadingHelper.savePose(robot.follower.getPose());
+        HeadingHelper.savePose(robot.follower.pose());
         robot.limelightSubsystem.LimelightTurnOff();
     }
 }

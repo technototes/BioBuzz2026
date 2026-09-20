@@ -2,8 +2,7 @@ package org.firstinspires.ftc.sixteen750.commands;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierPoint;
-import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.Pose;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.technototes.library.command.Command;
 import com.technototes.library.control.Stick;
@@ -13,6 +12,7 @@ import com.technototes.library.util.Alliance;
 import com.technototes.library.util.HeadingHelper;
 import com.technototes.library.util.MathUtils;
 import com.technototes.library.util.PIDFController;
+import java.util.Locale;
 import java.util.function.DoubleSupplier;
 import org.firstinspires.ftc.sixteen750.Setup;
 import org.firstinspires.ftc.sixteen750.Setup.OtherSettings;
@@ -48,21 +48,21 @@ public class PedroDriver implements Command, Loggable {
 
     // Methods to bind to buttons (Commands)
     public void ResetGyro() {
-        headingOffset = follower.getHeading();
+        headingOffset = follower.pose().heading();
     }
 
     public void SetSnailSpeed() {
-        follower.setMaxPowerScaling(OtherSettings.SNAIL_SPEED);
+        // follower.setMaxPowerScaling(OtherSettings.SNAIL_SPEED);
         turnSpeed = OtherSettings.SNAIL_TURN;
     }
 
     public void SetNormalSpeed() {
-        follower.setMaxPowerScaling(OtherSettings.NORMAL_SPEED);
+        // follower.setMaxPowerScaling(OtherSettings.NORMAL_SPEED);
         turnSpeed = OtherSettings.NORMAL_TURN;
     }
 
     public void SetTurboSpeed() {
-        follower.setMaxPowerScaling(OtherSettings.TURBO_SPEED);
+        // follower.setMaxPowerScaling(OtherSettings.TURBO_SPEED);
         turnSpeed = OtherSettings.TURBO_TURN;
     }
 
@@ -72,14 +72,14 @@ public class PedroDriver implements Command, Loggable {
         }
         if (driveStyle == DrivingStyle.Hold) {
             // If we're currently holding a position, stop doing so
-            follower.startTeleOpDrive();
+            //follower.dr();
             holdPose = null;
         }
         driveStyle = style;
         // If we've switched *to* holding a pose, start the follower
         if (style == DrivingStyle.Hold) {
-            holdPose = follower.getPose();
-            follower.holdPoint(new BezierPoint(holdPose), holdPose.getHeading(), false);
+            holdPose = follower.pose();
+            follower.hold(holdPose, false);
         }
     }
 
@@ -121,14 +121,14 @@ public class PedroDriver implements Command, Loggable {
     }
 
     public void SaveHeading() {
-        HeadingHelper.savePose(follower.getPose());
+        HeadingHelper.savePose(follower.pose());
     }
 
     // Some just slightly more complex commands:
     public void StayPut() {
         if (prevDriveStyle == DrivingStyle.None) {
             prevDriveStyle = driveStyle;
-            prevDriveSpeed = follower.getMaxPowerScaling();
+            // prevDriveSpeed = follower.getMaxPowerScaling();
             prevTurnSpeed = turnSpeed;
         }
         HoldCurrentPosition();
@@ -141,7 +141,7 @@ public class PedroDriver implements Command, Loggable {
             SetNormalSpeed();
         } else {
             switchDriveStyle(prevDriveStyle);
-            follower.setMaxPowerScaling(prevDriveSpeed);
+            // follower.setMaxPowerScaling(prevDriveSpeed);
             turnSpeed = prevTurnSpeed;
             prevDriveStyle = DrivingStyle.None;
         }
@@ -244,7 +244,7 @@ public class PedroDriver implements Command, Loggable {
 
     @Override
     public void initialize() {
-        follower.startTeleOpDrive();
+        follower.manual();
     }
 
     @Override
@@ -272,12 +272,12 @@ public class PedroDriver implements Command, Loggable {
         if (driveMode == DrivingMode.RobotCentric || driveMode == DrivingMode.FieldCentric) {
             double rot = getRotation(fwdVal, strafeVal);
             ShowDriveVectors(fwdVal, strafeVal, rot, headingOffset);
-            follower.setTeleOpDrive(
+            follower.manual(
                 fwdVal,
                 strafeVal,
-                rot,
+                rot /*,
                 driveMode == DrivingMode.RobotCentric,
-                headingOffset
+                headingOffset*/
             );
         }
 
@@ -300,7 +300,7 @@ public class PedroDriver implements Command, Loggable {
         // coordinate system.
         double rotation = -r.getAsDouble();
         curHeading =
-            MathUtils.normalizeDeltaRadians(follower.getHeading()) -
+            MathUtils.normalizeDeltaRadians(follower.pose().heading()) -
             MathUtils.normalizeDeltaRadians(headingOffset);
         double targetHeading = 0;
         switch (driveStyle) {
@@ -420,13 +420,14 @@ public class PedroDriver implements Command, Loggable {
                 drvMode += " [Unknown]";
                 break;
         }
-        drvMode += String.format(" Max:%.2f", f.getMaxPowerScaling());
-        Pose curPose = f.getPose();
+        // drvMode += String.format(" Max:%.2f", f.getMaxPowerScaling());
+        Pose curPose = f.pose();
         drvLoc = String.format(
+            Locale.ENGLISH,
             "X:%.2f Y:%.2f H:%.1f°",
-            curPose.getX(),
-            curPose.getY(),
-            Math.toDegrees(curPose.getHeading())
+            curPose.x(),
+            curPose.y(),
+            Math.toDegrees(curPose.heading())
         );
     }
 
@@ -437,6 +438,7 @@ public class PedroDriver implements Command, Loggable {
         double offset
     ) {
         drvVec = String.format(
+            Locale.ENGLISH,
             "f %.2f s %.2f r %.2f [%.1f°]",
             fwdVal,
             strafeVal,

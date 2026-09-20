@@ -15,13 +15,11 @@ import org.firstinspires.ftc.buzzball.Hardware;
 import org.firstinspires.ftc.buzzball.Robot;
 import org.firstinspires.ftc.buzzball.Setup;
 import org.firstinspires.ftc.buzzball.commands.TeleCommands;
-import org.firstinspires.ftc.buzzball.commands.auto.Paths;
+import org.firstinspires.ftc.buzzball.commands.auto.Poses;
 import org.firstinspires.ftc.buzzball.commands.driving.DrivingCommands;
 import org.firstinspires.ftc.buzzball.controls.DriverController;
 import org.firstinspires.ftc.buzzball.controls.OperatorController;
 import org.firstinspires.ftc.buzzball.helpers.StartingPosition;
-import org.firstinspires.ftc.buzzball.subsystems.LauncherSubsystem;
-import org.firstinspires.ftc.buzzball.subsystems.LimelightSubsystem;
 
 @TeleOp(name = "BlueTele")
 @SuppressWarnings("unused")
@@ -40,7 +38,7 @@ public class BlueTele extends CommandOpMode implements Loggable {
         robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
         // controlsOperator = new OperatorController(codriverGamepad, robot);
         panelsTelemetry = PanelsTelemetry.INSTANCE;
-        robot.follower.setStartingPose(Paths.getBSegmentedCurveStart());
+        robot.follower.setStartingPose(Poses.StartPoses.getBStart());
         // limelight = hardwareMap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
         if (Setup.Connected.DRIVEBASE) {
             controlsDriver = new DriverController(driverGamepad, robot);

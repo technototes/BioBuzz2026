@@ -6,7 +6,6 @@ import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import com.technototes.library.util.HeadingHelper;
 import org.firstinspires.ftc.learnbot.Hardware;
 import org.firstinspires.ftc.learnbot.Robot;
 import org.firstinspires.ftc.learnbot.TestPaths;
@@ -26,6 +25,7 @@ public class TestPedroAuto extends CommandOpMode {
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Net);
+        /*
         TestPaths p = new TestPaths(Pedro.getFollower());
         CommandScheduler.scheduleOnceForState(
             () -> Pedro.getFollower().setStartingPose(p.getStart()),
@@ -43,13 +43,12 @@ public class TestPedroAuto extends CommandOpMode {
             ),
             OpModeState.RUN
         );
+         */
     }
 
     public void uponStart() {
         robot.atStart();
     }
 
-    public void end() {
-        HeadingHelper.SaveCurrentPosition(Pedro.getFollower());
-    }
+    public void end() {}
 }
