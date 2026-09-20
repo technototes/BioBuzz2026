@@ -1,10 +1,12 @@
-package org.firstinspires.ftc.teamcode.pedro;
+package org.firstinspires.ftc.learnbot;
 
+import com.pedropathing.algorithm.Foresight;
 import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Matrix;
 import com.pedropathing.math.Vector2D;
+import com.pedropathing.revhub.drivetrains.Mecanum;
 import com.pedropathing.revhub.drivetrains.MecanumConfig;
 import com.pedropathing.revhub.localizers.OctoQuadConfig;
 import com.pedropathing.revhub.localizers.OctoQuadLocalizer;
@@ -13,10 +15,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class Constants {
+public class PedroConstants {
 
     public static Follower create(HardwareMap h) {
-        return new Follower(new OctoQuadLocalizer(), Localizer, Foresight);
+        return new Follower(
+            new OctoQuadLocalizer(h, localizerConfig),
+            new Mecanum(h, drivetrainConfig),
+            new Foresight(foresightConfig)
+        );
     }
 
     public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
