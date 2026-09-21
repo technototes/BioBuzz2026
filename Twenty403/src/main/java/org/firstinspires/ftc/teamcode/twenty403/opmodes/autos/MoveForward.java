@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.twenty403.opmodes.autos;
+package org.firstinspires.ftc.teamcode.twenty403.opmodes.autos;
 
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -7,12 +7,12 @@ import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
-import org.firstinspires.ftc.twenty403.Hardware;
-import org.firstinspires.ftc.twenty403.Robot;
-import org.firstinspires.ftc.twenty403.Setup;
-import org.firstinspires.ftc.twenty403.commands.auto.DriveAutoCommand;
-import org.firstinspires.ftc.twenty403.controls.DriverController;
-import org.firstinspires.ftc.twenty403.helpers.StartingPosition;
+import org.firstinspires.ftc.teamcode.twenty403.Hardware;
+import org.firstinspires.ftc.teamcode.twenty403.Robot;
+import org.firstinspires.ftc.teamcode.twenty403.Setup;
+import org.firstinspires.ftc.teamcode.twenty403.commands.auto.DriveAutoCommand;
+import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
+import org.firstinspires.ftc.teamcode.twenty403.helpers.StartingPosition;
 
 @Autonomous(name = "DriveForward", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
 @SuppressWarnings("unused")

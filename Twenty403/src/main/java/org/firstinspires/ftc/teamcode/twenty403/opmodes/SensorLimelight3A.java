@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.twenty403.opmodes;
+package org.firstinspires.ftc.teamcode.twenty403.opmodes;
 
 //package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import static org.firstinspires.ftc.twenty403.Setup.HardwareNames.LIMELIGHT;
+import static org.firstinspires.ftc.teamcode.twenty403.Setup.HardwareNames.LIMELIGHT;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;

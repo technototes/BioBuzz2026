@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.twenty403.opmodes;
+package org.firstinspires.ftc.teamcode.twenty403.opmodes;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import org.firstinspires.ftc.twenty403.Setup;
+import org.firstinspires.ftc.teamcode.twenty403.Setup;
 
 @Configurable
 @TeleOp(name = "Drivebase Testbed")
