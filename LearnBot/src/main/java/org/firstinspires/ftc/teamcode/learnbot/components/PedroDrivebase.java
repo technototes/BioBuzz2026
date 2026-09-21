@@ -4,10 +4,12 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.algorithm.Foresight;
 import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.controllers.Controller;
+import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Matrix;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector2D;
+import com.pedropathing.paths.Path;
 import com.pedropathing.revhub.drivetrains.Mecanum;
 import com.pedropathing.revhub.drivetrains.MecanumConfig;
 import com.pedropathing.revhub.localizers.OctoQuadConfig;
@@ -156,12 +158,16 @@ public class PedroDrivebase {
 
         protected static Component self;
 
-        public static Command ManualDrivePower(double p1, double p2, double p3, double p4) {
-            return new DrivePowerImpl(p1, p2, p3, p4);
+        public static Command ManualDriveForward(double fwd) {
+            return new DrivePowerImpl(fwd, 0, 0);
         }
 
-        public static Command ManualDrivePower(double pow) {
-            return new DrivePowerImpl(pow, pow, pow, pow);
+        public static Command ManualDriveStrafe(double strafe) {
+            return new DrivePowerImpl(0, strafe, 0);
+        }
+
+        public static Command ManualDriveTurn(double turn) {
+            return new DrivePowerImpl(0, 0, turn);
         }
 
         public static Command JoystickDrive(Stick xyStick, Stick rotStick) {
@@ -180,19 +186,18 @@ public class PedroDrivebase {
             return new JoystickImpl(fwdSup, strafeSup, rotSup);
         }
 
-        /*
-        public static Command FollowPath(PathChain p) {
+        public static Command FollowPath(Path p) {
             return new FollowPathImpl(p);
         }
 
-        public static Command FollowPath(Pose startPose, PathChain p) {
+        public static Command FollowPath(Pose startPose, Path p) {
             return new FollowPathImpl(startPose, p);
         }
 
-        public static Command FollowPath(PathChain p, boolean readCurPose) {
+        public static Command FollowPath(Path p, boolean readCurPose) {
             return new FollowPathImpl(p, readCurPose);
         }
-*/
+
         public static Command TurboSpeed() {
             return self::SetTurboSpeed;
         }
@@ -229,24 +234,22 @@ public class PedroDrivebase {
             return self::SetVisionRotation;
         }
 
+        // Helper for DrivePower-based manual driving commands
         protected static class DrivePowerImpl implements Command {
 
-            double[] p;
+            DrivePowers p;
 
-            public DrivePowerImpl(double p1, double p2, double p3, double p4) {
-                p = new double[4];
-                p[0] = p1;
-                p[1] = p2;
-                p[2] = p3;
-                p[3] = p4;
+            public DrivePowerImpl(double fwd, double strafe, double turn) {
+                p = new DrivePowers(fwd, strafe, turn);
             }
 
             @Override
             public void execute() {
-                // getFollower().drivetrain.runDrive(p);
+                getFollower().drivetrain.drive(p, true);
             }
         }
 
+        // Helper for any Joystick driving commands
         protected static class JoystickImpl implements Command {
 
             // The sticks for driving (probably CommandAxis suppliers)
@@ -291,25 +294,26 @@ public class PedroDrivebase {
                 return false;
             }
         }
-        /*
+
+        // *Untested* command to have Pedro V3 follow a path
         protected static class FollowPathImpl implements Command {
 
-            public PathChain pathChain;
+            public Path path;
             public Pose begin;
             public boolean currentPose;
 
-            public FollowPathImpl(PathChain p) {
-                pathChain = p;
+            public FollowPathImpl(Path p) {
+                path = p;
             }
 
-            public FollowPathImpl(Pose startPose, PathChain p) {
-                pathChain = p;
+            public FollowPathImpl(Pose startPose, Path p) {
+                path = p;
                 currentPose = true;
                 begin = startPose;
             }
 
-            public FollowPathImpl(PathChain p, boolean currPose) {
-                pathChain = p;
+            public FollowPathImpl(Path p, boolean currPose) {
+                path = p;
                 currentPose = currPose;
                 begin = null;
             }
@@ -317,9 +321,9 @@ public class PedroDrivebase {
             @Override
             public void initialize() {
                 if (currentPose) {
-                    getFollower().setStartingPose(begin == null ? getFollower().getPose() : begin);
+                    getFollower().setPose(begin == null ? getFollower().pose() : begin);
                 }
-                getFollower().followPath(pathChain);
+                getFollower().follow(path);
             }
 
             @Override
@@ -332,8 +336,6 @@ public class PedroDrivebase {
                 getFollower().update();
             }
         }
-
- */
     }
 
     // The PedroPath follower, to let us actually make the bot move:
