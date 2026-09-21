@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.twenty403;
+package org.firstinspires.ftc.teamcode.twenty403;
 
 import com.bylazar.configurables.annotations.Configurable;
 

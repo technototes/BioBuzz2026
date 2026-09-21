@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.twenty403.controls;
+package org.firstinspires.ftc.teamcode.twenty403.controls;
 
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.control.CommandAxis;
 import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
 import com.technototes.library.control.Stick;
-import org.firstinspires.ftc.twenty403.Hardware;
-import org.firstinspires.ftc.twenty403.Robot;
-import org.firstinspires.ftc.twenty403.Setup;
-import org.firstinspires.ftc.twenty403.commands.EZCmd;
-import org.firstinspires.ftc.twenty403.commands.FeedCMD;
-import org.firstinspires.ftc.twenty403.commands.driving.JoystickDriveCommand;
+import org.firstinspires.ftc.teamcode.twenty403.Hardware;
+import org.firstinspires.ftc.teamcode.twenty403.Robot;
+import org.firstinspires.ftc.teamcode.twenty403.Setup;
+import org.firstinspires.ftc.teamcode.twenty403.commands.EZCmd;
+import org.firstinspires.ftc.teamcode.twenty403.commands.FeedCMD;
+import org.firstinspires.ftc.teamcode.twenty403.commands.driving.JoystickDriveCommand;
 
 public class DriverController {
 

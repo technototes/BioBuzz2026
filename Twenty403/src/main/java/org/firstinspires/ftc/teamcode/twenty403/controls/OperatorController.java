@@ -1,12 +1,7 @@
-package org.firstinspires.ftc.twenty403.controls;
+package org.firstinspires.ftc.teamcode.twenty403.controls;
 
-import com.technototes.library.command.Command;
-import com.technototes.library.command.CommandScheduler;
-import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
-import com.technototes.library.control.Stick;
-import org.firstinspires.ftc.twenty403.Robot;
-import org.firstinspires.ftc.twenty403.Setup;
+import org.firstinspires.ftc.teamcode.twenty403.Robot;
 
 public class OperatorController {
 

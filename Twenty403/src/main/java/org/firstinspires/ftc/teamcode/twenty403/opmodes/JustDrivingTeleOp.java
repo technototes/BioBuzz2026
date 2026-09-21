@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.twenty403.opmodes;
+package org.firstinspires.ftc.teamcode.twenty403.opmodes;
 
-import static org.firstinspires.ftc.twenty403.Setup.HardwareNames.AprilTag_Pipeline;
-import static org.firstinspires.ftc.twenty403.Setup.HardwareNames.LIMELIGHT;
+import static org.firstinspires.ftc.teamcode.twenty403.Setup.HardwareNames.AprilTag_Pipeline;
+import static org.firstinspires.ftc.teamcode.twenty403.Setup.HardwareNames.LIMELIGHT;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.gamepad.GamepadManager;
@@ -23,12 +23,12 @@ import com.technototes.library.util.HeadingHelper;
 import java.util.Arrays;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.twenty403.Hardware;
-import org.firstinspires.ftc.twenty403.Robot;
-import org.firstinspires.ftc.twenty403.Setup;
-import org.firstinspires.ftc.twenty403.controls.DriverController;
-import org.firstinspires.ftc.twenty403.controls.OperatorController;
-import org.firstinspires.ftc.twenty403.helpers.StartingPosition;
+import org.firstinspires.ftc.teamcode.twenty403.Hardware;
+import org.firstinspires.ftc.teamcode.twenty403.Robot;
+import org.firstinspires.ftc.teamcode.twenty403.Setup;
+import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
+import org.firstinspires.ftc.teamcode.twenty403.controls.OperatorController;
+import org.firstinspires.ftc.teamcode.twenty403.helpers.StartingPosition;
 
 // unicode is moai emoji
 @Configurable

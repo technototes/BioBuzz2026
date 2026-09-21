@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.twenty403.commands;
+package org.firstinspires.ftc.teamcode.twenty403.commands;
 
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Pose;
 import com.technototes.library.command.Command;
-import org.firstinspires.ftc.twenty403.commands.driving.JoystickDriveCommand;
+import org.firstinspires.ftc.teamcode.twenty403.commands.driving.JoystickDriveCommand;
 
 public class EZCmd {
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.twenty403.commands.auto;
+package org.firstinspires.ftc.teamcode.twenty403.commands.auto;
 
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
