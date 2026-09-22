@@ -17,8 +17,8 @@ public class TargetSubsystem implements Subsystem, Loggable, TargetAcquisition {
 
     public static class Config {
 
-        public static CameraOrientation Camera_Orientation = CameraOrientation.USB_UP;
-        public static double Camera_Tilt_Degrees = 14.0;
+        public static CameraOrientation CAMERA_ORIENTATION = CameraOrientation.USB_UP;
+        public static double CAMERA_TILT_DEGREES = 14.0;
         public static double VISION_TARGET_SIZE = 10;
         public static double VISION_FORWARD_GAIN = .1;
     }
@@ -55,22 +55,22 @@ public class TargetSubsystem implements Subsystem, Loggable, TargetAcquisition {
 
         private void setXY(double obsX, double obsY) {
             // Translate based on Camera Orientation
-            switch (Config.Camera_Orientation) {
+            switch (Config.CAMERA_ORIENTATION) {
                 case USB_BOT_LEFT:
                     this.x = obsX;
-                    this.y = obsY - Config.Camera_Tilt_Degrees;
+                    this.y = obsY - Config.CAMERA_TILT_DEGREES;
                     break;
                 case USB_UP:
                     this.x = -obsY;
-                    this.y = obsX - Config.Camera_Tilt_Degrees;
+                    this.y = obsX - Config.CAMERA_TILT_DEGREES;
                     break;
                 case USB_BOT_RIGHT:
                     this.x = -obsX;
-                    this.y = -obsY + Config.Camera_Tilt_Degrees;
+                    this.y = -obsY + Config.CAMERA_TILT_DEGREES;
                     break;
                 case USB_DOWN:
                     this.x = obsY;
-                    this.y = -obsX + Config.Camera_Tilt_Degrees;
+                    this.y = -obsX + Config.CAMERA_TILT_DEGREES;
                     break;
             }
         }
