@@ -31,6 +31,7 @@ public class Setup {
         public static String LEFTINTAKESERVO = "lintake";
         public static String RIGHTINTAKESERVO = "rintake";
         public static String INTAKEMOTOR = "intake";
+        public static String TRANSFERMOTOR = "transfer";
         public static String OTOS = "sparky";
         public static String LIMELIGHT = "limelight";
         public static String TESTSERVO = "testservo";
