@@ -14,10 +14,10 @@ public class IntakeValidator extends ValidationOpMode {
     private DcMotorEx intakeMotor;
     private CRServo left;
     private CRServo right;
-    public static double intakeVelocity = 2;
-    public static double intakeVelocity2 = -2;
-    public static double spinLeftFlower = 2;
-    public static double spinRightFlower = -2;
+    public static double intakeVelocity = 2000;
+    public static double intakeVelocity2 = -200;
+    public static double spinLeftFlower = -1;
+    public static double spinRightFlower = 1;
 
     @Override
     public void init() {
