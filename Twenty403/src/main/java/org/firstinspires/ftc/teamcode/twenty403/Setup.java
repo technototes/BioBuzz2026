@@ -28,8 +28,9 @@ public class Setup {
         public static String EXTERNALIMU = "adafruit-imu";
         public static String OCTOQUAD = "octoquad";
         public static String LAUNCHER = "top";
-        public static String LEFTINTAKE = "bottoml";
-        public static String RIGHTINTAKE = "bottomr";
+        public static String LEFTINTAKESERVO = "lintake";
+        public static String RIGHTINTAKESERVO = "rintake";
+        public static String INTAKEMOTOR = "intake";
         public static String OTOS = "sparky";
         public static String LIMELIGHT = "limelight";
         public static String TESTSERVO = "testservo";
