@@ -42,11 +42,11 @@ public class DriveBaseValidation extends LinearOpMode {
         if (Setup.Connected.INTAKE) {
             bl = this.hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo.class,
-                Setup.HardwareNames.LEFTINTAKE
+                Setup.HardwareNames.LEFTINTAKESERVO
             );
             br = this.hardwareMap.get(
                 com.qualcomm.robotcore.hardware.CRServo.class,
-                Setup.HardwareNames.RIGHTINTAKE
+                Setup.HardwareNames.RIGHTINTAKESERVO
             );
         } else {
             bl = null;
