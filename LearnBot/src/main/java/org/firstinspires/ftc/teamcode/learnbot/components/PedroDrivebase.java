@@ -6,6 +6,7 @@ import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.drivetrain.DrivePowers;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.follower.ManualDrive;
 import com.pedropathing.math.Matrix;
 import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector2D;
@@ -761,7 +762,10 @@ public class PedroDrivebase {
                 }
             }
             ShowDriveVectors(forward, strafe, rot, GetHeadingOffsetRadians());
-            follower.manual(forward, strafe, rot);
+            DrivePowers p = botCentric
+                ? new DrivePowers(forward, strafe, rot)
+                : ManualDrive.fieldCentric(forward, strafe, rot, curHeading);
+            follower.manual(p);
             follower.update();
         }
 
