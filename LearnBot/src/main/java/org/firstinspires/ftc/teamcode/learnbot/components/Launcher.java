@@ -97,7 +97,11 @@ public class Launcher {
         //    button.whenPressed(Launcher.Commands.IncreaseMotor(r.launcherComponent));
         // This doesn't work if we have *two* different launchers, but I *think* that's unlikely in an
         // FTC game ;)
-        protected static Component component = null;
+        private static Component component = null;
+
+        public static void setComponent(Component c) {
+            component = c;
+        }
 
         // This command is a "while" thing: It sets it once.
         // If you want to keep it going, use AutoVelocity instead
@@ -170,10 +174,10 @@ public class Launcher {
 
         // External dependencies this component requires:
         // The two launcher motors:
-        EncodedMotor<DcMotorEx> launcher1;
-        EncodedMotor<DcMotorEx> launcher2;
+        EncodedMotor<DcMotorEx> _launcher1;
+        EncodedMotor<DcMotorEx> _launcher2;
         // Interface to indicate position of a target
-        TargetAcquisition targetAcquisition;
+        TargetAcquisition _targetAcquisition;
         // Get the voltage, needed for a sensible FeedFwd function
         DoubleSupplier voltage;
 
@@ -186,11 +190,9 @@ public class Launcher {
         }
 
         public Component(TargetAcquisition targetSubsystem, DoubleSupplier voltageSup) {
-            // Save this off for commands to use
-            Commands.component = this;
-            launcher1 = configMotor(Config.MotorName1, Config.PrimaryReversed);
-            launcher2 = configMotor(Config.MotorName2, Config.SecondaryReversed);
-            targetAcquisition = targetSubsystem;
+            _launcher1 = configMotor(Config.MotorName1, Config.PrimaryReversed);
+            _launcher2 = configMotor(Config.MotorName2, Config.SecondaryReversed);
+            _targetAcquisition = targetSubsystem;
             voltage = () -> {
                 double v = voltageSup != null ? voltageSup.getAsDouble() : Config.DefaultVoltage;
                 return v > 0 ? v : Config.DefaultVoltage;
@@ -221,6 +223,8 @@ public class Launcher {
 
             setVelocityTarget(0);
             CommandScheduler.register(this);
+            // Save this off for commands to use
+            Commands.setComponent(this);
         }
 
         public Component() {
@@ -236,7 +240,7 @@ public class Launcher {
             pidfController.setTarget(speed);
         }
 
-        // Returns the current target velocity (which may be set explicity, or automatically)
+        // Returns the current target velocity (which may be set explicitly, or automatically)
         public double getVelocityTarget() {
             return pidfController.getTarget();
         }
@@ -247,31 +251,31 @@ public class Launcher {
             setVelocityTarget(calculateVelocityTarget()); //change to auto aim velocity
         }
 
-        protected void setPower(double pow) {
-            double power = Math.clamp(pow, -1, 1);
-            targetPower = power;
-            if (hasLaunch1()) {
-                launcher1.setPower(power);
-            }
-            if (hasLaunch2()) {
-                launcher2.setPower(power);
-            }
-        }
-
         public double getActualVelocity() {
             if (hasLaunch1()) {
-                return launcher1.getVelocity() * (Config.ReverseEncoder ? -1 : 1);
+                return _launcher1.getVelocity() * (Config.ReverseEncoder ? -1 : 1);
             } else {
                 return Double.NaN; // Not a Number
             }
         }
 
+        protected void setPower(double pow) {
+            double power = Math.clamp(pow, -1, 1);
+            targetPower = power;
+            if (hasLaunch1()) {
+                _launcher1.setPower(power);
+            }
+            if (hasLaunch2()) {
+                _launcher2.setPower(power);
+            }
+        }
+
         public double getMotor1Current() {
-            return hasLaunch1() ? launcher1.getAmperage(CurrentUnit.AMPS) : 0;
+            return hasLaunch1() ? _launcher1.getAmperage(CurrentUnit.AMPS) : 0;
         }
 
         public double getMotor2Current() {
-            return hasLaunch2() ? launcher2.getAmperage(CurrentUnit.AMPS) : 0;
+            return hasLaunch2() ? _launcher2.getAmperage(CurrentUnit.AMPS) : 0;
         }
 
         public void stop() {
@@ -301,8 +305,8 @@ public class Launcher {
         // target acquisition subsystem. If there is a TA subsystem, it uses that, otherwise it
         // uses Config.DefaultDistance.
         private double getTargetDistance() {
-            if (targetAcquisition != null) {
-                return targetAcquisition.getDistance();
+            if (_targetAcquisition != null) {
+                return _targetAcquisition.getDistance();
             }
             return Config.DefaultDistance;
         }
@@ -318,11 +322,11 @@ public class Launcher {
         }
 
         boolean hasLaunch1() {
-            return launcher1 != null;
+            return _launcher1 != null;
         }
 
         boolean hasLaunch2() {
-            return launcher2 != null;
+            return _launcher2 != null;
         }
     }
 
@@ -349,13 +353,13 @@ public class Launcher {
             double p1 = gamepad1.left_trigger;
             double p2 = gamepad1.right_trigger;
             if (lc.hasLaunch1()) {
-                lc.launcher1.setPower(p1);
+                lc._launcher1.setPower(p1);
                 res += "lt " + p1;
             } else {
                 res += "(no launcher1) ";
             }
             if (lc.hasLaunch2()) {
-                lc.launcher2.setPower(p2);
+                lc._launcher2.setPower(p2);
                 res += "rt " + p2;
             } else {
                 res += "(no launcher2) ";
@@ -378,7 +382,7 @@ public class Launcher {
     @TeleOp(name = "Launcher FeedFwd Helper", group = "Launcher")
     public static class FeedFwdHelper extends ValidationOpMode {
 
-        private enum State {
+        enum State {
             MeasureStaticFriction,
             ValidateStaticFriction,
             MeasureDynamicFriction,
