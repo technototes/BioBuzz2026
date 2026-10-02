@@ -70,11 +70,8 @@ public class TurretSubsystem implements Loggable, Subsystem {
         setHoodPosition(DOWN);
     }
 
-    public void TurretRotation() {
-        setTurretPosition(ROTATE_LEFT);
-        setTurretPosition(ROTATE_RIGHT);
-    }
-    // takes the already decided upon target and takes the current robot pose and does some math to figure out what angle the turret needs to point to face the target
+
+    // takes the already decided upon target and takes the current robot pose and does some math to figure out what angle the turret needs to point to face the target i just guessed which direction is positive should be easy to flip
     public double getTurretAngle() {
         Pose TargetPose = getTargetPose();
 
@@ -91,7 +88,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
         Angle = (FieldAngle - Head);
         return Angle;
     }
-    //determines the distance from the robot to the current hive target to be used for hood angle and flywheel speed
+    //determines the distance from the robot to the current hive target in inches to be used for hood angle and flywheel speed
     public double getDistance() {
         Pose RobotPose = robot.follower.pose();
         Pose TargetPose = getTargetPose();
@@ -100,23 +97,19 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         return Distance;
     }
-// determines which hive target to aim for based on what half of the field we are
+    // determines which hive target to aim for based on what half of the field we are
     public Pose getTargetPose() {
 
-        double TargetX, TargetY, Y;
+        double Y;
         Pose  TargetPose;
 
         Y = robot.follower.pose().y();
 
         if (Y > TARGET_SWITCH_THRESHOLD) {
-            TargetX = HIVE_TARGET2.x();
-            TargetY = HIVE_TARGET2.y();
+            TargetPose = HIVE_TARGET1;
         } else {
-            TargetX = HIVE_TARGET1.x();
-            TargetY = HIVE_TARGET1.y();
+            TargetPose = HIVE_TARGET2;
         }
-
-        TargetPose = new Pose(TargetX, TargetY);
 
         return TargetPose;
     }
