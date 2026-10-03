@@ -4,13 +4,18 @@ import static java.lang.Math.clamp;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.pedropathing.math.Pose;
+import com.pedropathing.utils.Angle;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.hardware.motor.EncodedMotor;
 import com.technototes.library.hardware.servo.Servo;
+import com.technototes.library.logger.Log;
 import com.technototes.library.logger.Loggable;
 import com.technototes.library.subsystem.Subsystem;
+import com.technototes.library.util.MathUtils;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.sixteen750.Hardware;
 import org.firstinspires.ftc.teamcode.sixteen750.Robot;
 import org.firstinspires.ftc.teamcode.sixteen750.Setup;
@@ -18,8 +23,8 @@ import org.firstinspires.ftc.teamcode.sixteen750.Setup;
 @Configurable
 public class TurretSubsystem implements Loggable, Subsystem {
     final Robot robot;
-    Pose HIVE_TARGET1 = new Pose(58,56);
-    Pose HIVE_TARGET2 = new Pose(58,85);
+    Pose HIVE_TARGET1 = new Pose(58,53);
+    Pose HIVE_TARGET2 = new Pose(58,88 );
 
     public static double TARGET_SWITCH_THRESHOLD = 71;
     public static double TURRET_CENTER = 0.5;
@@ -28,6 +33,16 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     public static double ROTATE_LEFT = 0.15;
     public static double ROTATE_RIGHT = 0.85;
+    @Log.Number (name = "target servo Pos")
+    public static double TARGET_SERVO_POS = 0;
+    @Log.Number (name = "Robot Heading")
+    public static double ROBOT_HEAD = 0;
+    @Log.Number (name = "Absolute heading")
+    public static double ABSOLUTE_HEAD = 0;
+    @Log.Number (name = "Turret Heading")
+    public static double TURRET_HEADING = 0;
+    @Log.Number (name = "Target Pose")
+    public static Pose TARGET_POSE = new Pose(0,0);
 
     public static double UP = 0.1;
     public static double DOWN = 0.5;
@@ -74,20 +89,20 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     // takes the already decided upon target and takes the current robot pose and does some math to figure out what angle the turret needs to point to face the target i just guessed which direction is positive should be easy to flip
     public double getTurretAngle() {
-        Pose TargetPose = getTargetPose();
+        Pose targetPose = getTargetPose();
 
-        double X, Y, Head, dx, dy, FieldAngle, Angle;
+        double x, y, robotHead, dx, dy, absoluteAngle, angle;
 
-        X = robot.follower.pose().x();
-        Y = robot.follower.pose().y();
-        Head = robot.follower.pose().heading();
+        x = robot.follower.pose().x();
+        y = robot.follower.pose().y();
+        robotHead = MathUtils.normalizeDeltaAngle(robot.follower.pose().heading(), AngleUnit.RADIANS); // head is in radians cause math is nice
 
-        dx = TargetPose.x() - X;
-        dy = TargetPose.y() - Y;
-        FieldAngle = Math.atan2(dy, dx);
+        dx = targetPose.x() - x;
+        dy = targetPose.y() - y;
+        absoluteAngle = Math.atan2(dy, dx); // in radians the target angle of the turret relative to the field
 
-        Angle = (FieldAngle - Head);
-        return Angle;
+        angle = (absoluteAngle - robotHead); // still in radians.......
+        return angle;
     }
     //determines the distance from the robot to the current hive target in inches to be used for hood angle and flywheel speed
     public double getDistance() {
@@ -102,22 +117,22 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public Pose getTargetPose() {
 
         double Y;
-        Pose  TargetPose;
+        Pose  targetPose;
 
         Y = robot.follower.pose().y();
 
         if (Y > TARGET_SWITCH_THRESHOLD) {
-            TargetPose = HIVE_TARGET1;
+            targetPose = HIVE_TARGET1;
         } else {
-            TargetPose = HIVE_TARGET2;
+            targetPose = HIVE_TARGET2;
         }
 
-        return TargetPose;
+        return targetPose;
     }
     // takes our turret target angle and turns it into a servo position also clamps it currently to not fry to wiring
     public double getTurretPos() {
-        double Angle = getTurretAngle();
-        double servoPos = TURRET_CENTER - (Angle / (2 * Math.PI));
+        double angle = getTurretAngle();
+        double servoPos = TURRET_CENTER - (angle / (2 * Math.PI));
 
         return (clamp(servoPos, TURRET_MIN, TURRET_MAX)-1  ) *-1;
     }
@@ -129,6 +144,11 @@ public class TurretSubsystem implements Loggable, Subsystem {
     @Override
     public void periodic() {
         getTurretPos();
+        TARGET_SERVO_POS = getTurretPos();
+        TARGET_POSE = getTargetPose();
+        TURRET_HEADING = getTurretAngle();
+        ROBOT_HEAD = robot.follower.pose().heading();
+
 
         // Add an item to the array and update the index for the next update to the 'circular' array
     }
