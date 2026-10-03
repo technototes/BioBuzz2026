@@ -38,7 +38,7 @@ public class MainTele extends CommandOpMode implements Loggable {
         robot = new Robot(hardware, Alliance.RED, StartingPosition.Unspecified);
         // controlsOperator = new OperatorController(codriverGamepad, robot);
         panelsTelemetry = PanelsTelemetry.INSTANCE;
-        robot.follower.setPose(new Pose(0, 0, 0));
+        robot.follower.setPose(new Pose(6.75, 6.75, 0));
         // limelight = hardwareMap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
         controlsDriver = new DriverController(driverGamepad, robot);
         if (Setup.Connected.DRIVEBASE) {
@@ -81,7 +81,9 @@ public class MainTele extends CommandOpMode implements Loggable {
     }
 
     @Override
-    public void runLoop() {}
+    public void runLoop() {
+        robot.follower.update();
+    }
 
     @Override
     public void end() {
