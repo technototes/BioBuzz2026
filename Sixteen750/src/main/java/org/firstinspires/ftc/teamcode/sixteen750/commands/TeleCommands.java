@@ -49,6 +49,14 @@ public class TeleCommands {
     public static Command Track(Robot r) {
         return Command.create(r.turretsubsystem::setTurretTarget);
     }
+    public static Command Increase (Robot r) {
+        return Command.create(r.turretsubsystem::up);
+    }
+    public static Command Decrease (Robot r) {
+        return Command.create(r.turretsubsystem::down);
+    }
+
 
     public static Command Launch (Robot r) {return Command.create(r.turretsubsystem::Launch);}
 }
+
