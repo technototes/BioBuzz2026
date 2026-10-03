@@ -29,6 +29,7 @@ public class DriverController implements Loggable {
     public CommandButton RelocButton;
     public CommandButton holdButton;
     public CommandButton turretlockButton;
+    public CommandButton trackButton;
 
     public CommandButton intakeTrigger;
     public CommandAxis autoAim;
@@ -64,13 +65,14 @@ public class DriverController implements Loggable {
         driveRightStick = gamepad.rightStick;
         intakeTrigger = gamepad.rightTrigger.getAsButton();
 
-        snailButton = gamepad.leftBumper;
+        snailButton = gamepad.ps_triangle;
         launchButton = gamepad.rightBumper;
         spitButton = gamepad.ps_square;
         gateButton = gamepad.ps_cross;
         holdButton = gamepad.ps_circle;
         RelocButton = gamepad.ps_share;
         turretlockButton = gamepad.dpadUp;
+        trackButton = gamepad.leftBumper;
     }
 
     public void bindDriveControls() {
@@ -103,7 +105,9 @@ public class DriverController implements Loggable {
         // autoAim.whilePressed(new LLPipelineChangeCommand(hardware.limelight, Setup.HardwareNames.AprilTag_Pipeline));
     }
 
-    public void bindLaunchControls() {}
+    public void bindLaunchControls() {
+        trackButton.whilePressed(TeleCommands.Track(robot));
+    }
 
     public void bindIntakeControls() {
         spitButton.whenPressed(TeleCommands.Spit(robot));

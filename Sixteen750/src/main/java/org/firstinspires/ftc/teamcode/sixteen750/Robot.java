@@ -37,7 +37,7 @@ public class Robot implements Loggable {
             follower = PedroConstants.create(hw.map);
         }
         if (Setup.Connected.TURRETSUBSYSTEM) {
-            this.turretsubsystem = new TurretSubsystem(hw);
+            this.turretsubsystem = new TurretSubsystem(hw, this);
         }
     }
 

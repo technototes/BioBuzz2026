@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.sixteen750.Setup;
 
 @Configurable
 public class TurretSubsystem implements Loggable, Subsystem {
-    Robot robot;
+    final Robot robot;
     Pose HIVE_TARGET1 = new Pose(58,56);
     Pose HIVE_TARGET2 = new Pose(58,85);
 
@@ -39,8 +39,9 @@ public class TurretSubsystem implements Loggable, Subsystem {
     EncodedMotor<DcMotorEx> launcher;
     Servo turret1, turret2, hood;
 
-    public TurretSubsystem(Hardware h) {
+    public TurretSubsystem(Hardware h, Robot r) {
         hasHardware = Setup.Connected.TURRETSUBSYSTEM;
+        robot = r;
         // Do stuff in here
         if (hasHardware) {
             launcher = h.launcher;
@@ -118,7 +119,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
         double Angle = getTurretAngle();
         double servoPos = TURRET_CENTER - (Angle / (2 * Math.PI));
 
-        return clamp(servoPos, TURRET_MIN, TURRET_MAX);
+        return (clamp(servoPos, TURRET_MIN, TURRET_MAX)-1  ) *-1;
     }
     public void setTurretTarget() {
         setTurretPosition(getTurretPos());
@@ -127,6 +128,8 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     @Override
     public void periodic() {
+        getTurretPos();
+
         // Add an item to the array and update the index for the next update to the 'circular' array
     }
 

@@ -81,7 +81,9 @@ public class MainTele extends CommandOpMode implements Loggable {
     }
 
     @Override
-    public void runLoop() {}
+    public void runLoop() {
+        robot.follower.update();
+    }
 
     @Override
     public void end() {
