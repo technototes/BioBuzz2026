@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.sixteen750.opmodes;
 import static org.firstinspires.ftc.teamcode.sixteen750.Setup.HardwareNames.AprilTag_Pipeline;
 
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.math.Pose;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.sixteen750.commands.driving.DrivingCommand
 import org.firstinspires.ftc.teamcode.sixteen750.controls.DriverController;
 import org.firstinspires.ftc.teamcode.sixteen750.controls.OperatorController;
 import org.firstinspires.ftc.teamcode.sixteen750.helpers.StartingPosition;
+import org.firstinspires.ftc.teamcode.sixteen750.subsystems.TurretSubsystem;
 
 @TeleOp(name = "MainTele")
 @SuppressWarnings("unused")
@@ -31,6 +33,7 @@ public class MainTele extends CommandOpMode implements Loggable {
     public Hardware hardware;
     private Limelight3A limelight;
     private PanelsTelemetry panelsTelemetry;
+    TelemetryManager ptel;
 
     @Override
     public void uponInit() {
@@ -46,8 +49,7 @@ public class MainTele extends CommandOpMode implements Loggable {
             CommandScheduler.scheduleForState(
                 new SequentialCommandGroup(
                     HeadingHelper.RestorePreviousPosition(robot.follower),
-                    DrivingCommands.ResetGyro(controlsDriver.pedroDriver),
-                    Command.create(robot.turretsubsystem::Launch)
+                    DrivingCommands.ResetGyro(controlsDriver.pedroDriver)
                 ),
                 OpModeState.INIT
             );
@@ -69,6 +71,8 @@ public class MainTele extends CommandOpMode implements Loggable {
              * Starts polling for data.  If you neglect to call start(), getLatestResult() will return null.
              */
             limelight.start();
+
+            ptel = PanelsTelemetry.INSTANCE.getTelemetry();
         }
         if (Setup.Connected.TURRETSUBSYSTEM) {
             // CommandScheduler.register(robot.launcherSubsystem);

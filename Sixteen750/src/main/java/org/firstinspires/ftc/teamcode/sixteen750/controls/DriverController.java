@@ -32,6 +32,8 @@ public class DriverController implements Loggable {
     public CommandButton trackButton;
 
     public CommandButton intakeTrigger;
+    public CommandButton upButton;
+    public CommandButton downButton;
     public CommandAxis autoAim;
     public PedroDriver pedroDriver;
 
@@ -65,13 +67,15 @@ public class DriverController implements Loggable {
         driveRightStick = gamepad.rightStick;
         intakeTrigger = gamepad.rightTrigger.getAsButton();
 
+        upButton = gamepad.dpadUp;
+        downButton = gamepad.dpadDown;
         snailButton = gamepad.ps_triangle;
         launchButton = gamepad.rightBumper;
         spitButton = gamepad.ps_square;
         gateButton = gamepad.ps_cross;
         holdButton = gamepad.ps_circle;
         RelocButton = gamepad.ps_share;
-        turretlockButton = gamepad.dpadUp;
+        turretlockButton = gamepad.dpadLeft;
         trackButton = gamepad.leftBumper;
     }
 
@@ -107,6 +111,9 @@ public class DriverController implements Loggable {
 
     public void bindLaunchControls() {
         trackButton.whilePressed(TeleCommands.Track(robot));
+        launchButton.whilePressed(TeleCommands.Launch(robot));
+        upButton.whenPressed(TeleCommands.Increase(robot));
+        downButton.whenPressed(TeleCommands.Decrease(robot));
     }
 
     public void bindIntakeControls() {
