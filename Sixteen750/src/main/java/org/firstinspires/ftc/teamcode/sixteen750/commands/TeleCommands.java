@@ -23,7 +23,7 @@ public class TeleCommands {
     }
 
     public static Command IntakeStop(Robot r) {
-         return Command.create(r.intakeSubsystem::StopIntake);
+        return Command.create(r.intakeSubsystem::StopIntake);
     }
 
     public static Command Reject(Robot r) {
@@ -55,9 +55,12 @@ public class TeleCommands {
     public static Command DecreaseFlywheel (Robot r) {
         return Command.create(r.turretsubsystem::decreaseVelocity);
     }
-    public static Command AutoHood (Robot r) {return  Command.create(r.turretsubsystem::setHoodAutoPos);}
 
+    public static Command AutoHood(Robot r) {
+        return Command.create(r.turretsubsystem::setHoodAutoPos);
+    }
 
-    public static Command Launch (Robot r) {return Command.create(r.turretsubsystem::Launch);}
+    public static Command Launch(Robot r) {
+        return Command.create(r.turretsubsystem::Launch);
+    }
 }
-

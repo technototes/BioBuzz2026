@@ -90,7 +90,6 @@ public class DriverController implements Loggable {
         );
 
         resetGyroButton.whenPressed(DrivingCommands.ResetGyro(pedroDriver));
-
     }
 
     public void bindLaunchControls() {
