@@ -28,14 +28,13 @@ public class DriverController implements Loggable {
     public CommandButton override;
     public CommandButton RelocButton;
     public CommandButton holdButton;
-    public CommandButton turretlockButton;
     public CommandButton trackButton;
-
+    public CommandButton flywheelButton;
     public CommandButton intakeTrigger;
     public CommandButton upButton;
     public CommandButton downButton;
-    public CommandAxis autoAim;
     public PedroDriver pedroDriver;
+    public CommandButton hoodButton;
 
     public static double triggerThreshold = 0.1;
 
@@ -55,10 +54,6 @@ public class DriverController implements Loggable {
         if (Setup.Connected.INTAKESUBSYSTEM) {
             bindIntakeControls();
         }
-
-        if (Setup.Connected.AIMINGSUBSYSTEM) {
-            bindAimControls();
-        }
     }
 
     public void AssignNamedControllerButton() {
@@ -69,14 +64,15 @@ public class DriverController implements Loggable {
 
         upButton = gamepad.dpadUp;
         downButton = gamepad.dpadDown;
-        snailButton = gamepad.ps_triangle;
+        snailButton = gamepad.leftBumper;
         launchButton = gamepad.rightBumper;
+        flywheelButton = gamepad.dpadLeft;
         spitButton = gamepad.ps_square;
         gateButton = gamepad.ps_cross;
         holdButton = gamepad.ps_circle;
         RelocButton = gamepad.ps_share;
-        turretlockButton = gamepad.dpadLeft;
-        trackButton = gamepad.leftBumper;
+        trackButton = gamepad.ps_triangle;
+        hoodButton = gamepad.dpadRight;
     }
 
     public void bindDriveControls() {
@@ -88,30 +84,19 @@ public class DriverController implements Loggable {
         );
         CommandScheduler.scheduleJoystick(pedroDriver);
 
-        // turboButton.whenPressed(DrivingCommands.TurboDriving(robot.drivebase));
-        // turboButton.whenReleased(DrivingCommands.NormalDriving(robot.drivebase));
         snailButton.whenPressedReleased(
             DrivingCommands.SnailDriving(pedroDriver),
             DrivingCommands.NormalDriving(pedroDriver)
         );
 
         resetGyroButton.whenPressed(DrivingCommands.ResetGyro(pedroDriver));
-        //MotorDecrease.whenPressed(TeleCommands.DecreaseMotor(robot));
-        //MotorIncrease.whenPressed(TeleCommands.IncreaseMotor(robot));
 
-        // if (Setup.Connected.LIMELIGHTSUBSYSTEM) {
-        //  autoAim.whenPressed(DrivingCommands.AutoOrient(pedroDriver));
-        //  autoAim.whenReleased(DrivingCommands.NoAutoOrient(pedroDriver));
-        //  RelocButton.whenPressed(TeleCommands.LLRelocCommand(robot));
-        //AltAutoAlign.whenPressed(new AltAutoOrient(robot));
-        //AltAutoAlign.whenReleased(DrivingCommands.NormalDriving(pedroDriver));
-        // }
-        // autoAim.whilePressed(new LLPipelineChangeCommand(hardware.limelight, Setup.HardwareNames.AprilTag_Pipeline));
     }
 
     public void bindLaunchControls() {
-        trackButton.whilePressed(TeleCommands.Track(robot));
-        launchButton.whilePressed(TeleCommands.Launch(robot));
+        trackButton.whileInverseToggled(TeleCommands.Track(robot));
+        flywheelButton.whileInverseToggled(TeleCommands.Launch(robot));
+        hoodButton.whileInverseToggled(TeleCommands.AutoHood(robot));
         upButton.whenPressed(TeleCommands.Increase(robot));
         downButton.whenPressed(TeleCommands.Decrease(robot));
     }
@@ -126,30 +111,5 @@ public class DriverController implements Loggable {
         launchButton.whilePressed(TeleCommands.Feed(robot));
         launchButton.whenReleased(TeleCommands.Hold(robot));
         gateButton.whenPressedReleased(TeleCommands.GateOpen(robot), TeleCommands.GateClose(robot));
-    }
-
-    // spitTrigger.whilePressed(TeleCommands.Spit(robot.intakeSubsystem));
-    // spitTrigger.whileReleased(TeleCommands.Intake(robot.intakeSubsystem));
-
-    public void bindAimControls() {
-        // if(yippee) {
-        //     leverButton.whenPressed(
-        //     TeleCommands.LeverStop(robot.aimingSubsystem));
-        //     yippee = false;
-        // } else {
-        //     leverButton.whenPressed(
-        //     TeleCommands.LeverGo(robot.aimingSubsystem));
-        //     yippee = true;
-        // }
-        // gateButton.whenPressed(TeleCommands.GateDown(robot));
-        gateButton.whenPressed(TeleCommands.Feed(robot));
-        gateButton.whenReleased(TeleCommands.IntakeStop(robot));
-        // gateButton.whenReleased(TeleCommands.GateUp(robot));
-
-        //
-        holdButton.whilePressed(TeleCommands.Intake(robot));
-        // holdButton.whenPressed(TeleCommands.GateDown(robot));
-        holdButton.whenReleased(TeleCommands.IntakeStop(robot));
-        //holdButton.whenReleased(TeleCommands.GateUp(robot));
     }
 }
