@@ -29,18 +29,17 @@ public class TurretSubsystem implements Loggable, Subsystem {
     Pose HIVE_TARGET1 = new Pose(58,53);
     Pose HIVE_TARGET2 = new Pose(58,88 );
 
-    public static double TARGET_SWITCH_THRESHOLD = 71;
+    public static double TARGET_SWITCH_THRESHOLD = 72;
     public static double TURRET_CENTER = 0.5;
-    public static double TURRET_MIN = 0.1;
-    public static double TURRET_MAX = 0.9;
-
+    public static double TURRET_MIN = 0.08;
+    public static double TURRET_MAX = 0.92;
     public static double ROTATE_LEFT = 0.15;
     public static double ROTATE_RIGHT = 0.85;
-    @Log.Number (name = "target servo Pos")
+   // @Log.Number (name = "target servo Pos")
     public static double TARGET_SERVO_POS = 0;
     @Log.Number (name = "Robot Heading")
     public static double ROBOT_HEAD = 0;
-    @Log.Number (name = "Absolute heading")
+   // @Log.Number (name = "Absolute heading")
     public static double ABSOLUTE_HEAD = 0;
     @Log.Number (name = "Turret Heading")
     public static double TURRET_HEADING = 0;
@@ -50,13 +49,24 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double CURRENT_VELO = 0;
     @Log.Number (name = "Target Pose")
     public static Pose TARGET_POSE = new Pose(0,0);
-
-    public static double UP = 0.1;
-    public static double DOWN = 0.5;
-    public static double INCREASE = 15;
+    public static double HOOD_AUTO_POS = 0.5; // final value we feed into the hood for position
+    public static double HOOD_TARGET_ANGLE = 21; // hood target angle in degrees
+    public static double HOOD_POSITION_TO_ANGLE_CONSTANT = 43.42105; // did math to get this it is how the position relates to the angle in degrees
+    public static double hoodCompScalar = 0.02; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
+    public static double HOOD_MIN = 0.1;
+    public static double HOOD_MAX = 0.5;
+    public static double HOOD_DOWN_ANGLE = 21; // fully down hood angle in deg
+    public static double INCREASE = 15; // extremely jank increment and decrement
+    public static double HOOD_TARGET_POS = 0.5;
     public static double ACTUAL_TARGET = 0;
-
     public static double LAUNCHER_VELOCITY = 2400;
+    public static double AUTO_VELOCITY = 2000;
+    public static double HOOD_REGRESSION_A = 0.5051; // slope of hood regression
+    public static double HOOD_REGRESSION_B = 7.5895; // offset to the slope (y intercept)
+    public static double LAUNCHER_REGRESSION_A = 33.86667; // slope of launcher regression
+    public static double LAUNCHER_REGRESSION_B = 916.66667; // offset to the launcher regression slope (y-intercept)
+    public static double DISTANCE_TO_TARGET = 0; // distance to the hive we are aiming at in inches
+    public static double error = 0; // error for launcher velo
 
     boolean hasHardware;
     Gamepad gamepad;
@@ -71,7 +81,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     // It's output is a power value in the -1 to +1 range.
     // So, P is probably in the range of .001-ish.
     // For a velocity-targeting PIDF, we probably want an I value, not a D value.
-    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.015, 0.0, 0.0, 0);
+    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.015, 0.0, 0.0, 0); // 10/3/26 added a p value seems pretty decent
     private Hardware hardware;
     // Stuff used for the Feed Forward function.
     // This one is highly variable, based on the amount of friction in the system
@@ -91,7 +101,6 @@ public class TurretSubsystem implements Loggable, Subsystem {
     // GoBilda says stall current of 9.2A at 12V, so V = I * R, R = 12 / 9.2 (about 1.3 ohms)
     // As the motor heats up, resistance also increase, so we could increase this a little bit
     // or maybe increase it over time to counteract that, but this is probably good enough.
-
     public TurretSubsystem(Hardware h, Robot r) {
         hasHardware = Setup.Connected.TURRETSUBSYSTEM;
         robot = r;
@@ -123,41 +132,41 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     public void Launch() {
         // Spin the motors
-        setVelocityTarget(LAUNCHER_VELOCITY);
+        setVelocityTarget(AUTO_VELOCITY);
     }
 
-
-
-    // takes the already decided upon target and takes the current robot pose and does some math to figure out what angle the turret needs to point to face the target i just guessed which direction is positive should be easy to flip
+    // returns the turret angle in radians relative to the robot
     public double getTurretAngle() {
         Pose targetPose = getTargetPose();
 
-        double x, y, robotHead, dx, dy, absoluteAngle, angle;
+        double x, y, robotHead, dx, dy, absoluteAngle, angle; //
 
-        x = robot.follower.pose().x();
-        y = robot.follower.pose().y();
-        robotHead = MathUtils.normalizeDeltaAngle(robot.follower.pose().heading(), AngleUnit.RADIANS); // head is in radians cause math is nice
+        x = robot.follower.pose().x(); // sets x to robots current y position
+        y = robot.follower.pose().y(); // sets y to robots current y position
+        robotHead = MathUtils.normalizeDeltaAngle(robot.follower.pose().heading(), AngleUnit.RADIANS); // sets robotHead to robot heading and normalizes to delta radians
 
-        dx = targetPose.x() - x;
-        dy = targetPose.y() - y;
+        dx = targetPose.x() - x; // difference between target x and robot x
+        dy = targetPose.y() - y; // difference between target y and robot y
         absoluteAngle = Math.atan2(dy, dx); // in radians the target angle of the turret relative to the field
 
         angle = (absoluteAngle - robotHead); // still in radians.......
         return angle;
     }
-    //determines the distance from the robot to the current hive target in inches to be used for hood angle and flywheel speed
+    //returns the distance from the selected hive target in inches
     public double getDistance() {
-        Pose RobotPose = robot.follower.pose();
-        Pose TargetPose = getTargetPose();
+        Pose robotPose = robot.follower.pose();
+        Pose targetPose = getTargetPose();
 
-        double Distance = RobotPose.distance(TargetPose);
+        double Distance = robotPose.distance(targetPose);
 
         return Distance;
     }
+    // increment
     public double increase() {
         ACTUAL_TARGET = LAUNCHER_VELOCITY +INCREASE;
         return ACTUAL_TARGET;
     }
+    // decrement
     public double decrease() {
         ACTUAL_TARGET = LAUNCHER_VELOCITY - INCREASE;
         return ACTUAL_TARGET;
@@ -178,12 +187,12 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         return targetPose;
     }
-    // takes our turret target angle and turns it into a servo position also clamps it currently to not fry to wiring
+    // takes our final turret angle does some math and returns a value in servo position aka 0-1
     public double getTurretPos() {
         double angle = getTurretAngle();
-        double servoPos = TURRET_CENTER - (angle / (2 * Math.PI));
+        double servoPos = TURRET_CENTER + (angle / (2 * Math.PI));
 
-        return (clamp(servoPos, TURRET_MIN, TURRET_MAX)-1  ) *-1;
+        return (clamp(servoPos, TURRET_MIN, TURRET_MAX));
     }
     public void setTurretTarget() {
         setTurretPosition(getTurretPos());
@@ -194,7 +203,25 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void down() {
         LAUNCHER_VELOCITY = decrease();
     }
+    public double getHoodTargetAngle() {
+        double x = DISTANCE_TO_TARGET;
 
+        HOOD_TARGET_ANGLE = HOOD_REGRESSION_A * x + HOOD_REGRESSION_B;
+
+        return HOOD_TARGET_ANGLE;
+    }
+    public double getHoodTargetPos() {
+        HOOD_TARGET_POS = HOOD_MAX - (HOOD_TARGET_ANGLE-HOOD_DOWN_ANGLE) / HOOD_POSITION_TO_ANGLE_CONSTANT;
+
+        return clamp(HOOD_TARGET_POS, HOOD_MIN, HOOD_MAX);
+    }
+    public double getHoodAutoPos() {
+        HOOD_AUTO_POS = HOOD_TARGET_POS - (error * hoodCompScalar);
+        return  clamp(HOOD_AUTO_POS, HOOD_MIN, HOOD_MAX);
+    }
+    public void setHoodAutoPos() {
+        setHoodPos(HOOD_AUTO_POS);
+    }
 
     @Override
     public void periodic() {
@@ -205,6 +232,13 @@ public class TurretSubsystem implements Loggable, Subsystem {
         ROBOT_HEAD = robot.follower.pose().heading();
         TARGET_VELO = getVelocityTarget();
         CURRENT_VELO = getActualVelocity();
+        AUTO_VELOCITY = getAutoVelocity();
+        DISTANCE_TO_TARGET = getDistance();
+        getHoodAutoPos();
+        getHoodTargetPos();
+        getHoodTargetAngle();
+        error = pidfController.getLastError();
+
 
 
         // Add an item to the array and update the index for the next update to the 'circular' array
@@ -223,6 +257,14 @@ public class TurretSubsystem implements Loggable, Subsystem {
             return pidfController.getTarget(); // Not a Number
         }
     }
+    // takes distance and returns AUTO_VELOCITY by plugging it into the regression
+    public double getAutoVelocity() {
+            double x = DISTANCE_TO_TARGET;
+
+            AUTO_VELOCITY = LAUNCHER_REGRESSION_A * x + LAUNCHER_REGRESSION_B;
+
+            return AUTO_VELOCITY;
+    }
 
     // Explicitly set the target velocity for the motors
     public void setVelocityTarget(double speed) {
@@ -231,6 +273,9 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void setTurretPosition(double pos) {
         turret1.setPosition(pos);
         turret2.setPosition(pos);
+    }
+    private void setHoodPos(double pos) {
+        hood.setPosition(pos);
     }
 
     // Returns the current target velocity (which may be set explicitly, or automatically)

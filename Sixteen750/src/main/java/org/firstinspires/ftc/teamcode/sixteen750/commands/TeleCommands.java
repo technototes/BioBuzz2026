@@ -55,6 +55,7 @@ public class TeleCommands {
     public static Command Decrease (Robot r) {
         return Command.create(r.turretsubsystem::down);
     }
+    public static Command AutoHood (Robot r) {return  Command.create(r.turretsubsystem::setHoodAutoPos);}
 
 
     public static Command Launch (Robot r) {return Command.create(r.turretsubsystem::Launch);}
