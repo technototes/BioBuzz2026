@@ -16,7 +16,6 @@ import com.technototes.library.logger.Loggable;
 import com.technototes.library.subsystem.Subsystem;
 import com.technototes.library.util.MathUtils;
 import com.technototes.library.util.PIDFController;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.sixteen750.Hardware;
@@ -25,9 +24,10 @@ import org.firstinspires.ftc.teamcode.sixteen750.Setup;
 
 @Configurable
 public class TurretSubsystem implements Loggable, Subsystem {
+
     final Robot robot;
-    Pose HIVE_TARGET1 = new Pose(58,53);
-    Pose HIVE_TARGET2 = new Pose(58,88 );
+    Pose HIVE_TARGET1 = new Pose(58, 53);
+    Pose HIVE_TARGET2 = new Pose(58, 88);
 
     public static double TARGET_SWITCH_THRESHOLD = 72;
     public static double TURRET_CENTER = 0.5;
@@ -143,15 +143,19 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         x = robot.follower.pose().x(); // sets x to robots current y position
         y = robot.follower.pose().y(); // sets y to robots current y position
-        robotHead = MathUtils.normalizeDeltaAngle(robot.follower.pose().heading(), AngleUnit.RADIANS); // sets robotHead to robot heading and normalizes to delta radians
+        robotHead = MathUtils.normalizeDeltaAngle(
+            robot.follower.pose().heading(),
+            AngleUnit.RADIANS
+        ); // sets robotHead to robot heading and normalizes to delta radians
 
         dx = targetPose.x() - x; // difference between target x and robot x
         dy = targetPose.y() - y; // difference between target y and robot y
         absoluteAngle = Math.atan2(dy, dx); // in radians the target angle of the turret relative to the field
 
-        angle = (absoluteAngle - robotHead); // still in radians.......
+        angle = absoluteAngle - robotHead; // still in radians.......
         return angle;
     }
+
     //returns the distance from the selected hive target in inches
     public double getDistance() {
         Pose robotPose = robot.follower.pose();
@@ -166,16 +170,17 @@ public class TurretSubsystem implements Loggable, Subsystem {
         actualTarget = launcherVelocity +INCREASE;
         return actualTarget;
     }
+
     // decrement
     public double decreaseVelo() {
         actualTarget = launcherVelocity - INCREASE;
         return actualTarget;
     }
+
     // determines which hive target to aim for based on what half of the field we are
     public Pose getTargetPose() {
-
         double Y;
-        Pose  targetPose;
+        Pose targetPose;
 
         Y = robot.follower.pose().y();
 
@@ -187,13 +192,15 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         return targetPose;
     }
+
     // takes our final turret angle does some math and returns a value in servo position aka 0-1
     public double getTurretPos() {
         double angle = getTurretAngle();
-        double servoPos = TURRET_CENTER + (angle / (2 * Math.PI));
+        double servoPos = TURRET_CENTER + angle / (2 * Math.PI);
 
-        return (clamp(servoPos, TURRET_MIN, TURRET_MAX));
+        return clamp(servoPos, TURRET_MIN, TURRET_MAX);
     }
+
     public void setTurretTarget() {
         setTurretPosition(getTurretPos());
     }
@@ -222,6 +229,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
         hoodAutoPos = hoodTargetPos - (error * hoodCompScalar); // takes our target and subtracts our error times a scalar
         return  clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
     }
+
     public void setHoodAutoPos() {
         setHoodPos(hoodAutoPos);
     }
@@ -241,6 +249,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
         getHoodTargetAngle();
         error = pidfController.getLastError();
 
+        // Add an item to the array and update the index for the next update to the 'circular' array
         double power = pidfController.update(getActualVelocity());
         setLauncherPower(power);
     }
@@ -256,6 +265,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
             return pidfController.getTarget(); // Not a Number
         }
     }
+
     // takes distance and returns AUTO_VELOCITY by plugging it into the regression
     public double getAutoVelocity() {
             double x = distanceToTarget;
@@ -269,10 +279,12 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void setVelocityTarget(double speed) {
         pidfController.setTarget(speed);
     }
+
     public void setTurretPosition(double pos) {
         turret1.setPosition(pos);
         turret2.setPosition(pos);
     }
+
     private void setHoodPos(double pos) {
         hood.setPosition(pos);
     }
