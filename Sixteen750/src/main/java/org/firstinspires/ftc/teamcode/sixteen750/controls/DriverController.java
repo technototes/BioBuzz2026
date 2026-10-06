@@ -94,11 +94,11 @@ public class DriverController implements Loggable {
     }
 
     public void bindLaunchControls() {
-        trackButton.whileInverseToggled(TeleCommands.Track(robot));
+        trackButton.whileInverseToggled(TeleCommands.TrackHive(robot));
         flywheelButton.whileInverseToggled(TeleCommands.Launch(robot));
         hoodButton.whileInverseToggled(TeleCommands.AutoHood(robot));
-        upButton.whenPressed(TeleCommands.Increase(robot));
-        downButton.whenPressed(TeleCommands.Decrease(robot));
+        upButton.whenPressed(TeleCommands.IncreaseFlywheel(robot));
+        downButton.whenPressed(TeleCommands.DecreaseFlywheel(robot));
     }
 
     public void bindIntakeControls() {

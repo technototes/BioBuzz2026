@@ -18,7 +18,8 @@ public class IntakeSubsystem implements Loggable, Subsystem {
 
     public static double REJECT_VELOCITY = -0.4;
 
-    public static double HOLD_VELOCITY = 0.4;
+    public static double HOLD_VELOCITY1 = 0.45;
+    public static double HOLD_VELOCITY2 = 0.55;
 
     public static double FEED_VELOCITY = 1;
 
@@ -72,7 +73,8 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     }
 
     public void Hold() {
-        setTransferPower(HOLD_VELOCITY);
+        setTransfer1Power(HOLD_VELOCITY2);
+        setTransfer2Power(HOLD_VELOCITY1);
         setGatePosition(BLOCK_POSITION);
     }
 
@@ -103,6 +105,18 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     private void setTransferPower(double power) {
         if (hasHardware) {
             _transfer1.setPower(power);
+            _transfer2.setPower(power);
+        }
+    }
+
+    private void setTransfer1Power(double power) {
+        if (hasHardware) {
+            _transfer1.setPower(power);
+        }
+    }
+
+    private void setTransfer2Power(double power) {
+        if (hasHardware) {
             _transfer2.setPower(power);
         }
     }

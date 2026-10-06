@@ -5,6 +5,7 @@ import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.technototes.library.command.Command;
 import com.technototes.library.command.CommandScheduler;
+import com.technototes.library.command.ParallelCommandGroup;
 import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.command.WaitCommand;
 import com.technototes.library.structure.CommandOpMode;
@@ -20,7 +21,7 @@ import org.firstinspires.ftc.teamcode.sixteen750.helpers.StartingPosition;
 import org.firstinspires.ftc.teamcode.sixteen750.pedro.meepmeep.Paths;
 import org.firstinspires.ftc.teamcode.sixteen750.pedro.meepmeep.Poses;
 
-@Autonomous(name = "PartnerPark12Park", preselectTeleOp = "BlueTele")
+@Autonomous(name = "PartnerPark12Park", preselectTeleOp = "MainTele")
 @SuppressWarnings("unused")
 public class PartnerPark12Park extends CommandOpMode {
 
@@ -41,22 +42,28 @@ public class PartnerPark12Park extends CommandOpMode {
         panelsTelemetry = PanelsTelemetry.INSTANCE;
         robot.follower.setPose(Poses.StartPoses.getStart());
         CommandScheduler.scheduleForState(
+               new ParallelCommandGroup(
+                       t.Launch(robot),
+                       t.TrackHive(robot),
+                       t.AutoHood(robot)
+               ).alongWith(
             new SequentialCommandGroup(
-                //t.Launch(robot)                .alongWith(
                 new PedroPathCommand(robot.follower, p.StartToPartnerPark()), //)
                 new PedroPathCommand(robot.follower, p.PartnerParkToLaunch1()),
-                //t.Feed(robot),
+                t.Feed(robot),
                 new WaitCommand(0.6),
-                new PedroPathCommand(robot.follower, p.Launch1ToGardenPreInt()),
-                //.alongWith(                            t.Intake(robot)                    )
+                new PedroPathCommand(robot.follower, p.Launch1ToGardenPreInt())
+                .alongWith(
+                        t.Intake(robot)),
                 new PedroPathCommand(robot.follower, p.GardenPreIntToGardenInt()),
                 new WaitCommand(1),
                 new PedroPathCommand(robot.follower, p.GardenIntToLaunch2()),
-                //t.Feed(robot),
+                t.Feed(robot),
                 new WaitCommand(0.6),
                 new PedroPathCommand(robot.follower, p.Launch2ToPark()),
                 CommandScheduler::terminateOpMode
-            ),
+            )
+                    ),
             OpModeState.RUN
         );
     }
