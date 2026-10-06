@@ -42,8 +42,8 @@ public class PedroConstants {
         c.xPodPort.set(1);
         c.yPodPort.set(0);
         c.ticksPerUnit.set(505.316944406);
-        c.xPodOffset.set(2.92913);
-        c.yPodOffset.set(2.77717);
+        c.xPodOffset.set(2.92913);// from cad but i trust it more
+        c.yPodOffset.set(2.77717);// from cad but i trust it more
         c.xPodDirection.set(OctoQuad.EncoderDirection.FORWARD);
         c.yPodDirection.set(OctoQuad.EncoderDirection.REVERSE);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
