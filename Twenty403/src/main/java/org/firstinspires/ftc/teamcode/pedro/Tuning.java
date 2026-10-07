@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.pedro.procedures.ForesightTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.MecanumTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.OctoQuadTuner;
 import org.firstinspires.ftc.teamcode.pedro.procedures.Tests;
+import org.firstinspires.ftc.teamcode.pedro.procedures.TwoWheelTuner;
 import org.firstinspires.ftc.teamcode.twenty403.PedroConstants;
 
 public class Tuning {
@@ -20,8 +21,8 @@ public class Tuning {
     }
 
     @Tuner
-    public static Procedure octoquadTuner() {
-        return new OctoQuadTuner();
+    public static Procedure TwoWheelTuner() {
+        return new TwoWheelTuner();
     }
 
     @Tuner
