@@ -51,6 +51,10 @@ public class PedroDriver implements Command, Loggable {
         headingOffset = follower.pose().heading();
     }
 
+    public void ResetPosition() {
+        follower.setPose(new Pose(6.75, 6.75, 0));
+    }
+
     public void SetSnailSpeed() {
         // follower.setMaxPowerScaling(OtherSettings.SNAIL_SPEED);
         turnSpeed = OtherSettings.SNAIL_TURN;

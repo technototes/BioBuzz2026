@@ -35,7 +35,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double TURRET_MAX = 0.92;
     public static double ROTATE_LEFT = 0.15;
     public static double ROTATE_RIGHT = 0.85;
-   // @Log.Number (name = "target servo Pos")
+    // @Log.Number (name = "target servo Pos")
     public static double targetServoPos = 0;
     @Log.Number (name = "Robot Heading")
     public static double robotHead = 0;
@@ -50,9 +50,10 @@ public class TurretSubsystem implements Loggable, Subsystem {
     @Log.Number (name = "Target Pose")
     public static Pose targetPose = new Pose(0,0);
     public static double hoodAutoPos = 0.5; // final value we feed into the hood for position
+
     public static double hoodTargetAngle = 21; // hood target angle in degrees
     public static double HOOD_POSITION_TO_ANGLE_CONSTANT = 43.42105; // did math to get this it is how the position relates to the angle in degrees
-    public static double hoodCompScalar = 0.02; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
+    public static double hoodCompScalar = 0.025; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
     public static double HOOD_MIN = 0.1;
     public static double HOOD_MAX = 0.5;
     public static double HOOD_DOWN_ANGLE = 21; // fully down hood angle in deg
@@ -61,11 +62,14 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double actualTarget = 0; // this is very sus code yay!
     public static double launcherVelocity = 2400;
     public static double autoVelocity = 2000;
-    public static double HOOD_REGRESSION_A = 0.5051; // slope of hood regression
-    public static double HOOD_REGRESSION_B = 7.5895; // offset to the slope (y intercept)
-    public static double LAUNCHER_REGRESSION_A = 33.86667; // slope of launcher regression
+    public static double HOOD_REGRESSION_A = 0.4651; // slope of hood regression
+    public static double HOOD_REGRESSION_B = 6.5895; // offset to the slope (y intercept)
+    public static double LAUNCHER_REGRESSION_A = 32.86667; // slope of launcher regression
     public static double LAUNCHER_REGRESSION_B = 916.66667; // offset to the launcher regression slope (y-intercept)
+
+    @Log.Number(name = "distance")
     public static double distanceToTarget = 0; // distance to the hive we are aiming at in inches
+
     public static double error = 0; // error for launcher velo
 
     boolean hasHardware;
@@ -167,7 +171,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     }
     // increment ignore how sus this implementation is btw
     public double increaseVelo() {
-        actualTarget = launcherVelocity +INCREASE;
+        actualTarget = launcherVelocity + INCREASE;
         return actualTarget;
     }
 
@@ -184,7 +188,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         Y = robot.follower.pose().y();
 
-        if (Y > TARGET_SWITCH_THRESHOLD) {
+        if (Y < TARGET_SWITCH_THRESHOLD) {
             targetPose = HIVE_TARGET1;
         } else {
             targetPose = HIVE_TARGET2;
@@ -204,9 +208,11 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void setTurretTarget() {
         setTurretPosition(getTurretPos());
     }
+
     public void increaseVelocity() {
         launcherVelocity = increaseVelo();
     }
+
     public void decreaseVelocity() {
         launcherVelocity = decreaseVelo();
     }
@@ -226,8 +232,8 @@ public class TurretSubsystem implements Loggable, Subsystem {
     }
     // returns the final position in servo position (0-1) that we want our hood servo to be at after velocity compensation
     public double getHoodAutoPos() {
-        hoodAutoPos = hoodTargetPos - (error * hoodCompScalar); // takes our target and subtracts our error times a scalar
-        return  clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
+        hoodAutoPos = hoodTargetPos - (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT; // takes our target and subtracts our error times a scalar
+        return clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
     }
 
     public void setHoodAutoPos() {
@@ -244,6 +250,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
         currentVelo = getActualVelocity();
         autoVelocity = getAutoVelocity();
         distanceToTarget = getDistance();
+        hoodAutoPos = getHoodAutoPos();
         getHoodAutoPos();
         getHoodTargetPos();
         getHoodTargetAngle();
@@ -268,11 +275,11 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     // takes distance and returns AUTO_VELOCITY by plugging it into the regression
     public double getAutoVelocity() {
-            double x = distanceToTarget;
+        double x = distanceToTarget;
 
-            autoVelocity = LAUNCHER_REGRESSION_A * x + LAUNCHER_REGRESSION_B;
+        autoVelocity = LAUNCHER_REGRESSION_A * x + LAUNCHER_REGRESSION_B;
 
-            return autoVelocity;
+        return autoVelocity;
     }
 
     // Explicitly set the target velocity for the motors
