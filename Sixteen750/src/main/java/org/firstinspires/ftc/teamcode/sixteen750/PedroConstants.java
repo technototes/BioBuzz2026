@@ -42,14 +42,14 @@ public class PedroConstants {
         c.xPodPort.set(1);
         c.yPodPort.set(0);
         c.ticksPerUnit.set(505.316944406);
-        c.xPodOffset.set(2.92913);// from cad but i trust it more
-        c.yPodOffset.set(2.77717);// from cad but i trust it more
+        c.xPodOffset.set(2.598); // from cad but i trust it more
+        c.yPodOffset.set(2.264); // from cad but i trust it more
         c.xPodDirection.set(OctoQuad.EncoderDirection.FORWARD);
         c.yPodDirection.set(OctoQuad.EncoderDirection.REVERSE);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
         c.i2cRecoveryMode.set(OctoQuad.I2cRecoveryMode.MODE_1_PERIPH_RST_ON_FRAME_ERR);
-        c.headingScalar.set(1.0348099609138208);
+        c.headingScalar.set(1.01828);
     });
     public static ForesightConfig foresightConfig = new ForesightConfig(c -> {
         Controller primaryTranslationalForward = Controller.proportional(0.28921569321161206);

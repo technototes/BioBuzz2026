@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.sixteen750.controls;
 
+import com.technototes.library.command.Command;
 import com.technototes.library.command.CommandScheduler;
-import com.technototes.library.control.CommandAxis;
 import com.technototes.library.control.CommandButton;
 import com.technototes.library.control.CommandGamepad;
 import com.technototes.library.control.Stick;
@@ -26,7 +26,7 @@ public class DriverController implements Loggable {
     public CommandButton spitButton;
     public CommandButton gateButton;
     public CommandButton override;
-    public CommandButton RelocButton;
+    public CommandButton relocButton;
     public CommandButton holdButton;
     public CommandButton trackButton;
     public CommandButton flywheelButton;
@@ -70,7 +70,7 @@ public class DriverController implements Loggable {
         spitButton = gamepad.ps_square;
         gateButton = gamepad.ps_cross;
         holdButton = gamepad.ps_circle;
-        RelocButton = gamepad.ps_share;
+        relocButton = gamepad.ps_share;
         trackButton = gamepad.ps_triangle;
         hoodButton = gamepad.dpadRight;
     }
@@ -90,6 +90,7 @@ public class DriverController implements Loggable {
         );
 
         resetGyroButton.whenPressed(DrivingCommands.ResetGyro(pedroDriver));
+        relocButton.whenPressed(DrivingCommands.ResetPosition(pedroDriver));
     }
 
     public void bindLaunchControls() {
