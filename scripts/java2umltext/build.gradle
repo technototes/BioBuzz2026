@@ -1,27 +1,26 @@
 plugins {
     id 'java'
 }
-
 group 'com.java2umltext'
-archivesBaseName = 'java2umltext'
 version '0.1.0'
-
-sourceCompatibility = 1.16
-targetCompatibility = 1.16
-
+base {
+  archivesName = 'java2umltext'
+}
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
-
 repositories {
     mavenCentral()
 }
-
 dependencies {
     implementation "com.github.javaparser:javaparser-core:3.24.2"
     implementation 'info.picocli:picocli:4.6.3'
 }
-
 jar {
     manifest {
         attributes(
@@ -32,11 +31,9 @@ jar {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
-
 tasks.withType(Jar) {
     duplicatesStrategy = "include"
 }
-
 test {
     useJUnitPlatform()
 }

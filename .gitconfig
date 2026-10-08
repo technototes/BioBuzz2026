@@ -1,0 +1,62 @@
+[alias]
+  unstage = reset HEAD --
+  st = status
+  s = status -uno
+  sl = log --graph --oneline --decorate --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative -n 100 --all
+  sl20 = log --graph --oneline --decorate --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative -n 20 --all
+  br = branch
+  co = checkout
+  ci = commit
+  di = diff
+  sum = show
+  summary = show
+  pick = cherry-pick
+  unedit = checkout --
+  amend = commit --amend
+  cdiff = diff HEAD
+  qdiff = diff --no-ext-diff
+  qcdiff = diff --no-ext-diff HEAD
+  stat = diff --name-only
+  cstat = diff --name-only HEAD
+  branches = branch --list --all
+  tags = tag --list
+  spull = "!__git_spull() { git pull \"$@\" && git submodule sync --recursive && git submodule update --init --recursive; }; __git_spull"
+[core]
+  editor = nano
+  quotepath = false
+  autocrlf = false
+  eol = lf
+[filter "lfs"]
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  required = true
+  process = git-lfs filter-process
+[push]
+  default = simple
+[user]
+  diff = auto
+  status = auto
+  branch = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  plain = white
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+  whitespace = red blink
+[color "status"]
+  added = yellow
+  changed = green
+  untracked = cyan
+[status]
+	submoduleSummary = true
+[diff]
+	submodule = log
+[pull]
+	rebase = true
+[init]
+	defaultBranch = main
