@@ -32,7 +32,7 @@ import org.firstinspires.ftc.teamcode.twenty403.helpers.StartingPosition;
 
 // unicode is moai emoji
 @Configurable
-@TeleOp(name = "Two Controller Drive \uD83D\uDDFF")
+@TeleOp(name = "2 Controller Drive \uD83D\uDDFF")
 @SuppressWarnings("unused")
 public class JustDrivingTeleOp extends CommandOpMode {
 
@@ -63,8 +63,10 @@ public class JustDrivingTeleOp extends CommandOpMode {
         hardware = new Hardware(hardwareMap);
         robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
         controlsOperator = new OperatorController(codriverGamepad, robot);
-        SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
-        otos.calibrateImu();
+        if (Setup.Connected.OTOS) {
+            SparkFunOTOS otos = hardwareMap.get(SparkFunOTOS.class, Setup.HardwareNames.OTOS);
+            otos.calibrateImu();
+        }
         controlsDriver = new DriverController(driverGamepad, robot);
         if (Setup.Connected.LIMELIGHT) {
             limelight = hardwareMap.get(Limelight3A.class, LIMELIGHT);
@@ -105,8 +107,9 @@ public class JustDrivingTeleOp extends CommandOpMode {
     public void runLoop() {
         // telemetry.addData("imu ori", hardware.imu.getHeading(AngleUnit.DEGREES));
         // telemetry.update();
-        robot.follower.update();
-
+        if (Setup.Connected.DRIVEBASE) {
+            robot.follower.update();
+        }
         LLStatus status = null;
         if (Setup.Connected.LIMELIGHT) {
             status = limelight.getStatus();
@@ -228,6 +231,12 @@ public class JustDrivingTeleOp extends CommandOpMode {
                 telemetry.addData("Limelight", "No data available");
             }
         }
+
+        // Pose location = robot.follower.pose();
+        double fbLoc = hardware.fbOdo.getPosition();
+        double strafeLoc = hardware.strafeOdo.getPosition();
+        telemetry.addData("FB Odo", fbLoc);
+        telemetry.addData("Strafe Odo", strafeLoc);
         panelsTelemetry.update(telemetry);
         telemetry.update();
     }
