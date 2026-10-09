@@ -31,8 +31,10 @@ public class DriverController implements Loggable {
     public CommandButton trackButton;
     public CommandButton flywheelButton;
     public CommandButton intakeTrigger;
-    public CommandButton upButton;
-    public CommandButton downButton;
+    public CommandButton veloUpButton;
+    public CommandButton veloDownButton;
+    public CommandButton hoodUpButton;
+    public CommandButton hoodDownButton;
     public PedroDriver pedroDriver;
     public CommandButton hoodButton;
 
@@ -62,17 +64,19 @@ public class DriverController implements Loggable {
         driveRightStick = gamepad.rightStick;
         intakeTrigger = gamepad.rightTrigger.getAsButton();
 
-        upButton = gamepad.dpadUp;
-        downButton = gamepad.dpadDown;
+        veloUpButton = gamepad.dpadUp;
+        veloDownButton = gamepad.dpadDown;
+        hoodUpButton = gamepad.dpadRight;
+        hoodDownButton = gamepad.dpadLeft;
         snailButton = gamepad.leftBumper;
         launchButton = gamepad.rightBumper;
-        flywheelButton = gamepad.dpadLeft;
+        flywheelButton = gamepad.ps_circle;
         spitButton = gamepad.ps_square;
-        gateButton = gamepad.ps_cross;
-        holdButton = gamepad.ps_circle;
+        // gateButton = gamepad.ps_cross;
+        // holdButton = gamepad.ps_circle;
         relocButton = gamepad.ps_share;
         trackButton = gamepad.ps_triangle;
-        hoodButton = gamepad.dpadRight;
+        hoodButton = gamepad.ps_cross;
     }
 
     public void bindDriveControls() {
@@ -97,8 +101,10 @@ public class DriverController implements Loggable {
         trackButton.whileInverseToggled(TeleCommands.TrackHive(robot));
         flywheelButton.whileInverseToggled(TeleCommands.Launch(robot));
         hoodButton.whileInverseToggled(TeleCommands.AutoHood(robot));
-        upButton.whenPressed(TeleCommands.IncreaseFlywheel(robot));
-        downButton.whenPressed(TeleCommands.DecreaseFlywheel(robot));
+        veloUpButton.whenPressed(TeleCommands.IncreaseFlywheel(robot));
+        veloDownButton.whenPressed(TeleCommands.DecreaseFlywheel(robot));
+        hoodUpButton.whenPressed(TeleCommands.IncreaseHood(robot));
+        hoodDownButton.whenPressed(TeleCommands.DecreaseHood(robot));
     }
 
     public void bindIntakeControls() {
@@ -110,6 +116,6 @@ public class DriverController implements Loggable {
         intakeTrigger.whenReleased(TeleCommands.Hold(robot));
         launchButton.whilePressed(TeleCommands.Feed(robot));
         launchButton.whenReleased(TeleCommands.Hold(robot));
-        gateButton.whenPressedReleased(TeleCommands.GateOpen(robot), TeleCommands.GateClose(robot));
+        //gateButton.whenPressedReleased(TeleCommands.GateOpen(robot), TeleCommands.GateClose(robot));
     }
 }

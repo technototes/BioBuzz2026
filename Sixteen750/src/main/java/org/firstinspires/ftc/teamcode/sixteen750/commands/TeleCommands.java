@@ -49,11 +49,21 @@ public class TeleCommands {
     public static Command TrackHive(Robot r) {
         return Command.create(r.turretsubsystem::setTurretTarget);
     }
-    public static Command IncreaseFlywheel (Robot r) {
+
+    public static Command IncreaseFlywheel(Robot r) {
         return Command.create(r.turretsubsystem::increaseVelocity);
     }
-    public static Command DecreaseFlywheel (Robot r) {
+
+    public static Command DecreaseFlywheel(Robot r) {
         return Command.create(r.turretsubsystem::decreaseVelocity);
+    }
+
+    public static Command IncreaseHood(Robot r) {
+        return Command.create(r.turretsubsystem::increaseHood);
+    }
+
+    public static Command DecreaseHood(Robot r) {
+        return Command.create(r.turretsubsystem::decreaseHood);
     }
 
     public static Command AutoHood(Robot r) {
