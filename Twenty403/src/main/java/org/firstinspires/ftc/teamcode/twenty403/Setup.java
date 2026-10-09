@@ -7,14 +7,15 @@ public class Setup {
     @Configurable
     public static class Connected {
 
-        public static boolean DRIVEBASE = true;
+        public static boolean DRIVEBASE = false;
         public static boolean TRANSFER = false;
+        public static boolean ODO = true;
         public static boolean SAFETYSUBSYSTEM = false;
-        public static boolean EXTERNALIMU = true;
+        public static boolean EXTERNALIMU = false;
         public static boolean LAUNCHER = true;
         public static boolean INTAKE = true;
         public static boolean LIMELIGHT = false;
-        public static boolean OTOS = true;
+        public static boolean OTOS = false;
     }
 
     @Configurable

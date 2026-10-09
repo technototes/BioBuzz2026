@@ -11,6 +11,7 @@ import com.technototes.library.hardware.motor.Motor;
 import com.technototes.library.hardware.sensor.AdafruitIMU;
 import com.technototes.library.hardware.sensor.IGyro;
 import com.technototes.library.hardware.sensor.IMU;
+import com.technototes.library.hardware.sensor.encoder.MotorEncoder;
 import com.technototes.library.logger.Loggable;
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.navigation.VoltageUnit;
@@ -21,6 +22,8 @@ public class Hardware implements Loggable {
 
     public EncodedMotor<DcMotorEx> launcher;
     public Motor<DcMotorEx> inTake;
+    public MotorEncoder fbOdo;
+    public MotorEncoder strafeOdo;
     public Limelight3A limelight;
     public CRServo transferServo;
     public CRServo leftIntakeServo;
@@ -34,6 +37,10 @@ public class Hardware implements Loggable {
         if (Setup.Connected.DRIVEBASE) {
         }
 
+        if (Setup.Connected.ODO) {
+            fbOdo = new MotorEncoder(PedroConstants.localizerConfig.xPodName.get());
+            strafeOdo = new MotorEncoder(PedroConstants.localizerConfig.yPodName.get());
+        }
         if (Setup.Connected.LAUNCHER) {
             launcher = new EncodedMotor<>(Setup.HardwareNames.LAUNCHER);
         }
