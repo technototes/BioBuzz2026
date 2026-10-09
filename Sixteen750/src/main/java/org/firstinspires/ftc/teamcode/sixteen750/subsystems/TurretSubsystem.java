@@ -26,8 +26,8 @@ import org.firstinspires.ftc.teamcode.sixteen750.Setup;
 public class TurretSubsystem implements Loggable, Subsystem {
 
     final Robot robot;
-    Pose HIVE_TARGET1 = new Pose(58, 53);
-    Pose HIVE_TARGET2 = new Pose(58, 88);
+    Pose HIVE_TARGET1 = new Pose(58, 51);
+    Pose HIVE_TARGET2 = new Pose(58, 93);
 
     public static double TARGET_SWITCH_THRESHOLD = 72;
     public static double TURRET_CENTER = 0.5;
@@ -37,31 +37,50 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double ROTATE_RIGHT = 0.85;
     // @Log.Number (name = "target servo Pos")
     public static double targetServoPos = 0;
-    @Log.Number (name = "Robot Heading")
+
+    @Log.Number(name = "Robot Heading")
     public static double robotHead = 0;
-   // @Log.Number (name = "Absolute heading")
+
+    // @Log.Number (name = "Absolute heading")
     public static double ABSOLUTE_HEAD = 0;
-    @Log.Number (name = "Turret Heading")
+
+    @Log.Number(name = "Turret Heading")
     public static double turretHead = 0;
-    @Log.Number (name = "Target Velocity")
+
+    @Log.Number(name = "Target Velocity")
     public static double targetVelo = 0;
-    @Log.Number (name = "Current Velocity")
+
+    @Log.Number(name = "Current Velocity")
     public static double currentVelo = 0;
-    @Log.Number (name = "Target Pose")
-    public static Pose targetPose = new Pose(0,0);
+
+    @Log(name = "Target Pose")
+    public static Pose targetPose = new Pose(0, 0);
+
+    @Log.Number(name = "final hood pose")
     public static double hoodAutoPos = 0.5; // final value we feed into the hood for position
+
+    @Log.Number(name = "Manual hood pos")
+    public static double manualHoodPos = 0.5; // manual hood pos stuff for tuning
+
+    public static double HOOD_INCREMENT = 0.01; // amount to manually adjust hood by for tuning
 
     public static double hoodTargetAngle = 21; // hood target angle in degrees
     public static double HOOD_POSITION_TO_ANGLE_CONSTANT = 43.42105; // did math to get this it is how the position relates to the angle in degrees
-    public static double hoodCompScalar = 0.025; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
+    public static double hoodCompScalar = 0.05; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
     public static double HOOD_MIN = 0.1;
     public static double HOOD_MAX = 0.5;
     public static double HOOD_DOWN_ANGLE = 21; // fully down hood angle in deg
     public static double INCREASE = 15; // extremely jank increment and decrement
+
+    @Log.Number(name = "hood calculated Pos")
     public static double hoodTargetPos = 0.5;
-    public static double actualTarget = 0; // this is very sus code yay!
+
+    public static double actualTarget = 0; // target for manual velocity tuning
     public static double launcherVelocity = 2400;
+
+    @Log.Number(name = "Auto Velocity")
     public static double autoVelocity = 2000;
+
     public static double HOOD_REGRESSION_A = 0.4651; // slope of hood regression
     public static double HOOD_REGRESSION_B = 6.5895; // offset to the slope (y intercept)
     public static double LAUNCHER_REGRESSION_A = 32.86667; // slope of launcher regression
@@ -70,6 +89,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     @Log.Number(name = "distance")
     public static double distanceToTarget = 0; // distance to the hive we are aiming at in inches
 
+    @Log.Number(name = "err")
     public static double error = 0; // error for launcher velo
 
     boolean hasHardware;
@@ -85,7 +105,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     // It's output is a power value in the -1 to +1 range.
     // So, P is probably in the range of .001-ish.
     // For a velocity-targeting PIDF, we probably want an I value, not a D value.
-    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.015, 0.0, 0.0, 0); // 10/3/26 added a p value seems pretty decent
+    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.012, 0.0, 0.0, 0); // 10/3/26 added a p value seems pretty decent
     private Hardware hardware;
     // Stuff used for the Feed Forward function.
     // This one is highly variable, based on the amount of friction in the system
@@ -139,6 +159,10 @@ public class TurretSubsystem implements Loggable, Subsystem {
         setVelocityTarget(autoVelocity);
     }
 
+    public void ManualLaunch() {
+        setVelocityTarget(launcherVelocity);
+    }
+
     // returns the turret angle in radians relative to the robot
     public double getTurretAngle() {
         Pose targetPose = getTargetPose();
@@ -169,6 +193,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         return Distance;
     }
+
     // increment ignore how sus this implementation is btw
     public double increaseVelo() {
         actualTarget = launcherVelocity + INCREASE;
@@ -216,6 +241,15 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void decreaseVelocity() {
         launcherVelocity = decreaseVelo();
     }
+
+    public void increaseHood() {
+        manualHoodPos = manualHoodPos + HOOD_INCREMENT;
+    }
+
+    public void decreaseHood() {
+        manualHoodPos = manualHoodPos - HOOD_INCREMENT;
+    }
+
     // returns the target angle we want our hood to be at in degrees before we compensate for velocity
     public double getHoodTargetAngle() {
         double x = distanceToTarget; // distance in inches
@@ -224,15 +258,20 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         return hoodTargetAngle;
     }
+
     //returns the target servo position for our hood before we compensate for velocity
     public double getHoodTargetPos() {
-        hoodTargetPos = HOOD_MAX - (hoodTargetAngle-HOOD_DOWN_ANGLE) / HOOD_POSITION_TO_ANGLE_CONSTANT; // basically shifting and scaling it to work
+        hoodTargetPos =
+            HOOD_MAX - (hoodTargetAngle - HOOD_DOWN_ANGLE) / HOOD_POSITION_TO_ANGLE_CONSTANT; // basically shifting and scaling it to work
 
         return clamp(hoodTargetPos, HOOD_MIN, HOOD_MAX); // clamping it so the servo doesnt rebel from the rest of the robot
     }
+
     // returns the final position in servo position (0-1) that we want our hood servo to be at after velocity compensation
     public double getHoodAutoPos() {
-        hoodAutoPos = hoodTargetPos - (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT; // takes our target and subtracts our error times a scalar
+        hoodAutoPos =
+            /*hoodTargetPos commented out for manual testing*/ manualHoodPos +
+            (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT; // takes our target and subtracts our error times a scalar
         return clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
     }
 
