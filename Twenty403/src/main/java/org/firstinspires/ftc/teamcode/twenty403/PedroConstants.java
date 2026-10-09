@@ -78,8 +78,8 @@ public class PedroConstants {
 
         c.coast.set(Controller.proportionalFeedforward(0.013777419288337794));
         c.brake.set(Controller.proportionalFeedforward(0.011710806395087125));
-
-        c.headingFeedback.set(Controller.proportional(14.24639824160929));
+        // manually set this one
+        c.headingFeedback.set(Controller.proportional(6.24639824160929));
         c.headingBrakeCoefficients.set(
             Vector2D.cartesian(0.04756241922901685, 0.00551561844341756)
         );
