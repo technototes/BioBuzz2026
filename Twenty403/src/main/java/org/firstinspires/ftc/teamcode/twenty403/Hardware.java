@@ -21,7 +21,7 @@ public class Hardware implements Loggable {
     public static List<LynxModule> hubs;
 
     public EncodedMotor<DcMotorEx> launcher;
-    public Motor<DcMotorEx> inTake;
+    public Motor<DcMotorEx> intake;
     public MotorEncoder fbOdo;
     public MotorEncoder strafeOdo;
     public Limelight3A limelight;
@@ -47,6 +47,7 @@ public class Hardware implements Loggable {
         if (Setup.Connected.INTAKE) {
             leftIntakeServo = new CRServo(Setup.HardwareNames.LEFTINTAKESERVO);
             rightIntakeServo = new CRServo(Setup.HardwareNames.RIGHTINTAKESERVO);
+            intake = new Motor<>(Setup.HardwareNames.LAUNCHER);
         }
         if (Setup.Connected.LIMELIGHT) {
             limelight = hwmap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
