@@ -51,15 +51,16 @@ public class PartnerPark12Park extends CommandOpMode {
                 new PedroPathCommand(robot.follower, p.StartToPartnerPark()), //)
                 new PedroPathCommand(robot.follower, p.PartnerParkToLaunch1()),
                 t.Feed(robot),
-                new WaitCommand(0.6),
+                new WaitCommand(3),
+                // Javier: need a GateClose, right? Or maybe a hold?
                 new PedroPathCommand(robot.follower, p.Launch1ToGardenPreInt())
                 .alongWith(
                         t.Intake(robot)),
                 new PedroPathCommand(robot.follower, p.GardenPreIntToGardenInt()),
-                new WaitCommand(1),
+                new WaitCommand(2),
                 new PedroPathCommand(robot.follower, p.GardenIntToLaunch2()),
                 t.Feed(robot),
-                new WaitCommand(0.6),
+                new WaitCommand(3),
                 new PedroPathCommand(robot.follower, p.Launch2ToPark()),
                 CommandScheduler::terminateOpMode
             )

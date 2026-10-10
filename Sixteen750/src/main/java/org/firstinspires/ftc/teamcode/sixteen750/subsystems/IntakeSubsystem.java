@@ -58,7 +58,7 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     }
 
     public void Feed() {
-        setIntakePower(-REJECT_VELOCITY);
+        setIntakePower(-REJECT_VELOCITY); // Javier: minus reject? does that mean ingest, or does that mean that there's a sign problem?
         setTransferPower(FEED_VELOCITY);
         setGatePosition(FIRE_POSITION);
     }
