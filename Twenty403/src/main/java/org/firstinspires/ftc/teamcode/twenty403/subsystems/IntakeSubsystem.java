@@ -25,7 +25,7 @@ public class IntakeSubsystem implements Subsystem {
         if (hasHardware) {
             _leftintake = h.leftIntakeServo;
             _rightintake = h.rightIntakeServo;
-            _intakemotor = h.inTake;
+            _intakemotor = h.intake;
         } else {
             _leftintake = null;
             _rightintake = null;

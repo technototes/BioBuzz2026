@@ -20,32 +20,12 @@ public class DriverController {
 
     public Stick driveLeftStick, driveRightStick;
     public CommandButton resetGyroButton;
-    public CommandButton turboButton;
-    public CommandButton snailButton;
-    public CommandAxis straightTrigger;
-    public CommandAxis angleTrigger;
     public CommandButton launch;
+    public CommandButton intake;
+    public CommandButton spitOut;
     public CommandButton launchFaster;
     public CommandButton launchSlower;
-    public CommandButton moveballup;
-    public CommandButton moveballslow;
-    public CommandButton pipelineMode;
-    public CommandButton compactScore;
-    public CommandButton barcodePipeline;
-    public CommandButton GreencolorPipeline;
-    public CommandButton moveballanyways;
-    public CommandButton classifierPipeline;
-    public CommandButton objectPipeline;
-    public CommandButton apriltagPipeline;
-    public CommandButton PurplecolorPipeline;
-    public CommandButton AutoAim;
-    public static boolean pipelineToggle = false;
-    public static boolean launchOn = false;
-    private boolean faceTagMode = false;
-
-    public void togglePipelineMode() {
-        pipelineToggle = !pipelineToggle;
-    }
+    public CommandButton autoAim;
 
     public DriverController(CommandGamepad g, Robot r) {
         this.robot = r;
@@ -59,7 +39,7 @@ public class DriverController {
             bindLaunchControls();
         }
         if (Setup.Connected.INTAKE) {
-            bindFeedControls();
+            bindIntakeControls();
         }
         if (Setup.Connected.LIMELIGHT) {
             bindPipelineControls();
@@ -70,49 +50,35 @@ public class DriverController {
         resetGyroButton = gamepad.ps_options;
         driveLeftStick = gamepad.leftStick;
         driveRightStick = gamepad.rightStick;
-        turboButton = gamepad.rightBumper;
-        snailButton = gamepad.leftBumper;
-        straightTrigger = gamepad.rightTrigger;
-        angleTrigger = gamepad.leftTrigger;
-        moveballup = gamepad.ps_square;
-        launch = gamepad.ps_triangle;
-        //        pipelineMode = gamepad.dpadUp;
-        launchSlower = gamepad.ps_cross;
-        launchFaster = gamepad.ps_circle;
-        //        apriltagPipeline = gamepad.dpadRight;
-        //        AutoAim = gamepad.dpadDown;
-        moveballanyways = gamepad.dpadDown;
-        compactScore = gamepad.dpadLeft;
+
+        launch = gamepad.rightTrigger.getAsButton();
+        intake = gamepad.leftTrigger.getAsButton();
+        spitOut = gamepad.leftBumper;
+        launchFaster = gamepad.dpadUp;
+        launchSlower = gamepad.dpadDown;
     }
 
     public void bindDriveControls() {
         CommandScheduler.scheduleJoystick(
-            new JoystickDriveCommand(
-                robot.follower,
-                driveLeftStick,
-                driveRightStick,
-                straightTrigger,
-                angleTrigger
-            )
+            new JoystickDriveCommand(robot.follower, driveLeftStick, driveRightStick)
         );
 
         if (Setup.Connected.LIMELIGHT) {
-            AutoAim.whenPressed(EZCmd.Drive.AutoAim());
+            autoAim.whenPressed(EZCmd.Drive.AutoAim());
         }
     }
 
     public void bindLaunchControls() {
-        launch.toggle(robot.launcherSubsystem::Launch, robot.launcherSubsystem::Stop);
-        launchSlower.whenPressed(this::launchSlower);
-        launchFaster.whenPressed(this::launchFaster);
+        if (Setup.Connected.LAUNCHER) {
+            launch.whenPressed(EZCmd.Launcher.Launch(robot.launcherSubsystem));
+        }
     }
 
-    public void bindFeedControls() {
-        moveballup.whenPressed(robot.intakeSubsystem::Intake);
-        moveballup.whenReleased(robot.intakeSubsystem::Stop);
-        compactScore.whenPressed(FeedCMD.Feed(robot));
-        moveballanyways.whenPressed(robot.intakeSubsystem::Intake);
-        moveballanyways.whenReleased(robot.intakeSubsystem::Stop);
+    public void bindIntakeControls() {
+        if (Setup.Connected.INTAKE) {
+            intake.whenPressed(EZCmd.PollenIntake.Intake(robot.intakeSubsystem));
+            spitOut.whenPressed(EZCmd.PollenIntake.Eject(robot.intakeSubsystem));
+        }
     }
 
     public void bindPipelineControls() {
@@ -141,25 +107,4 @@ public class DriverController {
         //            );
         //        }
     }
-
-    // public void setLaunch() {
-    //     launchOn = !launchOn;
-    //     Launch();
-    // }
-
-    public void launchFaster() {
-        robot.launcherSubsystem.IncreaseVelocity();
-    }
-
-    public void launchSlower() {
-        robot.launcherSubsystem.DecreaseVelocity();
-    }
-
-    // public void Launch() {
-    //     if (launchOn) {
-    //         robot.launcherSubsystem.Launch();
-    //     } else {
-    //         robot.launcherSubsystem.Stop();
-    //     }
-    // }
 }
