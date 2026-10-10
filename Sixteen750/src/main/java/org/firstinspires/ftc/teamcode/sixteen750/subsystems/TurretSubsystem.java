@@ -81,10 +81,15 @@ public class TurretSubsystem implements Loggable, Subsystem {
     @Log.Number(name = "Auto Velocity")
     public static double autoVelocity = 2000;
 
-    public static double HOOD_REGRESSION_A = 0.4651; // slope of hood regression
-    public static double HOOD_REGRESSION_B = 6.5895; // offset to the slope (y intercept)
-    public static double LAUNCHER_REGRESSION_A = 32.86667; // slope of launcher regression
-    public static double LAUNCHER_REGRESSION_B = 916.66667; // offset to the launcher regression slope (y-intercept)
+    public static double HOOD_REGRESSION_A = -0.00000187439; // slope of hood regression
+    public static double HOOD_REGRESSION_B = 0.000294848;
+    public static double HOOD_REGRESSION_C = -0.0163552;
+    public static double HOOD_REGRESSION_D = 0.361257;
+    public static double HOOD_REGRESSION_E = -2.18586; // offset to the slope (y intercept)
+    public static double LAUNCHER_REGRESSION_A = -0.00629449;; // slope of launcher regression
+    public static double LAUNCHER_REGRESSION_B = 0.604771;
+    public static double LAUNCHER_REGRESSION_C = -6.81626;
+    public static double LAUNCHER_REGRESSION_D = 1807.12749; // offset to the launcher regression slope (y-intercept)
 
     @Log.Number(name = "distance")
     public static double distanceToTarget = 0; // distance to the hive we are aiming at in inches
@@ -105,7 +110,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     // It's output is a power value in the -1 to +1 range.
     // So, P is probably in the range of .001-ish.
     // For a velocity-targeting PIDF, we probably want an I value, not a D value.
-    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.012, 0.0, 0.0, 0); // 10/3/26 added a p value seems pretty decent
+    public static PIDFCoefficients launchPID = new PIDFCoefficients(0.003, 0.00015, 0.0, 0); // 10/3/26 added a p value seems pretty decent
     private Hardware hardware;
     // Stuff used for the Feed Forward function.
     // This one is highly variable, based on the amount of friction in the system
@@ -251,26 +256,26 @@ public class TurretSubsystem implements Loggable, Subsystem {
     }
 
     // returns the target angle we want our hood to be at in degrees before we compensate for velocity
-    public double getHoodTargetAngle() {
+    public double getHoodTargetPos() {
         double x = distanceToTarget; // distance in inches
 
-        hoodTargetAngle = HOOD_REGRESSION_A * x + HOOD_REGRESSION_B; // we run our distance into our regression formula
+        hoodTargetPos = HOOD_REGRESSION_A * Math.pow(x,4) + HOOD_REGRESSION_B * Math.pow(x,3) + HOOD_REGRESSION_C * Math.pow(x,2) + HOOD_REGRESSION_D * x + HOOD_REGRESSION_E; // we run our distance into our regression formula
 
-        return hoodTargetAngle;
+        return hoodTargetPos;
     }
 
     //returns the target servo position for our hood before we compensate for velocity
-    public double getHoodTargetPos() {
+   /* public double getHoodTargetPos() {
         hoodTargetPos =
             HOOD_MAX - (hoodTargetAngle - HOOD_DOWN_ANGLE) / HOOD_POSITION_TO_ANGLE_CONSTANT; // basically shifting and scaling it to work
 
         return clamp(hoodTargetPos, HOOD_MIN, HOOD_MAX); // clamping it so the servo doesnt rebel from the rest of the robot
-    }
+    } */
 
     // returns the final position in servo position (0-1) that we want our hood servo to be at after velocity compensation
     public double getHoodAutoPos() {
         hoodAutoPos =
-            /*hoodTargetPos commented out for manual testing*/ manualHoodPos +
+            /*hoodTargetPos commented out for manual testing*/ hoodTargetPos +
             (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT; // takes our target and subtracts our error times a scalar
         return clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
     }
@@ -292,7 +297,6 @@ public class TurretSubsystem implements Loggable, Subsystem {
         hoodAutoPos = getHoodAutoPos();
         getHoodAutoPos();
         getHoodTargetPos();
-        getHoodTargetAngle();
         error = pidfController.getLastError();
 
         // Add an item to the array and update the index for the next update to the 'circular' array
@@ -316,7 +320,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public double getAutoVelocity() {
         double x = distanceToTarget;
 
-        autoVelocity = LAUNCHER_REGRESSION_A * x + LAUNCHER_REGRESSION_B;
+        autoVelocity = LAUNCHER_REGRESSION_A * Math.pow(x,3) + LAUNCHER_REGRESSION_B * Math.pow(x,2) + LAUNCHER_REGRESSION_C * x + LAUNCHER_REGRESSION_D;
 
         return autoVelocity;
     }
