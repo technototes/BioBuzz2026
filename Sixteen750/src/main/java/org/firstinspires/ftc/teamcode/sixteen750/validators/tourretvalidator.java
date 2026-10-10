@@ -39,7 +39,6 @@ public class tourretvalidator extends CommandOpMode {
         intake = this.hardwareMap.get(DcMotor.class, Setup.HardwareNames.INTAKE_MOTOR);
         transfer1 = this.hardwareMap.get(DcMotor.class, Setup.HardwareNames.TRANSFER_MOTOR1);
         transfer2 = this.hardwareMap.get(DcMotor.class, Setup.HardwareNames.TRANSFER_MOTOR2);
-
     }
 
     @Override
@@ -57,13 +56,12 @@ public class tourretvalidator extends CommandOpMode {
         telemetry.addData("hoodpos", hoodpos);
 
         telemetry.addLine("Increase velocity");
-        double po = ((this.gamepad1.left_stick_x + 1) / 2) *-1;
+        double po = ((this.gamepad1.left_stick_x + 1) / 2) * -1;
         launcher.setPower(-.8);
         telemetry.addData("launcher speed", launcher.getPower());
-        double velo = (this.gamepad1.right_trigger);
+        double velo = this.gamepad1.right_trigger;
         intake.setPower(velo);
         transfer1.setPower(velo);
         transfer2.setPower(velo);
-
     }
 }

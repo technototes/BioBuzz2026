@@ -40,8 +40,6 @@ public class Hardware implements Loggable {
         map = hwmap;
         hubs = hwmap.getAll(LynxModule.class);
 
-
-
         if (Setup.Connected.DRIVEBASE) {
             fl = new EncodedMotor<DcMotorEx>(Setup.HardwareNames.FL_DRIVE_MOTOR);
             fr = new EncodedMotor<DcMotorEx>(Setup.HardwareNames.FR_DRIVE_MOTOR);

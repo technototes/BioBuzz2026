@@ -86,7 +86,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double HOOD_REGRESSION_C = -0.0163552;
     public static double HOOD_REGRESSION_D = 0.361257;
     public static double HOOD_REGRESSION_E = -2.18586; // offset to the slope (y intercept)
-    public static double LAUNCHER_REGRESSION_A = -0.00629449;; // slope of launcher regression
+    public static double LAUNCHER_REGRESSION_A = -0.00629449; // slope of launcher regression
     public static double LAUNCHER_REGRESSION_B = 0.604771;
     public static double LAUNCHER_REGRESSION_C = -6.81626;
     public static double LAUNCHER_REGRESSION_D = 1807.12749; // offset to the launcher regression slope (y-intercept)
@@ -259,13 +259,18 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public double getHoodTargetPos() {
         double x = distanceToTarget; // distance in inches
 
-        hoodTargetPos = HOOD_REGRESSION_A * Math.pow(x,4) + HOOD_REGRESSION_B * Math.pow(x,3) + HOOD_REGRESSION_C * Math.pow(x,2) + HOOD_REGRESSION_D * x + HOOD_REGRESSION_E; // we run our distance into our regression formula
+        hoodTargetPos =
+            HOOD_REGRESSION_A * Math.pow(x, 4) +
+            HOOD_REGRESSION_B * Math.pow(x, 3) +
+            HOOD_REGRESSION_C * Math.pow(x, 2) +
+            HOOD_REGRESSION_D * x +
+            HOOD_REGRESSION_E; // we run our distance into our regression formula
 
         return hoodTargetPos;
     }
 
     //returns the target servo position for our hood before we compensate for velocity
-   /* public double getHoodTargetPos() {
+    /* public double getHoodTargetPos() {
         hoodTargetPos =
             HOOD_MAX - (hoodTargetAngle - HOOD_DOWN_ANGLE) / HOOD_POSITION_TO_ANGLE_CONSTANT; // basically shifting and scaling it to work
 
@@ -320,7 +325,11 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public double getAutoVelocity() {
         double x = distanceToTarget;
 
-        autoVelocity = LAUNCHER_REGRESSION_A * Math.pow(x,3) + LAUNCHER_REGRESSION_B * Math.pow(x,2) + LAUNCHER_REGRESSION_C * x + LAUNCHER_REGRESSION_D;
+        autoVelocity =
+            LAUNCHER_REGRESSION_A * Math.pow(x, 3) +
+            LAUNCHER_REGRESSION_B * Math.pow(x, 2) +
+            LAUNCHER_REGRESSION_C * x +
+            LAUNCHER_REGRESSION_D;
 
         return autoVelocity;
     }
