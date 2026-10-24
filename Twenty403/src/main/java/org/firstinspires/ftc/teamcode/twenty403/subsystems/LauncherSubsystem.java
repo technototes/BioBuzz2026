@@ -21,7 +21,7 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     public static double TARGET_MOTOR_VELOCITY = 1350; //.58; // 0.5 // /1.0
     public static double WINDMILL_SPIN = -0.15;
     public static double REVERSE_WINDMILL = 0.15;
-    public static double Target_windmill = 100;
+    public static double Target_windmill = 250;
     // GoBilda says stall current of 9.2A at 12V, so V = I * R, R = 12 / 9.2 (about 1.3 ohms)
     // As the motor heats up, resistance also increase, so we could increase this a little bit
     // or maybe increase it over time to counteract that, but this is probably good enough.
@@ -59,7 +59,7 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     @Log(name = "Launcher Power: ")
     public static double power;
 
-    @Log(name = "Error")
+    @Log(name = "Err")
     public static double err;
 
     private boolean launching = false;
@@ -135,21 +135,17 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     }
 
     public void IncreaseVelocity() {
-        if (hasHardware && launching) {
-            target += 100;
-            setTargetSpeed(target);
-        }
+        target += 100;
+        setTargetSpeed(target);
     }
 
     public void DecreaseVelocity() {
-        if (hasHardware && launching) {
-            target -= 100;
-            setTargetSpeed(target);
-        }
+        target -= 100;
+        setTargetSpeed(target);
     }
 
-    public boolean GetCurrentTargetVelocity() {
-        return launchMotor.getVelocity() >= 1300;
+    public boolean IsAtTargetVelocity() {
+        return Math.abs(MOTOR_VELOCITY - TARGET_MOTOR_VELOCITY) < Target_windmill;
     }
 
     public void Stop() {
@@ -172,15 +168,14 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     }
 
     private void setMotorPower(double pow) {
-        double power = Math.clamp(pow, -0.53, 0.53);
         if (launchMotor != null) {
-            launchMotor.setPower(power);
+            launchMotor.setPower(pow);
         }
     }
 
     public double getMotorSpeed() {
         if (launchMotor != null) {
-            return launchMotor.getVelocity();
+            return -launchMotor.getVelocity();
         }
         return -1;
     }
@@ -188,7 +183,7 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     private final MovingStatistics smooth = new MovingStatistics(AMP_MOTOR_SAMPLE);
 
     public double getMotor1Current() {
-        if (launchMotor != null) {
+        if (launchMotor == null) {
             return 0;
         }
         smooth.add(launchMotor.getAmperage(CurrentUnit.AMPS));
@@ -197,12 +192,13 @@ public class LauncherSubsystem implements Loggable, Subsystem {
 
     @Override
     public void periodic() {
-        setMotorPower(launcherPID.update(getMotorSpeed()));
+        double pidPower = launcherPID.update(getMotorSpeed());
         err = launcherPID.getLastError();
         MOTOR_VELOCITY = getMotorSpeed();
         power = launchMotor.getPower();
+        setMotorPower(pidPower);
         // only launch if the wheel is spinning within 100 rpm of target
-        if (launching && Math.abs(MOTOR_VELOCITY - TARGET_MOTOR_VELOCITY) < Target_windmill) {
+        if (launching && IsAtTargetVelocity()) {
             setWindmillPower(WINDMILL_SPIN);
         } else if (reverse) {
             setWindmillPower(-WINDMILL_SPIN);
