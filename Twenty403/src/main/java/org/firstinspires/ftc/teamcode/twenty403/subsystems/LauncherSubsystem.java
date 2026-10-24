@@ -24,6 +24,10 @@ public class LauncherSubsystem implements Loggable, Subsystem {
     boolean hasHardware;
     public static EncodedMotor<DcMotorEx> launchMotor;
     public CRServo windmill;
+    // kSF = 0.27
+    // kDF = 0.22
+    // kVel = 0.0043
+    // Reverse encoder, Reverse motor
     // this doesn't really matter as much since f calculation is just overriding it :(
     public static PIDFCoefficients launcherP = new PIDFCoefficients(0.006, 0.0, 0.0, 0);
     public static double SPIN_F_SCALE = 0.00016;
