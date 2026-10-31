@@ -14,12 +14,11 @@ import org.firstinspires.ftc.teamcode.twenty403.Robot;
 import org.firstinspires.ftc.teamcode.twenty403.commands.auto.DriveAutoCommand;
 import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
 
-@Autonomous(name = "NorthPark", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
+@Autonomous(name = "NorthPark-f", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
 @SuppressWarnings("unused")
 public class NorthJustPark extends CommandOpMode {
 
     public Robot robot;
-    public DriverController controls;
     public Hardware hardware;
     private PanelsTelemetry panelsTelemetry;
     private Limelight3A limelight;
@@ -32,9 +31,10 @@ public class NorthJustPark extends CommandOpMode {
         robot.follower.setPose(PedroConstants.Poses.North);
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new DriveAutoCommand(robot.drivebaseSubsystem, 0.5, 0),
-                new WaitCommand(.3),
-                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0)
+                new DriveAutoCommand(robot.drivebaseSubsystem, -0.5, 0),
+                new WaitCommand(0.3),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0),
+                CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
         );
