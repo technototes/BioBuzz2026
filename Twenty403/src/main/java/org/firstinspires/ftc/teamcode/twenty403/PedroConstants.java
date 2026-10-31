@@ -5,6 +5,7 @@ import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.math.Matrix;
+import com.pedropathing.math.Pose;
 import com.pedropathing.math.Vector2D;
 import com.pedropathing.revhub.drivetrains.Mecanum;
 import com.pedropathing.revhub.drivetrains.MecanumConfig;
@@ -92,4 +93,10 @@ public class PedroConstants {
         c.naturalForwardDeceleration.set(27.50243954601577);
         c.naturalStrafeDeceleration.set(59.156372270294554);
     });
+
+    public static class Poses {
+
+        public static Pose South = new Pose(7, 80, Math.toRadians(90));
+        public static Pose North = new Pose(7, 135, Math.toRadians(270));
+    }
 }

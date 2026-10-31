@@ -28,7 +28,6 @@ public class Robot implements Loggable {
     @Log(name = "Launcher")
     public double launcherVelociy;
 
-    public StartingPosition position;
     public Alliance alliance;
     public double initialVoltage;
 
@@ -38,7 +37,6 @@ public class Robot implements Loggable {
     public Follower follower;
 
     public Robot(Hardware hw, Alliance team, StartingPosition pos) {
-        this.position = pos;
         this.alliance = team;
         this.initialVoltage = hw.voltage();
         if (Setup.Connected.LAUNCHER) {
