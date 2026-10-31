@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.twenty403.Robot;
 import org.firstinspires.ftc.teamcode.twenty403.commands.auto.DriveAutoCommand;
 import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
 
-@Autonomous(name = "Park", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
+@Autonomous(name = "SouthPark", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
 @SuppressWarnings("unused")
 public class SouthJustPark extends CommandOpMode {
 
@@ -32,9 +32,9 @@ public class SouthJustPark extends CommandOpMode {
         robot.follower.setPose(PedroConstants.Poses.South);
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new DriveAutoCommand(robot.follower, 0.5, 0),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0.5, 0),
                 new WaitCommand(.3),
-                new DriveAutoCommand(robot.follower, 0, 0)
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0)
             ),
             OpModeState.RUN
         );

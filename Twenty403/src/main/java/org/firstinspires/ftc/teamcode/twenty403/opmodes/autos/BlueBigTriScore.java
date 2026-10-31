@@ -31,11 +31,11 @@ public class BlueBigTriScore extends CommandOpMode {
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
                 FeedCMD.Feed(robot),
-                new DriveAutoCommand(robot.follower, -0.5, 0),
+                new DriveAutoCommand(robot.drivebaseSubsystem, -0.5, 0),
                 new WaitCommand(.3),
-                new DriveAutoCommand(robot.follower, 0, 0.5),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0.5),
                 new WaitCommand(.9),
-                new DriveAutoCommand(robot.follower, 0, 0),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN

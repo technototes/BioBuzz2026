@@ -32,6 +32,7 @@ public class Robot implements Loggable {
         }
         if (Setup.Connected.DRIVEBASE) {
             this.drivebaseSubsystem = new DrivebaseSubsystem(hw.follower);
+            this.follower = hw.follower;
         }
     }
 
