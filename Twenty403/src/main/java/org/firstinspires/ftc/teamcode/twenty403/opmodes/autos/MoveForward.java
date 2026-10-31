@@ -25,9 +25,9 @@ public class MoveForward extends CommandOpMode {
         robot = new Robot(hardware, Alliance.RED);
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new DriveAutoCommand(robot.follower, 0.5, 0),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0.5, 0),
                 new WaitCommand(0.3),
-                new DriveAutoCommand(robot.follower, 0, 0),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
