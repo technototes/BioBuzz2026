@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.twenty403.opmodes.autos;
 
 import com.bylazar.configurables.annotations.Configurable;
-//import com.pedropathing.geometry.Pose;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.command.SequentialCommandGroup;
@@ -11,10 +9,8 @@ import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
 import org.firstinspires.ftc.teamcode.twenty403.Hardware;
 import org.firstinspires.ftc.teamcode.twenty403.Robot;
-import org.firstinspires.ftc.teamcode.twenty403.Setup;
 import org.firstinspires.ftc.teamcode.twenty403.commands.FeedCMD;
 import org.firstinspires.ftc.teamcode.twenty403.commands.auto.DriveAutoCommand;
-import org.firstinspires.ftc.teamcode.twenty403.helpers.StartingPosition;
 
 @Configurable
 @Autonomous(name = "BlueBigTriScore", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
@@ -29,7 +25,7 @@ public class BlueBigTriScore extends CommandOpMode {
     @Override
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
-        robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
+        robot = new Robot(hardware, Alliance.BLUE);
         robot.follower.update();
         CommandScheduler.register(robot.launcherSubsystem);
         CommandScheduler.scheduleForState(

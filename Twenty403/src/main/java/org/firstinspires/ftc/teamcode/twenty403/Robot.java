@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.twenty403.subsystems.LauncherSubsystem;
 @Configurable
 public class Robot implements Loggable {
 
-    public StartingPosition position;
     public Alliance alliance;
     public double initialVoltage;
 
@@ -22,8 +21,7 @@ public class Robot implements Loggable {
     public DrivebaseSubsystem drivebaseSubsystem;
     public Follower follower;
 
-    public Robot(Hardware hw, Alliance team, StartingPosition pos) {
-        this.position = pos;
+    public Robot(Hardware hw, Alliance team) {
         this.alliance = team;
         this.initialVoltage = hw.voltage();
         if (Setup.Connected.LAUNCHER) {

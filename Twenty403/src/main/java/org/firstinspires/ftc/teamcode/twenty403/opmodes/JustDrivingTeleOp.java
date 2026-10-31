@@ -9,26 +9,20 @@ import com.bylazar.gamepad.PanelsGamepad;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.math.Pose;
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.technototes.library.command.CommandScheduler;
 import com.technototes.library.command.SequentialCommandGroup;
 import com.technototes.library.structure.CommandOpMode;
 import com.technototes.library.util.Alliance;
 import com.technototes.library.util.HeadingHelper;
-import java.util.Arrays;
-import java.util.List;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.twenty403.Hardware;
 import org.firstinspires.ftc.teamcode.twenty403.Robot;
 import org.firstinspires.ftc.teamcode.twenty403.Setup;
 import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
 import org.firstinspires.ftc.teamcode.twenty403.controls.OperatorController;
-import org.firstinspires.ftc.teamcode.twenty403.helpers.StartingPosition;
 
 // unicode is moai emoji
 @Configurable
@@ -61,7 +55,7 @@ public class JustDrivingTeleOp extends CommandOpMode {
     @Override
     public void uponInit() {
         hardware = new Hardware(hardwareMap);
-        robot = new Robot(hardware, Alliance.BLUE, StartingPosition.Unspecified);
+        robot = new Robot(hardware, Alliance.BLUE);
         controlsOperator = new OperatorController(codriverGamepad, robot);
         controlsDriver = new DriverController(driverGamepad, robot);
         if (Setup.Connected.LIMELIGHT) {
