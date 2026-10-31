@@ -32,8 +32,8 @@ public class NorthJustParkDelayed extends CommandOpMode {
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
                 new WaitCommand(0.2),
-                new DriveAutoCommand(robot.drivebaseSubsystem, 0, -0.5),
-                new WaitCommand(.3),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0.1, -0.5),
+                new WaitCommand(.7),
                 new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0),
                 CommandScheduler::terminateOpMode
             ),

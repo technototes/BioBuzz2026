@@ -31,8 +31,8 @@ public class SouthJustPark extends CommandOpMode {
         robot.follower.setPose(PedroConstants.Poses.South);
         CommandScheduler.scheduleForState(
             new SequentialCommandGroup(
-                new DriveAutoCommand(robot.drivebaseSubsystem, 0.5, 0),
-                new WaitCommand(.3),
+                new DriveAutoCommand(robot.drivebaseSubsystem, 0.1, 0.5),
+                new WaitCommand(.7),
                 new DriveAutoCommand(robot.drivebaseSubsystem, 0, 0),
                 CommandScheduler::terminateOpMode
             ),
