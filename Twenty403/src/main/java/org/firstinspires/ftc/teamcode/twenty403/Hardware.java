@@ -36,6 +36,15 @@ public class Hardware implements Loggable {
 
     public Hardware(HardwareMap hwmap) {
         hubs = hwmap.getAll(LynxModule.class);
+        if (Setup.Connected.EXTERNALIMU) {
+            // This needs to be done before the follower is created
+            AdafruitIMU theImu = new AdafruitIMU(
+                Setup.HardwareNames.EXTERNALIMU,
+                AdafruitIMU.Orientation.Yaw
+            );
+            PedroConstants.ext_imu = theImu;
+            imu = theImu;
+        }
         if (Setup.Connected.DRIVEBASE) {
             follower = PedroConstants.create(hwmap);
         }
@@ -54,9 +63,6 @@ public class Hardware implements Loggable {
         }
         if (Setup.Connected.LIMELIGHT) {
             limelight = hwmap.get(Limelight3A.class, Setup.HardwareNames.LIMELIGHT);
-        }
-        if (Setup.Connected.EXTERNALIMU) {
-            imu = new AdafruitIMU(Setup.HardwareNames.EXTERNALIMU, AdafruitIMU.Orientation.Yaw);
         }
         /*
             Pedro manages the IMU, so we don't need this.
