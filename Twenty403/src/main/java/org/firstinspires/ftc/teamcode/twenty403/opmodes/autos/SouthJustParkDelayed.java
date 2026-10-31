@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.twenty403.Robot;
 import org.firstinspires.ftc.teamcode.twenty403.commands.auto.DriveAutoCommand;
 import org.firstinspires.ftc.teamcode.twenty403.controls.DriverController;
 
-@Autonomous(name = "SouthParkDelay+s", preselectTeleOp = "Two Controller Drive \uD83D\uDDFF")
+@Autonomous(name = "SouthParkDelay", preselectTeleOp = "2 Controller Drive \uD83D\uDDFF")
 @SuppressWarnings("unused")
 public class SouthJustParkDelayed extends CommandOpMode {
 
