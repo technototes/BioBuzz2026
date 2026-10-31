@@ -17,9 +17,13 @@ import com.pedropathing.revhub.localizers.TwoWheelLocalizer;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.technototes.library.hardware.sensor.AdafruitIMU;
 import org.firstinspires.ftc.teamcode.twenty403.helpers.AdafruitCustomIMU;
 
 public class PedroConstants {
+
+    // This should set before the follower is created
+    public static AdafruitIMU ext_imu = null;
 
     public static Follower create(HardwareMap h) {
         return new Follower(
@@ -48,7 +52,7 @@ public class PedroConstants {
             Setup.Connected.EXTERNALIMU ? Setup.HardwareNames.EXTERNALIMU : Setup.HardwareNames.IMU
         );
         if (Setup.Connected.EXTERNALIMU) {
-            AdafruitCustomIMU imu = new AdafruitCustomIMU();
+            AdafruitCustomIMU imu = new AdafruitCustomIMU(ext_imu);
             c.imu.set(imu);
         }
         c.xPodOffset.set(-0.413);
