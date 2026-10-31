@@ -27,6 +27,9 @@ public class DrivebaseSubsystem implements Subsystem, Loggable {
     @Log.Number(name = "H")
     public static double H;
 
+    @Log.Boolean(name = "busy")
+    public static boolean busy;
+
     private final Follower follower;
     private double fwdJoystick, strafeJoystick, rotateJoystick;
 
@@ -55,9 +58,10 @@ public class DrivebaseSubsystem implements Subsystem, Loggable {
             return;
         }
         Pose pose = follower.pose();
-        X = pose.x();
-        Y = pose.y();
+        X = fwdJoystick; //pose.x();
+        Y = strafeJoystick; //pose.y();
         H = (pose.heading() * 180) / Math.PI;
+        busy = follower.isBusy();
         if (!follower.isBusy()) {
             follower.manual(
                 ManualDrive.fieldCentric(

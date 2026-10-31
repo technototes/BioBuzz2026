@@ -7,16 +7,18 @@ import org.firstinspires.ftc.teamcode.twenty403.subsystems.DrivebaseSubsystem;
 
 public class DriveAutoCommand implements Command {
 
-    public DrivebaseSubsystem drivbase;
+    public DrivebaseSubsystem drivebase;
     double forward = 0;
     double strafe = 0;
 
-    public DriveAutoCommand(DrivebaseSubsystem db, double fwd, double strafe) {
-        drivbase = db;
+    public DriveAutoCommand(DrivebaseSubsystem db, double fwd, double strf) {
+        drivebase = db;
+        forward = fwd;
+        strafe = strf;
     }
 
     @Override
     public void execute() {
-        drivbase.setControllerInputs(forward, strafe, 0);
+        drivebase.setControllerInputs(forward, strafe, 0);
     }
 }

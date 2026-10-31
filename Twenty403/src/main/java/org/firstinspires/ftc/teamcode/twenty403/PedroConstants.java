@@ -114,7 +114,7 @@ public class PedroConstants {
 
     public static class Poses {
 
-        public static Pose South = new Pose(7, 80, Math.toRadians(90));
-        public static Pose North = new Pose(7, 135, Math.toRadians(270));
+        public static Pose South = new Pose(7, 80, 0);
+        public static Pose North = new Pose(7, 135, 0);
     }
 }
