@@ -52,12 +52,9 @@ public class DoublePark2Tip extends CommandOpMode {
                 new PedroPathCommand(robot.follower, p.DGardenPreIntToGardenInt()).withTimeout(2),
                 new WaitCommand(1.3),
                 new PedroPathCommand(robot.follower, p.DGardenIntToLaunch2()),
-                new WaitCommand(0.3),
-                a.FireHalf(robot),
-                new PedroPathCommand(robot.follower, p.DLaunch2ToLaunch3()),
-                new WaitCommand(2),
-                a.FireHalf(robot),
-                new PedroPathCommand(robot.follower, p.DLaunch3ToNearFlowerPreInt()).alongWith(
+                new WaitCommand(0.5),
+                a.Fire(robot),
+                new PedroPathCommand(robot.follower, p.DLaunch2ToNearFlowerPreInt()).alongWith(
                     t.Reject(robot),
                     t.RampDown(robot)
                 ),
@@ -80,9 +77,10 @@ public class DoublePark2Tip extends CommandOpMode {
                 new PedroPathCommand(robot.follower, p.DSideFlowerIntToLaunch3()),
                 new WaitCommand(0.3).alongWith(t.RampUp(robot)),
                 a.Fire(robot),
-                new PedroPathCommand(robot.follower, p.DLaunch3ToPark()),
+                new PedroPathCommand(robot.follower, p.DLaunch3ToSidePark()),
                 t.GateClose(robot),
                 t.SaveEndOfAuto(robot),
+                t.SaveEndHead(robot),
                 CommandScheduler::terminateOpMode
             ),
             OpModeState.RUN
@@ -91,7 +89,6 @@ public class DoublePark2Tip extends CommandOpMode {
 
     @Override
     public void runLoop() {
-        robot.follower.update();
         robot.turretsubsystem.Launch();
         robot.turretsubsystem.setTurretTarget();
         robot.turretsubsystem.setHoodAutoPos();
