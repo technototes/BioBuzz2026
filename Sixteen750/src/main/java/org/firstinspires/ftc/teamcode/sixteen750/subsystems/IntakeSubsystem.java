@@ -9,6 +9,7 @@ import com.technototes.library.hardware.servo.Servo;
 import com.technototes.library.logger.Log;
 import com.technototes.library.logger.Loggable;
 import com.technototes.library.subsystem.Subsystem;
+import java.util.Locale;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.sixteen750.Hardware;
 import org.firstinspires.ftc.teamcode.sixteen750.Setup;
@@ -38,6 +39,9 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     public static double transferCurrent2 = 0.0;
 
     boolean hasHardware;
+
+    @Log(name = "Intake Amps")
+    public static String motorCurrent = "";
 
     Motor<DcMotorEx> _intake;
     Motor<DcMotorEx> _transfer1, _transfer2;
@@ -118,6 +122,13 @@ public class IntakeSubsystem implements Loggable, Subsystem {
         transferCurrent1 = _transfer1.getAmperage(CurrentUnit.AMPS);
         transferCurrent2 = _transfer2.getAmperage(CurrentUnit.AMPS);
         // Add an item to the array and update the index for the next update to the 'circular' array
+        motorCurrent = String.format(
+            Locale.ENGLISH,
+            "Amps: %1.3f %1.3f %1.3f",
+            getIntakeCurrent(),
+            getTransfer1Current(),
+            getTransfer2Current()
+        );
     }
 
     private void setIntakePower(double power) {
@@ -155,5 +166,26 @@ public class IntakeSubsystem implements Loggable, Subsystem {
         if (hasHardware) {
             _ramp.setPosition(pos);
         }
+    }
+
+    private double getIntakeCurrent() {
+        if (hasHardware) {
+            return _intake.getAmperage(CurrentUnit.AMPS);
+        }
+        return 0;
+    }
+
+    private double getTransfer1Current() {
+        if (hasHardware) {
+            return _transfer1.getAmperage(CurrentUnit.AMPS);
+        }
+        return 0;
+    }
+
+    private double getTransfer2Current() {
+        if (hasHardware) {
+            return _transfer2.getAmperage(CurrentUnit.AMPS);
+        }
+        return 0;
     }
 }

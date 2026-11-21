@@ -45,4 +45,27 @@ public class AutoCommands {
             return Command.create(r.turretsubsystem::Launch);
         }
     }
+
+    static class IntakeFull implements Command {
+
+        IntakeSubsystem intake;
+
+        public IntakeFull(Robot r) {
+            this.intake = r.intakeSubsystem;
+        }
+
+        @Override
+        public boolean isFinished() {
+            // This should return if the intake is full
+            // return 'intake.IsRobotFull()' or something
+            return false;
+        }
+
+        @Override
+        public void execute() {}
+    }
+
+    public static Command WaitForFullIntake(Robot r) {
+        return new IntakeFull(r);
+    }
 }
