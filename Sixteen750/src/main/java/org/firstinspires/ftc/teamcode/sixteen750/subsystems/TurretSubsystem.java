@@ -32,8 +32,9 @@ public class TurretSubsystem implements Loggable, Subsystem {
     Pose HIVE_TARGET2 = new Pose(60, 90);
 
     public static boolean turretSOTM = true;
-    public static boolean velocitySOTM = false;
-    public static boolean hoodSOTM = false;
+    public static boolean sotmAccel = false; // acceleration term in SOTM aiming (shaky - see getSotmTargetPose)
+    public static boolean velocitySOTM = false; // flywheel speed from distance to the SOTM-shifted target
+    public static boolean hoodSOTM = true; // hood angle from distance to the SOTM-shifted target
 
     public static Velocity previousVeloSOTM;
     private static ElapsedTime velocityTimer = new ElapsedTime();
@@ -50,6 +51,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static double targetServoPos = 0;
 
     public static double FLIGHT_TIME = 0.62;
+    public static double SOTM_Y_SCALE = 1.0; // extra multiplier on the Y-velocity lead in SOTM
 
     @Log.Number(name = "xvelo")
     public static double xVelo = 0;
@@ -83,7 +85,8 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     public static double HOOD_INCREMENT = 0.01; // amount to manually adjust hood by for tuning
     public static double HOOD_POSITION_TO_ANGLE_CONSTANT = 43.42105; // did math to get this it is how the position relates to the angle in degrees
-    public static double hoodCompScalar = -0.047; // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
+    public static boolean hoodVelocityComp = true; // adjust hood for flywheel speed error
+    public static double hoodCompScalar = -0.0313; // 11/24/26: 2/3 of the old -0.047 // the ratio between our error in velocity ~in the couple of hundreds and the change in hood angle 21-38 degrees;
     public static double HOOD_MIN = 0.1;
     public static double HOOD_MAX = 0.5;
     public static double INCREASE = 15; // extremely jank increment and  decrement
@@ -278,8 +281,12 @@ public class TurretSubsystem implements Loggable, Subsystem {
         Pose sotmTargetPose;
 
         Y = robot.follower.pose().y();
-        dx = getXVelo() + acceleration.vx * ejectiontime;
-        dy = getYVelo() + acceleration.vy * ejectiontime;
+        // The acceleration estimate is an unfiltered per-loop derivative of odometry velocity, so
+        // it's mostly noise and made the turret shake. Off unless re-enabled (Panels: sotmAccel).
+        double ax = sotmAccel ? acceleration.vx * ejectiontime : 0;
+        double ay = sotmAccel ? acceleration.vy * ejectiontime : 0;
+        dx = getXVelo() + ax;
+        dy = getYVelo() + ay;
 
         Pose targetPose;
         if (Y < TARGET_SWITCH_THRESHOLD) {
@@ -290,7 +297,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
         sotmTargetPose = new Pose(
             targetPose.x() - dx * FLIGHT_TIME,
-            targetPose.y() - dy * FLIGHT_TIME
+            targetPose.y() - dy * FLIGHT_TIME * SOTM_Y_SCALE
         );
         /*
         if (Y < TARGET_SWITCH_THRESHOLD) {
@@ -358,9 +365,10 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     // returns the final position in servo position (0-1) that we want our hood servo to be at after velocity compensation
     public double getHoodAutoPos() {
-        hoodAutoPos =
-            /*hoodTargetPos commented out for manual testing*/ hoodTargetPos +
-            (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT; // takes our target and subtracts our error times a scalar
+        double comp = hoodVelocityComp
+            ? (error * hoodCompScalar) / HOOD_POSITION_TO_ANGLE_CONSTANT // takes our target and subtracts our error times a scalar
+            : 0;
+        hoodAutoPos = /*hoodTargetPos commented out for manual testing*/ hoodTargetPos + comp;
         return clamp(hoodAutoPos, HOOD_MIN, HOOD_MAX); // clamp it again so it doesnt try and unionize (i think you only need to clamp it once but by doing it twice both the compensated and uncompensated values are actually usable)
     }
 
