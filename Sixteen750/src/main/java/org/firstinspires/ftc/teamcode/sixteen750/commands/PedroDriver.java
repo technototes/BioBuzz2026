@@ -189,6 +189,9 @@ public class PedroDriver implements Command, Loggable {
     double headingOffset;
     // The current rotation scaling factor
     public static double turnSpeed; //this is turnspeed FOR EVERYTHING
+    // Last rotation command sent to the follower (Pedro convention: + = counter-clockwise).
+    // Read by TurretSubsystem for stick feedforward.
+    public static volatile double lastRotCmd = 0;
     public static double visionTurnSpeed; //turnspeed for vision only
     // Camera, for future use:
     LimelightSubsystem limelightSubsystem;
@@ -283,6 +286,7 @@ public class PedroDriver implements Command, Loggable {
         if (follower.isBusy() || driveStyle == DrivingStyle.Hold) {
             //follower.update(); // not needed either
             drvVec = "busy";
+            lastRotCmd = 0;
             return;
         }
 
@@ -300,6 +304,7 @@ public class PedroDriver implements Command, Loggable {
         }
         if (driveMode == DrivingMode.RobotCentric || driveMode == DrivingMode.FieldCentric) {
             double rot = getRotation(fwdVal, strafeVal);
+            lastRotCmd = rot; // the turret uses this to lead turns before the robot rotates
             ShowDriveVectors(fwdVal, strafeVal, rot, headingOffset);
             if (driveMode == DrivingMode.FieldCentric) {
                 double heading = follower.pose().heading();

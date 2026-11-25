@@ -23,6 +23,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.sixteen750.Hardware;
 import org.firstinspires.ftc.teamcode.sixteen750.Robot;
 import org.firstinspires.ftc.teamcode.sixteen750.Setup;
+import org.firstinspires.ftc.teamcode.sixteen750.commands.PedroDriver;
 
 @Configurable
 public class TurretSubsystem implements Loggable, Subsystem {
@@ -35,6 +36,39 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public static boolean sotmAccel = false; // acceleration term in SOTM aiming (shaky - see getSotmTargetPose)
     public static boolean velocitySOTM = false; // flywheel speed from distance to the SOTM-shifted target
     public static boolean hoodSOTM = true; // hood angle from distance to the SOTM-shifted target
+    // Turret anti-shake (tunable in Panels):
+    // smoothing time constant (seconds) for the robot velocity SOTM leads by; 0 = raw
+    public static double SOTM_VELO_SMOOTHING = 0.15;
+    // don't re-command the turret servos unless the aim moved more than this (servo units;
+    // 1.0 = 360 degrees, so 0.003 is about 1 degree)
+    public static double TURRET_DEADBAND = 0.003;
+    // Turret turn-rate feedforward: lead the aim by (robot turn rate x this many seconds).
+    // Roughly loop time + servo response; 0 = off.
+    public static double TURRET_OMEGA_LEAD = 0.1;
+    public static double TURRET_OMEGA_SMOOTHING = 0.05; // seconds; 0 = raw turn rate
+    // Target-turn feedforward: seconds to lead by the not-yet-reached part of the follower's target
+    // turn rate (0 = off). In teleop the target is the stick command scaled by
+    // TURRET_STICK_MAX_OMEGA (robot turn rate in rad/s at a full rotation command); while following
+    // a path it's the path's heading change per inch times path speed.
+    public static double TURRET_TARGET_LEAD = 0.1;
+    public static double TURRET_STICK_MAX_OMEGA = 5.0;
+    private double smoothVx = 0,
+        smoothVy = 0,
+        smoothOmega = 0;
+    // Turret interpolation: max servo travel per second while tracking (1.0 = 360 deg/s); 0 = jump
+    // Safety clamp only - set at/above the servo's real top speed so it doesn't add lag (was 1.0).
+    public static double TURRET_MAX_RATE = 2.0;
+    // Bearing-rate feedforward: lead the aim by (aim bearing rate x this many seconds); 0 = off.
+    public static double TURRET_BEARING_LEAD = 0.1;
+    public static double TURRET_BEARING_SMOOTHING = 0.025; // seconds
+    // Deadband only applies when turn rate and bearing rate are both below this (rad/s).
+    public static double TURRET_STILL_RATE = 0.2;
+    private double smoothBearingRate = 0,
+        lastBearing = Double.NaN;
+    private final ElapsedTime bearingTimer = new ElapsedTime();
+    private double lastTurretCmd = Double.NaN;
+    private final ElapsedTime turretTimer = new ElapsedTime();
+    private final ElapsedTime smoothTimer = new ElapsedTime();
 
     public static Velocity previousVeloSOTM;
     private static ElapsedTime velocityTimer = new ElapsedTime();
@@ -201,18 +235,31 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     // returns the turret angle in radians relative to the robot
     public double getTurretAngle() {
-        Pose targetPose = getTargetPose();
-        Pose sotmTargetPose = getSotmTargetPose();
-
-        double x, y, robotHead, dx, dy, absoluteAngle, angle; //
-
-        x = robot.follower.pose().x(); // sets x to robots current y position
-        y = robot.follower.pose().y(); // sets y to robots current y position
-        robotHead = MathUtils.normalizeDeltaAngle(
+        double robotHead = MathUtils.normalizeDeltaAngle(
             robot.follower.pose().heading(),
             AngleUnit.RADIANS
         ); // sets robotHead to robot heading and normalizes to delta radians
+        double angle;
+        // Bearing-rate feedforward (Thornbots AngleSetpointRate idea): lead the field-frame aim by
+        // how fast it's changing, which covers driving sideways past the goal, not just turning.
+        double absoluteAngle = getAimBearing() + smoothBearingRate * TURRET_BEARING_LEAD;
 
+        // Turn-rate feedforward: aim for where the robot will be pointing TURRET_OMEGA_LEAD seconds
+        // from now, so loop + servo lag doesn't leave the turret trailing while we rotate.
+        // Target-turn feedforward: the turn the follower is being asked for that the robot hasn't
+        // reached yet (target turn rate - measured), so the turret starts moving before the robot.
+        double targetLead = (getTargetOmega() - smoothOmega) * TURRET_TARGET_LEAD;
+        angle = absoluteAngle - (robotHead + smoothOmega * TURRET_OMEGA_LEAD + targetLead); // still in radians.......
+        return MathUtils.normalizeDeltaRadians(angle);
+    }
+
+    // Field-frame direction (radians) from the robot to what the turret should aim at.
+    private double getAimBearing() {
+        Pose targetPose = getTargetPose();
+        Pose sotmTargetPose = getSotmTargetPose();
+        double x, y, dx, dy;
+        x = robot.follower.pose().x(); // sets x to robots current y position
+        y = robot.follower.pose().y(); // sets y to robots current y position
         if (turretSOTM) {
             dx = sotmTargetPose.x() - x;
             dy = sotmTargetPose.y() - y;
@@ -221,10 +268,28 @@ public class TurretSubsystem implements Loggable, Subsystem {
             dy = targetPose.y() - y; // difference between target y and robot y
         }
 
-        absoluteAngle = Math.atan2(dy, dx); // in radians the target angle of the turret relative to the field
+        return Math.atan2(dy, dx); // in radians the target angle of the turret relative to the field
+    }
 
-        angle = absoluteAngle - robotHead; // still in radians.......
-        return MathUtils.normalizeDeltaRadians(angle);
+    // Once per loop: low-pass the rate of change of the aim bearing (25 ms, like Thornbots), and
+    // drop it on a jump (target switch / relocalization) instead of treating that as motion.
+    private void updateBearingRate() {
+        double bearing = getAimBearing();
+        double dt = bearingTimer.seconds();
+        bearingTimer.reset();
+        if (Double.isNaN(lastBearing) || dt <= 0 || dt > 0.25) {
+            lastBearing = bearing;
+            smoothBearingRate = 0;
+            return;
+        }
+        double change = MathUtils.normalizeDeltaRadians(bearing - lastBearing);
+        lastBearing = bearing;
+        if (Math.abs(change) > 0.25) {
+            smoothBearingRate = 0;
+            return;
+        }
+        double a = TURRET_BEARING_SMOOTHING <= 0 ? 1 : dt / (TURRET_BEARING_SMOOTHING + dt);
+        smoothBearingRate += a * (change / dt - smoothBearingRate);
     }
 
     //returns the distance from the selected hive target in inches
@@ -324,7 +389,23 @@ public class TurretSubsystem implements Loggable, Subsystem {
     }
 
     public void setTurretTarget() {
-        setTurretPosition(getTurretPos());
+        double target = getTurretPos();
+        double dt = Math.min(turretTimer.seconds(), 0.1); // cap so a long gap can't cause a jump
+        turretTimer.reset();
+        if (Double.isNaN(lastTurretCmd)) {
+            setTurretPosition(target);
+            return;
+        }
+        double diff = target - lastTurretCmd;
+        // Deadband: small pose/velocity noise shouldn't make the servos twitch every loop. Only while
+        // nearly still - while turning/driving it would turn smooth tracking into a staircase.
+        boolean still =
+            Math.abs(smoothOmega) < TURRET_STILL_RATE &&
+            Math.abs(smoothBearingRate) < TURRET_STILL_RATE;
+        if (still && Math.abs(diff) <= TURRET_DEADBAND) return;
+        // Interpolation: glide toward the target at no more than TURRET_MAX_RATE per second.
+        double maxStep = TURRET_MAX_RATE <= 0 ? Math.abs(diff) : TURRET_MAX_RATE * dt;
+        setTurretPosition(lastTurretCmd + clamp(diff, -maxStep, maxStep));
     }
 
     public void increaseVelocity() {
@@ -378,6 +459,8 @@ public class TurretSubsystem implements Loggable, Subsystem {
 
     @Override
     public void periodic() {
+        updateSmoothedVelocity();
+        updateBearingRate();
         updateAcceleration(true);
         targetServoPos = getTurretPos();
         targetPose = getTargetPose();
@@ -431,17 +514,49 @@ public class TurretSubsystem implements Loggable, Subsystem {
     public void setTurretPosition(double pos) {
         turret1.setPosition(pos);
         turret2.setPosition(pos);
+        lastTurretCmd = pos;
     }
 
-    //gets our x velocity in in/s clamping it to not make the launcher have a seizure
+    // The turn rate (rad/s, + = counter-clockwise) the follower is trying to reach right now.
+    private double getTargetOmega() {
+        if (robot.follower.following()) {
+            double t = robot.follower.parametricCompletion();
+            if (Double.isNaN(t)) return 0;
+            double t2 = Math.min(1, t + 0.01),
+                t1 = Math.max(0, t2 - 0.01);
+            Pose a = robot.follower.poseAt(t1),
+                b = robot.follower.poseAt(t2);
+            double ds = a.distance(b);
+            if (ds < 1e-3) return 0; // turning in place: no path speed to scale by
+            double dh = MathUtils.normalizeDeltaRadians(b.heading() - a.heading());
+            return (dh / ds) * robot.follower.tangentialVelocity();
+        }
+        return PedroDriver.lastRotCmd * TURRET_STICK_MAX_OMEGA;
+    }
+
+    // Low-pass the follower velocity once per loop (called from periodic). SOTM multiplies this by
+    // the flight time, so raw odometry velocity noise turned straight into turret jitter.
+    private void updateSmoothedVelocity() {
+        Velocity v = robot.follower.velocity();
+        double dt = smoothTimer.seconds();
+        smoothTimer.reset();
+        double a = SOTM_VELO_SMOOTHING <= 0 ? 1 : Math.min(1, dt / (SOTM_VELO_SMOOTHING + dt));
+        smoothVx += a * (v.vx - smoothVx);
+        smoothVy += a * (v.vy - smoothVy);
+        double ao =
+            TURRET_OMEGA_SMOOTHING <= 0 ? 1 : Math.min(1, dt / (TURRET_OMEGA_SMOOTHING + dt));
+        smoothOmega += ao * (v.omega - smoothOmega);
+    }
+
+    //gets our (smoothed) x velocity in in/s clamping it to not make the launcher have a seizure
     public double getXVelo() {
-        xVelo = robot.follower.velocity().vx;
+        xVelo = smoothVx;
         return clamp(xVelo, -50, 50);
     }
 
-    //gets our y velocity in in/s clamping it to not make the launcher have a seizure
+    //gets our (smoothed) y velocity in in/s clamping it to not make the launcher have a seizure
     public double getYVelo() {
-        yVelo = robot.follower.velocity().vy;
+        yVelo = smoothVy;
         return clamp(yVelo, -50, 50);
     }
 
