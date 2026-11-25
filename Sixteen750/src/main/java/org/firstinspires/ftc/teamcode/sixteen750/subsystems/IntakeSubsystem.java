@@ -20,24 +20,17 @@ public class IntakeSubsystem implements Loggable, Subsystem {
     public static double INTAKE_VELOCITY = .96;
 
     public static double REJECT_VELOCITY = -0.6;
-    public static double TRANSFER1_HOLD_VELOCITY = 0.55;
-    public static double TRANSFER2_HOLD_VELOCITY = 0.4;
+    public static double TRANSFER1_HOLD_VELOCITY = 0.65;
+    public static double TRANSFER2_HOLD_VELOCITY = 0.5;
     public static double INTAKE_FEED_VELOCITY = 0.6;
-    public static double TRANSFER1_FEED_VELOCITY = .95;
-    public static double TRANSFER2_FEED_VELOCITY = 0.96;
+    public static double TRANSFER1_FEED_VELOCITY = .98;
+    public static double TRANSFER2_FEED_VELOCITY = 0.98;
     public static double BLOCK_POSITION = 0.51;
     public static double REGURGITATE_VELOCITY = -0.7;
 
     public static double FIRE_POSITION = 0.3;
     public static double RAMP_UP_POS = 0.3;
     public static double RAMP_DOWN_POS = 0.965;
-
-    @Log.Number(name = "transfer1 current")
-    public static double transferCurrent1 = 0.0;
-
-    @Log.Number(name = "transfer2 current")
-    public static double transferCurrent2 = 0.0;
-
     boolean hasHardware;
 
     @Log(name = "Intake Amps")
@@ -119,8 +112,6 @@ public class IntakeSubsystem implements Loggable, Subsystem {
 
     @Override
     public void periodic() {
-        transferCurrent1 = _transfer1.getAmperage(CurrentUnit.AMPS);
-        transferCurrent2 = _transfer2.getAmperage(CurrentUnit.AMPS);
         // Add an item to the array and update the index for the next update to the 'circular' array
         motorCurrent = String.format(
             Locale.ENGLISH,

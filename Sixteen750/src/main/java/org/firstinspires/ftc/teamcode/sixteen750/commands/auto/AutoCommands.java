@@ -56,16 +56,15 @@ public class AutoCommands {
 
         @Override
         public boolean isFinished() {
-            // This should return if the intake is full
+            return intake.IntakeFull(); // This should return if the intake is full
             // return 'intake.IsRobotFull()' or something
-            return false;
         }
 
         @Override
         public void execute() {}
     }
 
-    public static Command WaitForFullIntake(Robot r) {
-        return new IntakeFull(r);
+    public static Command WaitForFullIntake(Robot r, double timeout) {
+        return new ParallelRaceGroup(new IntakeFull(r), new WaitCommand(timeout));
     }
 }
