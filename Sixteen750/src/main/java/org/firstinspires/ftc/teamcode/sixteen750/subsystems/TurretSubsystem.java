@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.sixteen750.Hardware;
 import org.firstinspires.ftc.teamcode.sixteen750.Robot;
 import org.firstinspires.ftc.teamcode.sixteen750.Setup;
 import org.firstinspires.ftc.teamcode.sixteen750.commands.PedroDriver;
+import org.firstinspires.ftc.teamcode.sixteen750.pc.TurretInputLog;
 
 @Configurable
 public class TurretSubsystem implements Loggable, Subsystem {
@@ -209,6 +210,7 @@ public class TurretSubsystem implements Loggable, Subsystem {
             CommandScheduler.register(this);
             gamepad = null;
             launcher.setDirection(DcMotorSimple.Direction.REVERSE);
+            if (LOG_TURRET_INPUTS) TurretInputLog.start();
         } else {
             launcher = null;
             turret1 = null;
@@ -457,12 +459,41 @@ public class TurretSubsystem implements Loggable, Subsystem {
         setHoodPos(hoodAutoPos);
     }
 
+    // Diagnostics: write every loop's turret inputs to /sdcard/FIRST/turretlogs (TurretInputLog).
+    public static boolean LOG_TURRET_INPUTS = true;
+
+    private void logTurretInputs() {
+        Pose p = robot.follower.pose();
+        Velocity v = robot.follower.velocity();
+        Pose aim = turretSOTM ? getSotmTargetPose() : getTargetPose();
+        TurretInputLog.log(
+            p.x(),
+            p.y(),
+            p.heading(),
+            v.vx,
+            v.vy,
+            v.omega,
+            smoothVx,
+            smoothVy,
+            smoothOmega,
+            aim.x(),
+            aim.y(),
+            getAimBearing(),
+            smoothBearingRate,
+            getTargetOmega(),
+            PedroDriver.lastRotCmd,
+            targetServoPos,
+            lastTurretCmd
+        );
+    }
+
     @Override
     public void periodic() {
         updateSmoothedVelocity();
         updateBearingRate();
         updateAcceleration(true);
         targetServoPos = getTurretPos();
+        if (LOG_TURRET_INPUTS) logTurretInputs();
         targetPose = getTargetPose();
         robotHead = robot.follower.pose().heading();
         targetVelo = getVelocityTarget();
