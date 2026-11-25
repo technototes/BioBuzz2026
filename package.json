@@ -41,6 +41,8 @@
     "- // g-": "",
     "- // g ": "Open the FTC Panels web interface",
     "panel": "bun run open http://192.168.43.1:8001",
+    "- // g2": "Drive motors / run experiments from the PC (USB or robot wifi), see doc/experiments.md",
+    "motors": "bun run scripts/motors.ts",
     "- // h-": "",
     "- // h ": "platform-specific commands",
     "- // h+": "",
