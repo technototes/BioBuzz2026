@@ -17,6 +17,12 @@ then type `bun install`. From there, to use any of these scripts, you go to that
 same directory and type `bun` _scriptname_, for example `bun format` will format
 all the files the current student is editing.
 
+### `motors`, `launcher`, `turret`
+
+PC-side tools for driving motors and running the flywheel and turret experiments
+on the 16750 robot without the Driver Station. See
+[doc/experiments.md](../doc/experiments.md).
+
 ### `flip`
 
 This script comments/uncomments lines of text according to the `fileList` map.
