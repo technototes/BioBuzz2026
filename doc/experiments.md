@@ -168,7 +168,15 @@ adb pull /sdcard/FIRST/turretlogs
 
 ## Known issue: turret jitter is NOT solved
 
-The turret still jitters while tracking. Things tried (all tunable in Panels,
+The turret still jitters while tracking. **Likely cause found, fix not yet
+verified on the robot:** the tracking command was a one-shot bound with
+`whileInverseToggled`, so the turret only got a new position a few times a
+second (about 3 Hz observed). The `fix-toggled-commands` branch makes
+`TrackHive` and `AutoHood` run every loop. Test that first; if it fixes the
+jitter, the smoothing and lead settings below should be re-checked, because they
+were all tuned by eye against the 3 Hz updates.
+
+Other things tried before that was found. Things tried (all tunable in Panels,
 `TurretSubsystem`):
 
 - SOTM acceleration term off (`sotmAccel`): it was a raw per-loop derivative.
